@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./bower_components/bootstrap/dist/js/bootstrap.bundle.min.js" /> 
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container" id="pageContainer">
+        <div class="row" id="">
+            <div class="col-4" id="navCol">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="project-list" data-bs-toggle="list" href="#project-tab" role="tab" aria-controls="project-tab">Project</a>
+                    <a class="list-group-item list-group-item-action" id="metadata-list" data-bs-toggle="list" href="#metadata-tab" role="tab" aria-controls="metadata-tab">Metadata</a>
+                    <a class="list-group-item list-group-item-action" id="spine-list" data-bs-toggle="list" href="#spine-tab" role="tab" aria-controls="spine-tab">Spine</a>
+                    <a class="list-group-item list-group-item-action" id="publish-list" data-bs-toggle="list" href="#publish-tab" role="tab" aria-controls="publish-tab">Review & Publish</a>
+                    <a class="list-group-item list-group-item-action" id="about-list" data-bs-toggle="list" href="#about-tab" role="tab" aria-controls="about-tab">About</a>
+                </div>
+            </div>
+            <!--Main Navigation-->
+            <!--Main layout-->
+            <div class="col-8">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="project-tab" role="tabpanel" aria-labelledby="project-list"> project-list </div>
+                    <div class="tab-pane fade" id="metadata-tab" role="tabpanel" aria-labelledby="metadata-list">metadata-list</div>
+                    <div class="tab-pane fade" id="spine-tab" role="tabpanel" aria-labelledby="spine-list">spine-list</div>
+                    <div class="tab-pane fade" id="publish-tab" role="tabpanel" aria-labelledby="publish-list">publish-list</div>
+                    <div class="tab-pane fade" id="about-tab" role="tabpanel" aria-labelledby="about-list">about-list</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./renderer.js"></script>
+</body>
+
+
+</html>
