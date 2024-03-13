@@ -128,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+.vs/FPB-Builder/FileContentIndex/b0bc6b35-654d-476f-b4c5-446753600181.vsidx
+.vs/FPB-Builder/FileContentIndex/9c37347c-0fcc-42b1-89bc-91dcbd6cd7e5.vsidx
+.vs/FPB-Builder/v17/.wsuo
+.vs/FPB-Builder/v17/DocumentLayout.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
