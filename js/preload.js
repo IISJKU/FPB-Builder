@@ -1,14 +1,18 @@
-const {ipcRenderer, contextBridge} = require('electron');
+const { ipcRenderer, contextBridge } = require("electron");
 
 //expose all of these main process functions to the renderer in namespace "BRIDGE"
-contextBridge.exposeInMainWorld('BRIDGE', {
+contextBridge.exposeInMainWorld("BRIDGE", {
+  desktop: true,
   setFilePath() {
-    ipcRenderer.send('selectDirectory');
-  }, 
+    ipcRenderer.send("selectDirectory");
+  },
   printFilePath() {
-    ipcRenderer.send('printDirectory');
+    ipcRenderer.send("printDirectory");
   },
   generateTestFiles() {
-    ipcRenderer.send('generateTestFiles');
+    ipcRenderer.send("generateTestFiles");
+  },
+  importFile() {
+    ipcRenderer.send("importFile");
   },
 });
