@@ -36,14 +36,8 @@ function MenuItem(name, src) {
 }
 
 let menuItems = [
-  new MenuItem(
-    'Anleitung zu "' + bookTitle + '"',
-    "xhtml/page00.xhtml#toc-epubtools-22"
-  ),
-  new MenuItem(
-    'Anleitung zu "' + bookTitle + '"',
-    "xhtml/notice_toc.xhtml#toc-epubtools-3"
-  ),
+  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/page00.xhtml#toc-epubtools-22"),
+  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/notice_toc.xhtml#toc-epubtools-16"),
   new MenuItem("Menü", "xhtml/notice.xhtml#toc-epubtools-5"),
   new MenuItem("Textmenü", "xhtml/notice.xhtml#toc-epubtools-6"),

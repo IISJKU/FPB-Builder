@@ -1,23 +1,25 @@
 const { dialog, ipcMain } = require("electron");
-const FileSystemManager = require("./fileSystemManager.js");
-const EPUBFileCreator = require("./epubFileCreator.js"); //VS Code gives me a warning, but its fine haha
+
+const EPUBMaker = require("./EPUBMaker.js");
+const PathUtilities = require("./pathUtilities.js");
 let fs = require("fs");
 const path = require("path");
-let importedFiles = Array();
+const importedFiles = [];
 
-let selectedDirectory = null;
 //sets up a function that lets the user pick a path from the file explorer
 ipcMain.on("selectDirectory", () => {
-  selectedDirectory = dialog.showOpenDialog({
-    properties: ["openDirectory"],
-  });
+  EPUBMaker.setDirectory(
+    dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    })
+  );
 });
 
 //lets the user print the filepath to console
 ipcMain.on("printDirectory", () => {
-  if (selectedDirectory != null) {
+  if (EPUBMaker.getDirectory() != null) {
     //dialog.showOpenDialog returns promise object, so we have to do it like this
-    selectedDirectory.then((value) => {
+    EPUBMaker.getDirectory().then((value) => {
       console.log(value["filePaths"][0]);
     });
   }
@@ -25,88 +27,110 @@ ipcMain.on("printDirectory", () => {
 
 //Here, the Files will be generated, this is still under construction!
 ipcMain.on("generateTestFiles", () => {
-  selectedDirectory.then((value) => {
-    //create overall folder
-    FileSystemManager.makeFolder(value["filePaths"][0], "TestEpub");
-
-    //Everything is put into this folder
-    tempDir = value["filePaths"][0] + "\\TestEpub";
-
-    //create top layer in folder structure
-    FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
-    //TODO: Create META INF Folder, and put files in it
-    FileSystemManager.makeFolder(tempDir, "META-INF");
-    FileSystemManager.makeFile(tempDir + "\\META-INF", "container.xml", EPUBFileCreator.containerFile);
-
-    //TODO
-    //Create OEBPS AND ALL THE FOLDERS and FILES INSIDE
-    FileSystemManager.makeFolder(tempDir, "OEBPS");
-    //set the tempDir one layer below
-    tempDir = tempDir + "\\OEBPS";
-    //create all of the folders inside this one
-    FileSystemManager.makeFolder(tempDir, "audio");
-    FileSystemManager.makeFolder(tempDir, "css");
-    FileSystemManager.makeFolder(tempDir, "fonts");
-    FileSystemManager.makeFolder(tempDir, "images");
-    FileSystemManager.makeFolder(tempDir, "Misc");
-    FileSystemManager.makeFolder(tempDir, "xhtml");
-
-    //TODO Write function that fills this file!
-    //
-    // This function is WIP!
-    //
-    //Create content,opf file
-    FileSystemManager.makeFile(tempDir, "content.opf", EPUBFileCreator.createContentFile());
-    //TODO Write function that fills this file!
-    //
-    // This function is WIP!
-    //
-    //create the TOC file
-    FileSystemManager.makeFile(tempDir, "toc.ncx", EPUBFileCreator.createTOC());
-  });
+  EPUBMaker.createFileStructure();
 });
 
 //Allows you to import a file!#
 //Still testing this out, this will be the one where xhtml gets imported & the file is scanned for imports
+//
+// TODO: Check Whether or not this even contains an image
+//
 ipcMain.on("importFile", () => {
-  /*
-  let asd = (selectedDirectory = dialog.showOpenDialog({
+  let asd = dialog.showOpenDialog({
     properties: ["openFile"],
     filters: [{ name: "xhtml Files", extensions: ["xhtml"] }],
-  }));
+  });
 
   asd.then((selectedFile) => {
-    console.log(selectedFile);
-    fs.copyFile()
-    //Do all the stuff below this here, i just commented it out for testing!
-  }); */
+    //this file is the one that should be selected, move this code above!
 
-  //this file is the one that should be selected, move this code above!
+    let src = selectedFile["filePaths"][0];
 
-  let src = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml";
+    //this opperation cuts of the last bit of the string, that contains the filename
+    let srcSplit = src.split("\\");
 
-  //this opperation cuts of the last bit of the string, that contains the filename
-  let srcSplit = src.split("\\");
-  let dest = "C:\\Users\\ak127746\\Desktop\\Testing Folder\\" + srcSplit[srcSplit.length - 1];
+    //fs.copyFile(src, dest, (err) => {
 
-  fs.copyFile(src, dest, (err) => {
-    if (err) {
-      console.log("Error Found:", err);
-    } else {
-      fs.readFile(dest, "utf8", (err, data) => {
+    if (fs.existsSync(src)) {
+      fs.readFile(src, "utf8", (err, data) => {
         if (err) {
           console.error(err);
           return;
         }
-
-        //split file into at linebreaks to parse it line by line
+        //split file at linebreaks to parse it line by line
         dataSplit = data.split("\n");
-        dataSplit.forEach((element) => {
-          if (element.includes("<link") || element.includes("<script")) {
-            console.log(element);
-          }
-        });
+        if (checkIfImage(dataSplit)) {
+          importDependencies(dataSplit, src);
+          importedFiles.push(src);
+          console.log("Sucess!");
+          EPUBMaker.createFileStructure();
+          EPUBMaker.importSelectedFiles(importedFiles);
+        } else {
+          //please select an image file!!
+          console.log("Please Select an xhtml containing an image!");
+        }
       });
     }
+
+    //
+    //
+    //TODO: Move this to the place where stuff is getting sorted!
+    // This is only here for testing porposes!
+    //also: check if path is even set or files have already been created
   });
 });
+
+//looks through the line-array of the file, and finds the absolute path of the dependencies
+function importDependencies(lineArray, src) {
+  lineArray.forEach((element) => {
+    let filename = "";
+    if (element.includes("<link")) {
+      filename = PathUtilities.cutOutFilename(element, "href");
+    } else if (element.includes("<script")) {
+      filename = PathUtilities.cutOutFilename(element, "src");
+    }
+
+    if (filename != "") {
+      let t = PathUtilities.getAbsolutePath(src, filename);
+      //check if the file was already imported!
+
+      if (importedFiles.includes(t)) {
+        //
+        // TODO: Inform user that the file was included in a previous try
+        //
+      } else {
+        //if it exists, add it to imported files, if not:
+        //let the user manually select it.
+        //
+        // TODO: prompt the user to select it!!
+        //
+        if (fs.existsSync(t)) {
+          importedFiles.push(t);
+        } else {
+          console.log("Success: False");
+          //prompt user to select it here!
+        }
+      }
+    }
+  });
+}
+
+//checks if xhtml file is an image
+function checkIfImage(lineArray) {
+  let hasFigure = false;
+  let hasSVG = false;
+  lineArray.forEach((element) => {
+    if (element.includes("<figure")) {
+      hasFigure = true;
+      console.log("This has a figure!");
+    }
+    if (element.includes("<svg")) {
+      hasSVG = true;
+    }
+  });
+
+  if (hasFigure == true && hasSVG == true) return true;
+  return false;
+}
+
+exports.importedFiles = importedFiles;
