@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
@@ -17,22 +17,22 @@
             </div>    
         </div>
         <div class="row" id="mainRow">
-            <div class="col-md-2" id="navColumn">
+            <div class="col-md-2" id="navColumn" role="navigation">
                 <!-- list of tabs -->
                 <div class="list-group" id="listTab" role="tablist">
-                    <a class="list-group-item list-group-item-action active" id="project-list" data-bs-toggle="list" href="#project-tab" role="tab" aria-controls="project-tab"><i class="bi bi-house-fill" alt=""></i> Project</a>
-                    <a class="list-group-item list-group-item-action" id="metadata-list" data-bs-toggle="list" href="#metadata-tab" role="tab" aria-controls="metadata-tab"><i class="bi bi-receipt-cutoff" alt=""></i> Metadata</a>
-                    <a class="list-group-item list-group-item-action" id="spine-list" data-bs-toggle="list" href="#spine-tab" role="tab" aria-controls="spine-tab"><i class="bi bi-hourglass-split" alt=""></i> Spine</a>
-                    <a class="list-group-item list-group-item-action" id="publish-list" data-bs-toggle="list" href="#publish-tab" role="tab" aria-controls="publish-tab"><i class="bi bi-book-fill" alt=""></i> Review & Publish</a>
-                    <a class="list-group-item list-group-item-action" id="about-list" data-bs-toggle="list" href="#about-tab" role="tab" aria-controls="about-tab"><i class="bi bi-question-lg" alt=""></i> About</a>
+                    <a class="list-group-item list-group-item-action active" id="project-list" data-bs-toggle="list" href="#project-tab" role="tab" aria-selected="true" aria-controls="project-tab"><i class="bi bi-house-fill" alt=""></i> Project</a>
+                    <a class="list-group-item list-group-item-action" id="metadata-list" data-bs-toggle="list" href="#metadata-tab" role="tab" aria-selected="false" aria-controls="metadata-tab"><i class="bi bi-receipt-cutoff" alt=""></i> Metadata</a>
+                    <a class="list-group-item list-group-item-action" id="spine-list" data-bs-toggle="list" href="#spine-tab" role="tab" aria-selected="false" aria-controls="spine-tab"><i class="bi bi-hourglass-split" alt=""></i> Spine</a>
+                    <a class="list-group-item list-group-item-action" id="publish-list" data-bs-toggle="list" href="#publish-tab" role="tab" aria-selected="false" aria-controls="publish-tab"><i class="bi bi-book-fill" alt=""></i> Review & Publish</a>
+                    <a class="list-group-item list-group-item-action" id="about-list" data-bs-toggle="list" href="#about-tab" role="tab" aria-selected="false" aria-controls="about-tab"><i class="bi bi-question-lg" alt=""></i> About</a>
                 </div>
                 <div class="form-group">
                     <br>
-                    <img src="./images/logo_FPE.jpg" id="firstImg" class="logo" alt="Flex Picture Ebook">
+                    <img src="./images/logo_FPE.jpg" id="firstImg" class="logo" alt="Flex Picture Ebook logo">
                     <br>
-                    <img src="./images/logosbeneficaireserasmusright_en_0.jpg" class="logo" alt="co-funded by the European Union">
+                    <img src="./images/logosbeneficaireserasmusright_en_0.jpg" class="logo" alt="co-funded by the European Union logo">
                     <br>
-                    <img src="./images/logo_erasmusplus.jpg" class="logo" alt="erasmus plus">
+                    <img src="./images/logo_erasmusplus.jpg" class="logo" alt="erasmus plus logo">
                 </div>
             </div>
             <div class="col-md-10" id="tabColumn">
@@ -43,16 +43,16 @@
                             <div class="col-md-6" id="projectColumn">
                                 <form>
                                     <div class="form-group mb-3">
-                                        <label for="formFile" class="custom-file-label">Directory</label>
-                                        <input class="form-control" type="file" id="formFile">
+                                        <label for="directory" class="custom-file-label">Directory</label>
+                                        <input class="form-control" type="file" id="directory" aria-label="Open project directory">
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="projectName">Name</label>
-                                        <input type="text" class="form-control" id="projectName" placeholder="Project Name">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Project Name" aria-label="Project name and can be modifiable">
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="pubLang">Publication languages</label>
-                                        <select class="form-select" aria-label="select multiple Publication languages" id="pubLang" multiple>
+                                        <label for="publicationLanguage">Publication languages</label>
+                                        <select class="form-select" aria-label="select multiple Publication languages" id="publicationLanguage" multiple>
                                             <option value="en" data-tokens="English">English</option>
                                             <option value="fr" data-tokens="French">French</option>
                                             <option value="it" data-tokens="Italian">Italian</option>
@@ -64,26 +64,26 @@
                                         </select>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="pubLang">Other settings</label>
-                                        <div class="settings">
+                                        <label for="otherSettings">Other settings</label>
+                                        <div class="settings" id="otherSettings">
                                             <div class="input-group-text settDiv">
-                                                <input class="" type="checkbox" id="audioNarr" value="audio" aria-label="...">
-                                                <label class="form-check-label" for="audioNarr"> Audio Narrations</label>
+                                                <input class=""  type="checkbox" id="audioNarrations" value="audio" aria-label="Check if project contains audio Narrations">
+                                                <label class="form-check-label" for="audioNarrations"> Audio Narrations</label>
                                             </div>
                                             <div class="input-group-text settDiv">
-                                                <input class="" type="checkbox" id="instructions" value="audio" aria-label="...">
+                                                <input class="" type="checkbox" id="instructions" value="instructions" aria-label="Check if project include instructions">
                                                 <label class="form-check-label" for="instructions"> Include instructions</label>
                                             </div>
                                             <div class="input-group-text settDiv">
-                                                <input class="" type="checkbox" id="" value="audio" aria-label="...">
-                                                <label class="form-check-label" for=""> Settings within the book</label>
+                                                <input class="" type="checkbox" id="bookSettings" value="bookSettings" aria-label="Check if project settings within the book">
+                                                <label class="form-check-label" for="bookSettings"> Settings within the book</label>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="col-md-6" id="recentColumn">
-                                <label id="recentLabel" class="">Recent projects</label>
+                                <label id="recentProjects" class="">Recent projects</label>
                                 <div class="list-group">
                                     <a href="#" class="list-group-item list-group-item-action">
                                         <div class="d-flex w-100 justify-content-between">

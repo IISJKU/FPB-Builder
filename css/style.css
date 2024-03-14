@@ -100,7 +100,7 @@ input[type=file]::-webkit-file-upload-button {
    display: none;
 }
   
-#formFile{
+#directory{
     padding-right: 0px;
     border-right-width: 0px;
 }
@@ -137,7 +137,7 @@ input[type=file]::-webkit-file-upload-button {
     padding-right: 7px;
 }
 
-#recentLabel{
+#recentProjects{
     margin-bottom: 5px;
     padding-left: 7px;
 }

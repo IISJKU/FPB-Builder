@@ -16,3 +16,5 @@ Install the latest stable version of bootstrap through bower components
 Install jquery
 - npm install --save jquery
 
+Install bootstrap icons
+- npm i bootstrap-icons
