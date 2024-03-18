@@ -36,47 +36,56 @@ ipcMain.on("generateTestFiles", () => {
 // TODO: Check Whether or not this even contains an image
 //
 ipcMain.on("importFile", () => {
+  /*
   let asd = dialog.showOpenDialog({
     properties: ["openFile"],
     filters: [{ name: "xhtml Files", extensions: ["xhtml"] }],
+  });*/
+
+  //this hardcodes the location of picked file, i did this, to make it easier to work with
+  //this will be removed in actual code
+  asd = new Promise((value) => {
+    const path = {
+      canceled: false,
+      filePaths: ["C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml"],
+    };
+    value(path);
   });
 
   asd.then((selectedFile) => {
     //this file is the one that should be selected, move this code above!
-
     let src = selectedFile["filePaths"][0];
 
     //this opperation cuts of the last bit of the string, that contains the filename
     let srcSplit = src.split("\\");
 
-    //fs.copyFile(src, dest, (err) => {
-
     if (fs.existsSync(src)) {
-      fs.readFile(src, "utf8", (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        //split file at linebreaks to parse it line by line
-        dataSplit = data.split("\n");
-        if (checkIfImage(dataSplit)) {
-          importDependencies(dataSplit, src);
-          importedFiles.push(src);
-          console.log("Sucess!");
-          EPUBMaker.createFileStructure();
-          EPUBMaker.importSelectedFiles(importedFiles);
-        } else {
-          //please select an image file!!
-          console.log("Please Select an xhtml containing an image!");
-        }
-      });
-    }
+      let data = fs.readFileSync(src, "utf8");
 
-    //
-    //
-    //TODO: Move this to the place where stuff is getting sorted!
-    // This is only here for testing porposes!
-    //also: check if path is even set or files have already been created
+      //split file at linebreaks to parse it line by line
+      dataSplit = data.split("\n");
+      if (checkIfImage(dataSplit)) {
+        //the generation should happen somewhere else, put afterwards
+        EPUBMaker.createFileStructure();
+
+        //this is responsible for adding every file to the list of imported files
+        importDependencies(dataSplit, src);
+        importedFiles.push(src);
+
+        console.log("Imported Files:");
+        importedFiles.forEach((filename) => {
+          console.log(filename.substring(filename.lastIndexOf("\\") + 1, filename.length));
+        });
+        console.log("");
+
+        //here, all of the entries in the array will be moved to the new folder and sorted accordingly
+        //paths contained in js and css will be replaced with old ones.
+        EPUBMaker.importSelectedFiles(importedFiles);
+      } else {
+        //please select an image file!!
+        console.log("Please Select an xhtml containing an image!");
+      }
+    }
   });
 });
 

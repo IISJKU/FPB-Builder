@@ -50,7 +50,6 @@ let menuItems = [
 
 //TODO
 //Actually write this
-//this is also the wrong header!!
 //prettier-ignore
 function createTOC() {
   let fileContents =
@@ -95,7 +94,7 @@ function createTOC() {
 //dynamically creates the xml inside the content.txt file!
 
 // prettier-ignore
-function createContentFile() {
+function createContentFile(files) {
   let header = "<?xml version='1.0' encoding='utf-8'?>\n" + '<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="pub-id" xml:lang="' + language + '">\n';
   let startMetadataTag = '  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ibooks="http://apple.com/ibooks/html-extensions">\n\n';
   let endPackageTag ="</package>";
@@ -144,21 +143,41 @@ function createContentFile() {
     '   <meta property="schema:accessibilityAPI">ARIA</meta>\n' +
     '   <meta property="schema:accessibilitySummary">Les illustrations sont décrites.</meta>\n';// translate this
     
-  let closeMetadata = "  </metadata>\n";
+  let closeMetadata = "  </metadata>\n\n";
   let metaData = startMetadataTag + metaDataContents + closeMetadata;
     
   
+  //here, stuff from the "files"-array will be written to the file
   let startManifestTag = "  <manifest>\n";
-  let importedItems = "\n\n   <!-- Imported items will be saved here -->\n\n\n"
+  let importedItems = "";
+  let spineContents = ''
+
+  files.forEach(filename => {
+    let line = "";
+    let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
+
+    if(filename.includes("xhtml")){
+      line = '   <item id="' + name + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="scripted svg" />';
+      spineContents = spineContents + '   <itemref idref="'+ name +'"/>' + "\n";
+    } else if(filename.includes("css")){
+      line = '   <item id="' + name + '" href="css/' + name + '" media-type="text/css" />';
+    }else if(filename.includes("js")){
+      line = '   <item id="' + name + '" href="Misc/' + name + '" media-type="application/javascript" />';
+    }else if(filename.includes("otf") || filename.includes(".ttf") ){
+      line = '   <item id="' + name + '" href="' + name + '" media-type="application/vnd.ms-opentype" />';
+    }
+
+    importedItems = importedItems + line + "\n";
+  });
   let endManifestTag = "  </manifest>\n\n";
   let manifest = startManifestTag + importedItems + endManifestTag;
 
   
 
   let startSpineTag = '  <spine toc="toc.ncx"></spine>\n';
-  let spineContents = '\n\n     <!-- Spine Contents here -->\n\n\n'
-  let endSpineTag = '  </spine>\n'
-  let spine = startSpineTag+spineContents+endSpineTag;
+  
+  let endSpineTag = '  </spine>\n\n'
+  let spine = startSpineTag + spineContents + endSpineTag;
 
   return header + metaData + manifest + spine + endPackageTag;
 }
