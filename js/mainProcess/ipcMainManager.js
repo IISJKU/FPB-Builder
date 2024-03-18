@@ -47,7 +47,7 @@ ipcMain.on("importFile", () => {
   asd = new Promise((value) => {
     const path = {
       canceled: false,
-      filePaths: ["C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml"],
+      filePaths: ["C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml"],
     };
     value(path);
   });
@@ -97,6 +97,8 @@ function importDependencies(lineArray, src) {
       filename = PathUtilities.cutOutFilename(element, "href");
     } else if (element.includes("<script")) {
       filename = PathUtilities.cutOutFilename(element, "src");
+    } else if (element.includes("<source")) {
+      filename = PathUtilities.cutOutFilename(element, "src");
     }
 
     if (filename != "") {
@@ -107,6 +109,7 @@ function importDependencies(lineArray, src) {
         //
         // TODO: Inform user that the file was included in a previous try
         //
+        console.log("File " + t + " was imported previously!");
       } else {
         //if it exists, add it to imported files, if not:
         //let the user manually select it.

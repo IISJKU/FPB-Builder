@@ -165,6 +165,8 @@ function createContentFile(files) {
       line = '   <item id="' + name + '" href="Misc/' + name + '" media-type="application/javascript" />';
     }else if(filename.includes("otf") || filename.includes(".ttf") ){
       line = '   <item id="' + name + '" href="' + name + '" media-type="application/vnd.ms-opentype" />';
+    } else if(filename.includes(".mp3")){
+      line = '   <item id="' + name + '" href="' + name + '" media-type="audio/mpeg" />';
     }
 
     importedItems = importedItems + line + "\n";

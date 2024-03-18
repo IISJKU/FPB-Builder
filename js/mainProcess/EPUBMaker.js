@@ -33,6 +33,7 @@ function importSelectedFiles(fileArray) {
 
   directory.then((value) => {
     fileArray.forEach((element) => {
+      rewritten = false;
       let subFolder = "";
       if (element.includes(".xhtml")) {
         rewriteDependencies(element);
@@ -45,6 +46,8 @@ function importSelectedFiles(fileArray) {
         rewritten = true;
       } else if (element.includes(".js")) {
         subFolder = "\\OEBPS\\Misc\\";
+      } else if (element.includes(".mp3") || element.includes(".wav")) {
+        subFolder = "\\OEBPS\\audio\\";
       }
 
       let i = element.lastIndexOf("\\");
@@ -54,9 +57,11 @@ function importSelectedFiles(fileArray) {
       } else {
         relAdress = value["filePaths"][0] + "\\" + newDirName + subFolder + element.slice(i, element.length);
         fs.copyFileSync(element, relAdress);
+        console.log(element);
       }
 
       relativePaths.push(relAdress);
+      tempFile = "";
     });
 
     FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/", "content.opf", EPUBFileCreator.createContentFile(fileArray.concat(fonts)));
@@ -75,7 +80,7 @@ function rewriteDependencies(filePath) {
   let hrefTag = "src";
 
   fileSplit.forEach((line) => {
-    if (line.includes("<link") || line.includes("<script")) {
+    if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
       let activeTag = line.includes(linkTag) ? linkTag : hrefTag;
 
       //<link rel="preload" href="../Misc/localforage.min.js" as="script" type="text/javascript" />;
@@ -115,9 +120,11 @@ function rewriteDependencies(filePath) {
         }
       }
       if (newName.includes(".css")) {
-        newName = "..\\css\\" + newName;
+        newName = "../css/" + newName;
       } else if (newName.includes(".js")) {
-        newName = "..\\Misc\\" + newName;
+        newName = "../Misc/" + newName;
+      } else if (newName.includes(".mp3")) {
+        newName = "../audio/" + newName;
       }
 
       tempFile = tempFile + firstPart + activeTag + '="' + newName + '"' + lastPart + "\n";
