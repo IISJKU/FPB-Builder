@@ -57,7 +57,6 @@ function importSelectedFiles(fileArray) {
       } else {
         relAdress = value["filePaths"][0] + "\\" + newDirName + subFolder + element.slice(i, element.length);
         fs.copyFileSync(element, relAdress);
-        console.log(element);
       }
 
       relativePaths.push(relAdress);
@@ -81,53 +80,67 @@ function rewriteDependencies(filePath) {
 
   fileSplit.forEach((line) => {
     if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
-      let activeTag = line.includes(linkTag) ? linkTag : hrefTag;
+      let done = false;
+      let index = 0;
+      let tempLine = line;
 
-      //<link rel="preload" href="../Misc/localforage.min.js" as="script" type="text/javascript" />;
-      //cut stuff before href tag
-      let firstPart = line.substring(0, line.indexOf(activeTag));
-      //cut stuff after href
-      let lastPart = line.substring(line.indexOf(activeTag), line.length);
-      lastPart = line.substring(line.indexOf(activeTag), line.length);
+      //this loop allows us to catch multiple tags in the same row! sometimes, there are multiple link tags in the same one
+      while (!done) {
+        let activeTag = tempLine.includes(linkTag, index) ? linkTag : hrefTag;
 
-      let start = null;
-      let end = null;
+        //cut stuff before href tag
+        let firstPart = tempLine.substring(0, tempLine.indexOf(activeTag, index));
+        //cut stuff after href
+        let lastPart = tempLine.substring(tempLine.indexOf(activeTag, index), tempLine.length);
+        lastPart = tempLine.substring(tempLine.indexOf(activeTag, index), tempLine.length);
 
-      for (let i = 0; i < lastPart.length; i++) {
-        if (lastPart[i] == "'" || lastPart[i] == '"') {
-          if (start == null) {
-            start = i;
-          } else {
-            end = i;
-            break;
+        let start = null;
+        let end = null;
+
+        for (let i = index; i < lastPart.length; i++) {
+          if (lastPart[i] == "'" || lastPart[i] == '"') {
+            if (start == null) {
+              start = i;
+            } else {
+              end = i;
+              break;
+            }
           }
         }
-      }
 
-      lastPart = lastPart.substring(end + 1, lastPart.length);
+        lastPart = lastPart.substring(end + 1, lastPart.length);
 
-      let name = line.substring(firstPart.length, line.length - lastPart.length);
-      let newName = "";
-      let open = false;
+        let name = line.substring(firstPart.length, tempLine.length - lastPart.length);
+        let newName = "";
+        let open = false;
 
-      for (let i = name.length - 1; i > 0; i--) {
-        if (!open && (name[i] == "'" || name[i] == '"')) {
-          open = true;
-        } else if (open && (name[i] == "\\" || name[i] == "/")) {
-          break;
-        } else if (open) {
-          newName = name[i] + newName;
+        for (let i = name.length - 1; i > 0; i--) {
+          if (!open && (name[i] == "'" || name[i] == '"')) {
+            open = true;
+          } else if (open && (name[i] == "\\" || name[i] == "/")) {
+            break;
+          } else if (open) {
+            newName = name[i] + newName;
+          }
+        }
+        if (newName.includes(".css")) {
+          newName = "../css/" + newName;
+        } else if (newName.includes(".js")) {
+          newName = "../Misc/" + newName;
+        } else if (newName.includes(".mp3")) {
+          newName = "../audio/" + newName;
+        }
+
+        tempLine = firstPart + activeTag + '="' + newName + '"' + lastPart;
+
+        index = tempLine.indexOf(activeTag, index) + 1;
+
+        if (!tempLine.includes(linkTag, index) && !tempLine.includes(hrefTag, index)) {
+          done = true;
         }
       }
-      if (newName.includes(".css")) {
-        newName = "../css/" + newName;
-      } else if (newName.includes(".js")) {
-        newName = "../Misc/" + newName;
-      } else if (newName.includes(".mp3")) {
-        newName = "../audio/" + newName;
-      }
 
-      tempFile = tempFile + firstPart + activeTag + '="' + newName + '"' + lastPart + "\n";
+      tempFile = tempFile + tempLine + "\n";
     } else {
       tempFile = tempFile + line + "\n";
     }
@@ -169,7 +182,6 @@ function importFonts(element, newPath) {
         let secondBracket = line.indexOf(")");
         //+ line.substring(secondBracket, line.length)
         tLine = line.substring(0, firstBracketIndex + 1) + '"' + relPath + '"' + line.substring(secondBracket, line.length);
-        //console.log();
         fs.copyFileSync(path, newPath + "\\" + newDirName + "\\OEBPS\\fonts\\" + path.substring(path.lastIndexOf("\\", path.length)));
         relativePaths.push(relPath);
       }

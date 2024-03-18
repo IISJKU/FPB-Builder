@@ -1,5 +1,6 @@
+//version of the same function, but with an offset!
 function cutOutFilename(str, tag) {
-  let index = str.search(tag);
+  let index = str.indexOf(tag);
   let filename = "";
   let open = false;
 

@@ -44,85 +44,109 @@ ipcMain.on("importFile", () => {
 
   //this hardcodes the location of picked file, i did this, to make it easier to work with
   //this will be removed in actual code
-  asd = new Promise((value) => {
+  selectedFiles = new Promise((value) => {
     const path = {
       canceled: false,
-      filePaths: ["C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml"],
+      filePaths: [
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page03-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page04-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page05-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page06-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page07-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page08-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page09-fig.xhtml",
+      ],
     };
     value(path);
   });
 
-  asd.then((selectedFile) => {
-    //this file is the one that should be selected, move this code above!
-    let src = selectedFile["filePaths"][0];
+  //the generation should happen somewhere else
+  EPUBMaker.createFileStructure();
 
-    //this opperation cuts of the last bit of the string, that contains the filename
-    let srcSplit = src.split("\\");
+  selectedFiles.then((selectedFile) => {
+    selectedFile["filePaths"].forEach((file) => {
+      if (fs.existsSync(file)) {
+        let data = fs.readFileSync(file, "utf8");
 
-    if (fs.existsSync(src)) {
-      let data = fs.readFileSync(src, "utf8");
-
-      //split file at linebreaks to parse it line by line
-      dataSplit = data.split("\n");
-      if (checkIfImage(dataSplit)) {
-        //the generation should happen somewhere else, put afterwards
-        EPUBMaker.createFileStructure();
-
-        //this is responsible for adding every file to the list of imported files
-        importDependencies(dataSplit, src);
-        importedFiles.push(src);
-
-        console.log("Imported Files:");
-        importedFiles.forEach((filename) => {
-          console.log(filename.substring(filename.lastIndexOf("\\") + 1, filename.length));
-        });
-        console.log("");
-
-        //here, all of the entries in the array will be moved to the new folder and sorted accordingly
-        //paths contained in js and css will be replaced with old ones.
-        EPUBMaker.importSelectedFiles(importedFiles);
-      } else {
-        //please select an image file!!
-        console.log("Please Select an xhtml containing an image!");
+        //split file at linebreaks to parse it line by line
+        dataSplit = data.split("\n");
+        if (checkIfImage(dataSplit)) {
+          //this is responsible for adding every file to the list of imported files
+          importDependencies(dataSplit, file);
+          console.log(importedFiles);
+          importedFiles.push(file);
+        } else {
+          //please select an image file!!
+          console.log("Please Select an xhtml containing an image!");
+        }
       }
-    }
+    });
   });
+
+  //here, all of the entries in the array will be moved to the new folder and sorted accordingly
+  //paths contained in js and css will be replaced with old ones.
+  EPUBMaker.importSelectedFiles(importedFiles);
 });
 
 //looks through the line-array of the file, and finds the absolute path of the dependencies
 function importDependencies(lineArray, src) {
   lineArray.forEach((element) => {
+    let done = false;
+    let index = 0;
+    let round = 0;
     let filename = "";
-    if (element.includes("<link")) {
-      filename = PathUtilities.cutOutFilename(element, "href");
-    } else if (element.includes("<script")) {
-      filename = PathUtilities.cutOutFilename(element, "src");
-    } else if (element.includes("<source")) {
-      filename = PathUtilities.cutOutFilename(element, "src");
-    }
+    //this while loop allows us to look for multiple imports per line!
+    while (!done) {
+      filename = "";
 
-    if (filename != "") {
-      let t = PathUtilities.getAbsolutePath(src, filename);
-      //check if the file was already imported!
+      //check if line has tag after index
+      let tline = element.substring(index, element.length);
 
-      if (importedFiles.includes(t)) {
-        //
-        // TODO: Inform user that the file was included in a previous try
-        //
-        console.log("File " + t + " was imported previously!");
-      } else {
-        //if it exists, add it to imported files, if not:
-        //let the user manually select it.
-        //
-        // TODO: prompt the user to select it!!
-        //
-        if (fs.existsSync(t)) {
-          importedFiles.push(t);
-        } else {
-          console.log("Success: False");
-          //prompt user to select it here!
-        }
+      if (tline.includes("<link", index)) {
+        filename = PathUtilities.cutOutFilename(tline, "href");
+        index = tline.indexOf("href");
+      } else if (tline.includes("<script", index)) {
+        filename = PathUtilities.cutOutFilename(tline, "src");
+        index = tline.indexOf("src");
+      } else if (tline.includes("<source", index)) {
+        filename = PathUtilities.cutOutFilename(tline, "src");
+        index = tline.indexOf("src");
       }
+      index = index + 1;
+
+      if (filename != "") {
+        let t = PathUtilities.getAbsolutePath(src, filename);
+        //check if the file was already imported!
+        if (round == 1) {
+          console.log(t);
+        }
+
+        if (importedFiles.includes(t)) {
+          //
+          // TODO: Inform user that the file was included in a previous try
+          //
+          //console.log("file already contained " + t);
+        } else {
+          //if it exists, add it to imported files, if not:
+          //let the user manually select it.
+          //
+          // TODO: prompt the user to select it!!
+          //
+
+          if (fs.existsSync(t)) {
+            importedFiles.push(t);
+          } else {
+            console.log("Success: False");
+            //prompt user to select it here!
+          }
+        }
+      } else {
+        done = true;
+      }
+      round = round + 1;
+      filename = "";
     }
   });
 }
