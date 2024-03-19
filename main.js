@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { report } = require('node:process');
 const path = require('node:path');
 
@@ -18,6 +18,9 @@ const createWindow = () => {
     mainWindow.loadFile('index.html');
     // Open the DevTools.
     //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.on('did-finish-load', function() {
+        
+    });
 }
 
 app.whenReady().then(() => {
@@ -28,4 +31,5 @@ app.on('window-all-closed', () => {
     // if not macOS
     if (process.platform !== 'darwin') app.quit()
 })
+
 

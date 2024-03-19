@@ -7,11 +7,8 @@ To use Electron, you need to install Node.js
 Install electon globally  
 - npm install -g electron 
 
-Install Bower to manage front-end dependencies
-- npm install -g bower
-
-Install the latest stable version of bootstrap through bower components
-- bower install bootstrap
+Install the latest version of bootstrap 
+- npm install bootstrap
 
 Install jquery
 - npm install --save jquery

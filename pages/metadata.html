@@ -1,0 +1,43 @@
+<form>
+    <div class="row" >
+        <div class="col-md-12" id="">
+            <div class="row">
+                <div class="col-md-4">
+                    Available metadata
+                    <select id="itemBox" multiple="multiple" class="form-control" size=13>
+                    <option value="contributor">Contributor</option>
+                    <option value="creator">Creator</option>
+                    <option value="publisher">Publisher</option>
+                    <option value="publishingDate">Publishing date</option>
+                    <option value="subject">Subject</option>
+                    <option value="type">Type</option>
+                    <option class="bi bi-person-wheelchair" value="mode">Mode </option>
+                    <option class="bi bi-person-wheelchair" value="feature"><label class="bi bi-person-wheelchair" alt="accessibility"></label> Feature </option>
+                    <option class="bi bi-person-wheelchair" value="hazard">Hazard </option>
+                    <option class="bi bi-person-wheelchair" value="summary">Summary <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
+                    <option class="bi bi-person-wheelchair" value="modeSufficient">Mode Sufficient <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
+                    <option class="bi bi-person-wheelchair" value="conformsTo">Conforms to <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
+                    <option class="bi bi-person-wheelchair" value="certifiedBy">Certified by <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
+                    </select>
+                </div>
+                <div class="col-md-2 btnColumn">
+                    <a id="addBtn" class="btn btn-block btn-primary">Add >> </a>
+                    <a id="removeBtn" onclick="removeBtn()" class="btn btn-block btn-primary"><< Remove</a>
+                </div>
+                <div class="col-md-6" id="selectedBoxColumn">
+                    Added metadata
+                    <select id="selectedBox" multiple="multiple" class="form-control" size=13>
+                    </select>
+                </div>
+            </div>
+           <!--- <div class="row"> -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="metadataInfo">Info</label>
+                        <textarea class="form-control" id="metadataInfo" rows="3" readonly> This textarea value cannot be changed</textarea>
+                      </div>
+                </div>
+           <!--- </div> -->
+        </div>
+    </div>
+</form>

@@ -1,11 +1,12 @@
-const bootstrap = require('./bower_components/bootstrap/dist/js/bootstrap.bundle.js');
+const { ipcRenderer } = require("electron");
+const bootstrap = require('./node_modules/bootstrap/dist/js/bootstrap.bundle.js');
+window.$ = window.jquery = require("jquery");
 
-var triggerTabList = [].slice.call(document.querySelectorAll('#listTab a'))
-triggerTabList.forEach(function (triggerEl) {
-    var tabTrigger = new bootstrap.Tab(triggerEl)
 
-    triggerEl.addEventListener('click', function (event) {
-        event.preventDefault()
-        tabTrigger.show()
-    })
-})
+document.addEventListener("DOMContentLoaded", function(e) {
+});
+
+window.onload = function(){
+  $("#project-tab").load("pages/project.html");
+  $("#metadata-tab").load("pages/metadata.html");
+}

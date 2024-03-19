@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "jquery-ui-dist": "^1.13.2"
   },
   "name": "fpb-builder",
   "description": "Toolkit for publishing Flexi Picture eBooks",
@@ -12,5 +14,9 @@
     "start": "electron ."
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^29.1.4",
+    "electron-dialog": "^2.0.0"
+  }
 }
