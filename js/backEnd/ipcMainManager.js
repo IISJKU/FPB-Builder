@@ -25,9 +25,106 @@ ipcMain.on("printDirectory", () => {
   }
 });
 
+//make an object that holds everything of the double page
+function Page(Image, Text) {
+  this.Image = Image;
+  this.Text = Text;
+}
+
+function Image(src, altText) {
+  this.src = src;
+  this.altText = altText;
+}
+
+function Text(title, lang, text, audio) {
+  this.title = title;
+  this.lang = lang;
+  this.text = text; //test with multi line inputs
+  this.audio = audio;
+}
+
 //Here, the Files will be generated, this is still under construction!
 ipcMain.on("generateTestFiles", () => {
   EPUBMaker.createFileStructure();
+
+  //
+  //
+  //testing stuff
+
+  const coverImage = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\images\\cover.jpg";
+  const coverNarration = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\EMILE_-_Page_de_faux_titre_V1.mp3";
+
+  EPUBMaker.makeCover("Buchdeckel", coverImage, "Buchdeckel: Ben will eine Fledermaus", coverNarration);
+  importedFiles.push(coverImage);
+  importedFiles.push(coverNarration);
+
+  const pages = new Array();
+  altText = "This is the alt text....";
+
+  //All of this will come from the front end soon!
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml", altText),
+      new Text("page01", "de", "Hello, this is the first page!", "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3")
+    )
+  );
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml", altText),
+      new Text(
+        "page02",
+        "de",
+        "On the second page..... \n nothing particular happens!",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3"
+      )
+    )
+  );
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page03-fig.xhtml", altText),
+      new Text("page03", "de", "Im testing \n some.... \n things \n ... \n", "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page03.mp3")
+    )
+  );
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page04-fig.xhtml", altText),
+      new Text("page04", "de", "This is page 4", "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page04.mp3")
+    )
+  );
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page05-fig.xhtml", altText),
+      new Text("page05", "de", "this is the fifth one!", "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page05.mp3")
+    )
+  );
+  pages.push(
+    new Page(
+      new Image("C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page06-fig.xhtml", altText),
+      new Text("page06", "de", "Page \n \n numero 6", "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page06.mp3")
+    )
+  );
+
+  pages.forEach((page) => {
+    if (fs.existsSync(page.Image.src)) {
+      let data = fs.readFileSync(page.Image.src, "utf8");
+      //split file at linebreaks to parse it line by line
+      dataSplit = data.split("\n");
+      if (checkIfImage(dataSplit)) {
+        //this is responsible for adding every file to the list of imported files
+
+        importDependencies(dataSplit, page.Image.src);
+        importedFiles.push(page.Text);
+        importedFiles.push(page.Image.src);
+        importedFiles.push(page.Text.audio);
+        //console.log(importedFiles);
+      } else {
+        //please select an image file!!
+        console.log("Please Select an xhtml containing an image!");
+      }
+    }
+  });
+
+  EPUBMaker.importSelectedFiles(importedFiles);
 });
 
 //Allows you to import a file!#
@@ -57,6 +154,18 @@ ipcMain.on("importFile", () => {
         "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page07-fig.xhtml",
         "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page08-fig.xhtml",
         "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page09-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page10-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page11-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page12-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page13-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page14-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page15-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page16-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page17-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page18-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page19-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page20-fig.xhtml",
+        "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page21-fig.xhtml",
       ],
     };
     value(path);
@@ -69,7 +178,6 @@ ipcMain.on("importFile", () => {
     selectedFile["filePaths"].forEach((file) => {
       if (fs.existsSync(file)) {
         let data = fs.readFileSync(file, "utf8");
-
         //split file at linebreaks to parse it line by line
         dataSplit = data.split("\n");
         if (checkIfImage(dataSplit)) {

@@ -16,7 +16,7 @@ const createWindow = () => {
   //this registers all of the icpMain Messages, that can be accessed through preload
   //moved to different file for clarity
   //this is ugly, fix this
-  require("./js/mainProcess/ipcMainManager.js");
+  require("./js/backEnd/ipcMainManager.js");
 };
 
 app.whenReady().then(() => {
