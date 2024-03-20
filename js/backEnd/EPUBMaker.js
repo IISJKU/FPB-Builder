@@ -4,6 +4,7 @@ const PathUtilities = require("./pathUtilities.js");
 
 let fs = require("fs");
 const { dir } = require("console");
+let pages = [];
 
 //set this to null to let the user pick for themselves
 //let directory = null;
@@ -122,17 +123,6 @@ function importSelectedFiles(fileArray) {
       tempFile = "";
     });
 
-    //testing this out, this will later be moved somewhere else!
-    const txt = {
-      pageName: "Page 5",
-      title: "Seite05 - TEXT",
-      lang: "de",
-      id: "pg05",
-      ariaLabel: "page 5",
-      text: "Was? Eine Fledermaus?",
-      audio: "../audio/page05.mp3",
-    };
-
     //make the notice_toc file
     FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "notice_toc.xhtml", EPUBFileCreator.createNoticeToc());
     spine.push("notice_toc.xhtml");
@@ -146,6 +136,8 @@ function importSelectedFiles(fileArray) {
     spine.push("credits.xhtml");
 
     //FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "testTxt.xhtml", EPUBFileCreator.createPageText(txt));
+    FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "toc.xhtml", EPUBFileCreator.createTocXHTML(pages));
+    spine.push("toc.xhtml");
 
     FileSystemManager.makeFile(
       value["filePaths"][0] + "/" + newDirName + "/OEBPS/",
@@ -358,6 +350,11 @@ function createFileStructure() {
   });
 }
 
+function setPages(p) {
+  pages = p;
+}
+
+exports.setPages = setPages;
 exports.makeCover = makeCover;
 exports.importSelectedFiles = importSelectedFiles;
 exports.createFileStructure = createFileStructure;

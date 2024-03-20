@@ -199,7 +199,9 @@ function createContentFile(files, spineFiles) {
   spineFiles.forEach(filename => {
     let line = "";
     let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
-    line = '   <item id="' + name.substring(0, name.indexOf("\.")) + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="scripted svg" />';
+    let properties = "scripted svg";
+    if(filename == "toc.xhtml") properties = "nav"; 
+    line = '   <item id="' + name.substring(0, name.indexOf("\.")) + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="' + properties + '" />';
     spineContents = spineContents + '   <itemref idref="'+ name.substring(0, name.indexOf("\.")) +'"/>' + "\n";
     importedItems = importedItems + line + "\n";
   });
@@ -237,6 +239,24 @@ function createNotice() {
   let str = "";
 
   str = fs.readFileSync("./js/backEnd/templates/noticeGer.xhtml", "utf-8");
+
+  return str;
+}
+
+function createTocXHTML(pages) {
+  let str = "";
+  str = fs.readFileSync("./js/backEnd/templates/toc.xhtml", "utf-8");
+  str = str.replace("{lang}", language);
+  str = str.replace("{title}", title);
+
+  pagesText = "";
+
+  pages.forEach((page) => {
+    '<li><a href="' + page.Text.title + "-txt.xhtml#" + page.Text.id + '">' + page.Text.title + "</a></li>";
+  });
+
+  str = str.replace("{pages}", pagesText);
+  str = str.replace("{firspage}", pages[0].Text.title + "-txt.xhtml");
 
   return str;
 }
@@ -421,3 +441,4 @@ exports.createPageText = createPageText;
 exports.createContentFile = createContentFile;
 exports.createNotice = createNotice;
 exports.createTOC = createTOC;
+exports.createTocXHTML = createTocXHTML;

@@ -124,6 +124,7 @@ ipcMain.on("generateTestFiles", () => {
     }
   });
 
+  EPUBMaker.setPages(pages);
   EPUBMaker.importSelectedFiles(importedFiles);
 });
 
