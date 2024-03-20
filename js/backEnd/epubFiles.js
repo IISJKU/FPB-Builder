@@ -2,19 +2,19 @@ const path = require("path");
 
 let fs = require("fs");
 const { title } = require("process");
-const menuCreator = require("./menuCreator.js");
 
 //THIS IS FAKE-DATA FOR TESTING PURPOSES
 //later this info will come from the frontend
 //add posibility for multiple authors / contributors
 let bookTitle = "Ben will eine Fledermaus.";
 let language = "de"; //look into the possible languages & create an enum containing all of the possible values
-let pubISBN = "isbn:978-2-36593-153-3";
-let originalISBN = "isbn:978-2-07064-424-7";
+let pubISBN = "978-2-36593-153-3";
+let originalISBN = "978-2-07064-424-7";
 let author1 = "Les doigts qui rêvent";
 let publisher = "LDQR";
 let copyright = "2022 LDQR";
 let date = new Date().toISOString();
+let dateText = date.substring(0, date.indexOf(".")) + "Z";
 let description = "This is the description adsdfgdfhgfhgfhf";
 let contributorFirstname1 = "Pax";
 let contributorLastname1 = "Munz";
@@ -59,7 +59,7 @@ let menuItems = [
 ]; */
 
 let menuItems = [
-  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/page00.xhtml#toc-epubtools-22"),
+  new MenuItem("Einstellungen", "xhtml/page00.xhtml#toc-epubtools-22"),
   new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/notice_toc.xhtml#toc-epubtools-16"),
   new MenuItem("Menü", "xhtml/notice.xhtml#toc-epubtools-5"),
@@ -67,7 +67,7 @@ let menuItems = [
   new MenuItem("Menü Abbildungen", "xhtml/notice.xhtml#toc-epubtools-7"),
   new MenuItem("Audio-Menü", "xhtml/notice.xhtml#toc-epubtools-8"),
   new MenuItem("Während des Lesens", "xhtml/notice.xhtml#toc-epubtools-9"),
-  new MenuItem("IMPRESSUM<", "xhtml/credits.xhtml#toc-epubtools-1"),
+  new MenuItem("IMPRESSUM", "xhtml/credits.xhtml#toc-epubtools-1"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/toc.xhtml#toc-epubtools-26"),
 ];
 //TODO
@@ -93,13 +93,11 @@ function createTOC() {
 
   menuItems.forEach((item) => {
     let nav =
-      '<content src="' + item.src + '" /></navPoint>\n' +
-      '<navPoint id="navPoint' + i +
-      '" playOrder="' + i + '">\n' +
+      '<navPoint id="navPoint' + i + '" playOrder="' + i + '">\n' +
       "<navLabel>\n" +
       "<text>" + item.name + "</text>\n" +
-      "</navLabel>\n\n";
-
+      "</navLabel>\n" +
+      '<content src="' + item.src + '" /></navPoint>\n\n';
     fileContents = fileContents + nav;
 
     i++;
@@ -113,7 +111,6 @@ function createTOC() {
 
 //TODO
 //Still not finished!
-
 // prettier-ignore
 function createContentFile(files, spineFiles) {
   let header = "<?xml version='1.0' encoding='utf-8'?>\n" + '<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="pub-id" xml:lang="' + language + '">\n';
@@ -122,8 +119,8 @@ function createContentFile(files, spineFiles) {
 
   let metaDataContents =
     '   <dc:language id="pub-langage">' + language + "</dc:language>\n" +
-    '   <dc:identifier id="pub-id">urn:' + pubISBN + "</dc:identifier>\n" +
-    '   <dc:source id="src-id">urn:' + originalISBN + "</dc:source>\n" +
+    '   <dc:identifier id="pub-id">urn:isbn:' + pubISBN + "</dc:identifier>\n" +
+    '   <dc:source id="src-id">urn:isbn:' + originalISBN + "</dc:source>\n" +
     "\n" +
     '   <dc:title id="titre">'+ bookTitle + '</dc:title>\n' + //Here, id-tags are used: look into, whether or not we should replace them dynamically
     '   <meta refines="#titre" property="title-type">main</meta>\n' +
@@ -141,8 +138,8 @@ function createContentFile(files, spineFiles) {
     "   <dc:publisher>" + publisher + "</dc:publisher>\n" +
     "   <dc:rights>Copyright ©" + copyright +"</dc:rights>\n" +
     "\n" +
-    "   <dc:date>" + date.split("T")[0] + "</dc:date>\n" +
-    '   <meta property="dcterms:modified">'+ date +'</meta>\n' +
+    "   <dc:date>" + dateText + "</dc:date>\n" +
+    '   <meta property="dcterms:modified">'+ dateText +'</meta>\n' +
     '   <dc:description id="description">' + description + '</dc:description>\n' +
     '   <dc:contributor id="'+contributor1ID + '">' + contributorLastname1 + ", " + contributorFirstname1 + '"</dc:contributor>\n' +
     '   <meta scheme="marc:relators" property="role" refines="#'+ contributor1ID + '">mrk</meta>\n' +
@@ -208,8 +205,7 @@ function createContentFile(files, spineFiles) {
   });
 
   let additionalImports = 
-  '   <item id="toc.ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />\n' + //those are the kind of files that will be in every epub
-  '   <item id="cover.jpg" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image" />';
+  '   <item id="toc.ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />\n'; //those are the kind of files that will be in every epub
 
   let endManifestTag = "  </manifest>\n\n";
   let manifest = startManifestTag + additionalImports + importedItems + endManifestTag;
@@ -222,9 +218,79 @@ function createContentFile(files, spineFiles) {
   return header + metaData + manifest + spine + endPackageTag;
 }
 
+//this reads page00 from a template,
+function createPage00() {
+  let str = "";
+
+  str = fs.readFileSync("./js/backEnd/templates/page00.xhtml", "utf-8");
+  str = str.replace("{title}", title);
+
+  return str;
+}
+
 //this is just a wrapper, to make it more easily accassible
+//
+// TODO: Make Language Dependent on active one!
+//
+//
 function createNotice() {
-  return menuCreator.createNotice();
+  let str = "";
+
+  str = fs.readFileSync("./js/backEnd/templates/noticeGer.xhtml", "utf-8");
+
+  return str;
+}
+
+//add the file that displays the credits
+function createCredits() {
+  let str = "";
+
+  str = fs.readFileSync("./js/backEnd/templates/credits.xhtml", "utf-8");
+
+  let tempCredits = [
+    'Digitaler illustrierter Band aus der Reihe <span lang="fr">Les Doigts Qui Rêvent</span> (Frankreich)',
+    "Validierung: pagina EPUB-Checker version 2.0.6 und Ace by DAISY Version 1.1.5",
+    'Digitaler Band "Ben will eine Fledermaus", eine in Texten und Abbildungen adaptierte ePub3-Version des Kinderbuchs <span lang="fr">"Émile veut une chauve-souris"</span> von <span lang="fr">Vincent Cuvellier</span> und <span lang="fr">Ronan Badel</span>, erschienen im Verlag <span lang="fr">Gallimard</span>, Frankreich.',
+    '<b class="ldqr-font-bold">Gestaltung und Produktion der adaptierten Illustrationen</b> von <span lang="fr">Yuvanoe</span> und <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, Frankreich)',
+    '<b class="ldqr-font-bold">Erzählt von Synchronsprecherin</b> Wanda Dziak',
+    '<b class="ldqr-font-bold">Sound-Design</b> (Stimmen, Effekte, Atmo und Tonmischung) des französischen Originals durch <span lang="fr">Ludovic Rocca</span> (<span lang="fr">Benjamin media</span>, Frankreich)',
+    '<b class="ldqr-font-bold">Design des digitalen Buchs im französischen Original</b> durch <span lang="fr">Ludovic Bal</span> (<span lang="fr">Réseau Canopé</span> - Frankreich).',
+    'Wir danken den Autoren <span lang="fr">Vincent Cuvellier</span> und <span lang="fr">Ronan Badel</span> sowie dem Verlag <span lang="fr">Gallimard</span> für die Erlaubnis, diese Adaption vorzunehmen.',
+    "Dieses Projekt wurde im Rahmen von ERASMUS PLUS (Call 2022) der Europäischen Union gefördert. Wir danken für die Unterstützung, ohne die dieses Projekt nicht möglich gewesen wäre.",
+    "This is a line of debug code added by Max Punz, to see whether or not this works!",
+  ];
+
+  let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
+  let count = 1;
+
+  tempCredits.forEach((credit) => {
+    let t = "";
+    if (count < 10) {
+      t = "0" + count;
+    } else {
+      t = count;
+    }
+    text = text + '        <p class="tsl_sentence' + t + '">' + credit + "</p>\n";
+    count = count + 1;
+  });
+
+  str = str.replace("{credits}", text);
+
+  return str;
+}
+
+//
+//
+// TODO: Make Language Dependent on active one!
+//
+function createNoticeToc() {
+  let str = "";
+
+  str = fs.readFileSync("./js/backEnd/templates/noticeGer.xhtml", "utf-8");
+  str = str.replace("{title}", bookTitle);
+  str = str.replace("{lang}", language);
+
+  return str;
 }
 
 //returns the html of the page0X-txt.html files as a string
@@ -232,7 +298,6 @@ function createNotice() {
 //prettier-ignore
 function createPageText(obj){
   let str = "";
-
   
   let text = obj.text; //test with multi line inputs
 
@@ -346,6 +411,9 @@ function createCover(title, cover, altText, audio){
   return str;
 }
 
+exports.createPage00 = createPage00;
+exports.createCredits = createCredits;
+exports.createNoticeToc = createNoticeToc;
 exports.createCover = createCover;
 exports.containerFile = containerFileXML;
 exports.iBooksOptions = iBooksOptions;

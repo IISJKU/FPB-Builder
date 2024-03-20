@@ -1,0 +1,158 @@
+/* span */
+span.couleurBg_ou {
+  background: yellow;
+}
+span.couleurBg_oo {
+  background: yellow;
+}
+span.couleurBg_oin {
+  background: #ec3eb8;
+}
+span.couleurBg_in {
+  background: #c0c0c0;
+}
+span.couleurBg_ain {
+  background: #c0c0c0;
+}
+span.couleurBg_ein {
+  background: #c0c0c0;
+}
+span.couleurBg_ien {
+  background: #c0c0c0;
+}
+span.couleurBg_im {
+  background: #c0c0c0;
+}
+span.couleurBg_ym {
+  background: #c0c0c0;
+}
+span.couleurBg_en_in {
+  background: #c0c0c0;
+}
+span.couleurBg_un {
+  background: #c0c0c0;
+}
+span.couleurBg_oi {
+  background: brown;
+}
+span.couleurBg_oy {
+  background: brown;
+}
+span.couleurBg_en {
+  background: #008000;
+}
+span.couleurBg_em {
+  background: #008000;
+}
+span.couleurBg_an {
+  background: #00ff00;
+}
+span.couleurBg_am {
+  background: #00ff00;
+}
+span.couleurBg_o {
+  background: blue;
+}
+span.couleurBg_au {
+  background: blue;
+}
+span.couleurBg_eau {
+  background: blue;
+}
+span.couleurBg_é {
+  background: #be81d4;
+}
+span.couleurBg_es {
+  background: #be81d4;
+}
+span.couleurBg_er {
+  background: #be81d4;
+}
+span.couleurBg_ez {
+  background: #be81d4;
+}
+span.couleurBg_ai {
+  background: #800080;
+}
+span.couleurBg_est {
+  background: #800080;
+}
+span.couleurBg_et {
+  background: #800080;
+}
+span.couleurBg_es_ai {
+  background: #800080;
+}
+span.couleurBg_e_ai {
+  background: #800080;
+}
+span.couleurBg_è {
+  background: #800080;
+}
+span.couleurBg_ê {
+  background: #800080;
+}
+span.couleurBg_ë {
+  background: #800080;
+}
+span.couleurBg_ei {
+  background: #800080;
+}
+span.couleurBg_ay {
+  background: #800080;
+}
+span.couleurBg_ey {
+  background: #800080;
+}
+span.couleurBg_eu {
+  background: #808080;
+}
+span.couleurBg_oeu {
+  background: #808080;
+}
+span.couleurBg_Œu {
+  background: #808080;
+}
+span.couleurBg_ue {
+  background: #808080;
+}
+span.couleurBg_eu {
+  background: orange;
+}
+span.couleurBg_oeu {
+  background: orange;
+}
+span.couleurBg_Œu {
+  background: orange;
+}
+span.couleurBg_ue {
+  background: orange;
+}
+span.couleurBg_on {
+  background: red;
+}
+span.couleurBg_om {
+  background: red;
+}
+span.couleurBg_ch {
+  background: #fa7ad4;
+}
+span.couleurBg_ill {
+  background: #66e0fe;
+}
+span.couleurBg_ph {
+  background: #8f9af9;
+}
+span.couleurBg_gn {
+  background: #9fbf48;
+}
+.texte span.couleur_muet {
+  color: #c0c0c0;
+}
+
+
+/* commun */
+.gras{
+    font-weight: bold;
+}
+

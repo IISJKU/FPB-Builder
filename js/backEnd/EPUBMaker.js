@@ -31,8 +31,6 @@ function getDirectory() {
   return directory;
 }
 
-function makePages() {}
-
 //makes cover and page00
 function makeCover(title, cover, altText, audio) {
   directory.then((value) => {
@@ -41,8 +39,11 @@ function makeCover(title, cover, altText, audio) {
       "cover.xhtml",
       EPUBFileCreator.createCover(title, cover, altText, audio)
     );
-    spine.push("cover.xhtml");
+    FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
   });
+
+  spine.push("cover.xhtml");
+  spine.push("page00.xhtml");
 }
 
 //copy all of the files to the dedicated folders!
@@ -52,7 +53,9 @@ function importSelectedFiles(fileArray) {
 
   //import the images needed for the settings / notice
   fileArray = fileArray.concat(pathsToNoticeImages());
-  console.log(fileArray);
+
+  //import js and css needed for the menu
+  fileArray = fileArray.concat(pathsToMenuDependencies());
 
   directory.then((value) => {
     fileArray.forEach((element) => {
@@ -60,11 +63,9 @@ function importSelectedFiles(fileArray) {
       let subFolder = "";
       //handle txt.xhtml files
       if (typeof element != "string") {
-        console.log("Works!");
         //
         // Import Text file here!
         //
-        console.log(element.title);
         FileSystemManager.makeFile(
           value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/",
           element.title + "-txt.xhtml",
@@ -73,7 +74,11 @@ function importSelectedFiles(fileArray) {
 
         spine.push("..\\OEBPS\\xhtml\\" + element.title + "-txt.xhtml");
       } else {
+        //look at where the name should be cut!
         let i = element.lastIndexOf("\\");
+        if (element.includes("/")) {
+          i = element.lastIndexOf("/");
+        }
 
         //handle files where path was given!
         if (element.includes(".xhtml")) {
@@ -128,9 +133,17 @@ function importSelectedFiles(fileArray) {
       audio: "../audio/page05.mp3",
     };
 
+    //make the notice_toc file
+    FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "notice_toc.xhtml", EPUBFileCreator.createNoticeToc());
+    spine.push("notice_toc.xhtml");
+
     //make the notice file
     FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "notice.xhtml", EPUBFileCreator.createNotice());
     spine.push("notice.xhtml");
+
+    //make the credits
+    FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "credits.xhtml", EPUBFileCreator.createCredits());
+    spine.push("credits.xhtml");
 
     //FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "testTxt.xhtml", EPUBFileCreator.createPageText(txt));
 
@@ -264,6 +277,10 @@ function pathsToNoticeImages() {
     "./js/backEnd/images/notice/home.svg",
     "./js/backEnd/images/notice/logo_erasmusplus.svg"
   );
+}
+
+function pathsToMenuDependencies() {
+  return new Array("./js/backEnd/imports/colorisation.min.js", "./js/backEnd/imports/colorisation.css");
 }
 
 //goes through css files line by line, looks for a font-face tag, ads fonts to array & changes location in file
