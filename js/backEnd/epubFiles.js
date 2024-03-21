@@ -173,7 +173,7 @@ function createContentFile(files, spineFiles) {
   files.forEach(filename => {
     let line = "";
     let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
-    if(filename.includes("/images/notice/")){
+    if(filename.includes("/")){
       name = filename.substring(filename.lastIndexOf('/') + 1, filename.length);
     }
 
@@ -186,9 +186,11 @@ function createContentFile(files, spineFiles) {
     } else if(filename.includes(".mp3")){
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if(filename.includes(".jpg")){
-      line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/jpeg" />';
+      if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/jpeg" />';
+      else line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/jpeg" />'
     }else if(filename.includes(".png")){
-      line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/png" />'
+      if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/png" />';
+      else line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/png" />';
     }else if(filename.includes(".svg")){
       line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/svg+xml" />'
     }
@@ -201,6 +203,7 @@ function createContentFile(files, spineFiles) {
     let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
     let properties = "scripted svg";
     if(filename == "toc.xhtml") properties = "nav"; 
+    if(filename == "cover.xhtml" || filename == "notice_toc.xhtml") properties = "scripted"; 
     line = '   <item id="' + name.substring(0, name.indexOf("\.")) + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="' + properties + '" />';
     spineContents = spineContents + '   <itemref idref="'+ name.substring(0, name.indexOf("\.")) +'"/>' + "\n";
     importedItems = importedItems + line + "\n";
@@ -225,7 +228,7 @@ function createPage00() {
   let str = "";
 
   str = fs.readFileSync("./js/backEnd/templates/page00.xhtml", "utf-8");
-  str = str.replace("{title}", title);
+  str = str.replaceAll("{title}", title);
 
   return str;
 }
@@ -246,17 +249,17 @@ function createNotice() {
 function createTocXHTML(pages) {
   let str = "";
   str = fs.readFileSync("./js/backEnd/templates/toc.xhtml", "utf-8");
-  str = str.replace("{lang}", language);
-  str = str.replace("{title}", title);
+  str = str.replaceAll("{lang}", language);
+  str = str.replaceAll("{title}", title);
 
   pagesText = "";
 
   pages.forEach((page) => {
-    '<li><a href="' + page.Text.title + "-txt.xhtml#" + page.Text.id + '">' + page.Text.title + "</a></li>";
+    pagesText = pagesText + '<li><a href="' + page.Text.title + "-txt.xhtml#" + page.Text.title + '">' + page.Text.title + "</a></li>\n";
   });
 
-  str = str.replace("{pages}", pagesText);
-  str = str.replace("{firspage}", pages[0].Text.title + "-txt.xhtml");
+  str = str.replaceAll("{pages}", pagesText);
+  str = str.replaceAll("{firstpage}", pages[0].Text.title + "-txt.xhtml");
 
   return str;
 }
@@ -294,7 +297,7 @@ function createCredits() {
     count = count + 1;
   });
 
-  str = str.replace("{credits}", text);
+  str = str.replaceAll("{credits}", text);
 
   return str;
 }
@@ -306,9 +309,9 @@ function createCredits() {
 function createNoticeToc() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/noticeGer.xhtml", "utf-8");
-  str = str.replace("{title}", bookTitle);
-  str = str.replace("{lang}", language);
+  str = fs.readFileSync("./js/backEnd/templates/noticeTocGer.xhtml", "utf-8");
+  str = str.replaceAll("{title}", bookTitle);
+  str = str.replaceAll("{lang}", language);
 
   return str;
 }

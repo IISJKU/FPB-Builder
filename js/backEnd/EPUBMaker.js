@@ -1,9 +1,10 @@
 const FileSystemManager = require("./fileSystemManager.js");
 const EPUBFileCreator = require("./epubFiles.js"); //VS Code gives me a warning, but its fine haha
 const PathUtilities = require("./pathUtilities.js");
-
+const ZipHandler = require("./zipHandler.js");
 let fs = require("fs");
 const { dir } = require("console");
+const { net } = require("electron/main");
 let pages = [];
 
 //set this to null to let the user pick for themselves
@@ -53,7 +54,7 @@ function importSelectedFiles(fileArray) {
   tempFile = "";
 
   //import the images needed for the settings / notice
-  fileArray = fileArray.concat(pathsToNoticeImages());
+  fileArray = fileArray.concat(pathsToImages());
 
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
@@ -237,8 +238,18 @@ function pickTempName() {
   });
 }
 
-function pathsToNoticeImages() {
+function pathsToImages() {
   return new Array(
+    "./js/backEnd/images/version01-coul.png",
+    "./js/backEnd/images/version01-nb.png",
+    "./js/backEnd/images/version02-coul.png",
+    "./js/backEnd/images/version02-nb.png",
+    "./js/backEnd/images/version03-coul.png",
+    "./js/backEnd/images/version03-nb.png",
+    "./js/backEnd/images/version04-coul.png",
+    "./js/backEnd/images/version04-nb.png",
+    "./js/backEnd/images/version05-coul.png",
+    "./js/backEnd/images/version05-nb.png",
     "./js/backEnd/images/notice/image020.jpg",
     "./js/backEnd/images/notice/image022.jpg",
     "./js/backEnd/images/notice/image024.jpg",
@@ -252,6 +263,7 @@ function pathsToNoticeImages() {
     "./js/backEnd/images/notice/image042.jpg",
     "./js/backEnd/images/notice/image043.jpg",
     "./js/backEnd/images/notice/image044.jpg",
+    "./js/backEnd/images/notice/image045.jpg",
     "./js/backEnd/images/notice/image046.jpg",
     "./js/backEnd/images/notice/image047.jpg",
     "./js/backEnd/images/notice/image050.jpg",
@@ -272,7 +284,14 @@ function pathsToNoticeImages() {
 }
 
 function pathsToMenuDependencies() {
-  return new Array("./js/backEnd/imports/colorisation.min.js", "./js/backEnd/imports/colorisation.css");
+  return new Array(
+    "./js/backEnd/imports/colorisation.min.js",
+    "./js/backEnd/imports/colorisation.css",
+    "./js/backEnd/templates/page00_svg.css",
+    "./js/backEnd/templates/page00.min.js",
+    "./js/backEnd/templates/radiobutton.js",
+    "./js/backEnd/templates/radiogroup.js"
+  );
 }
 
 //goes through css files line by line, looks for a font-face tag, ads fonts to array & changes location in file
@@ -326,7 +345,9 @@ function createFileStructure() {
     tempDir = value["filePaths"][0] + "\\" + newDirName + "\\";
 
     //create top layer in folder structure
-    FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
+
+    //the mimetype will be added when zipping!
+    //FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
     //TODO: Create META INF Folder, and put files in it
     FileSystemManager.makeFolder(tempDir, "META-INF");
     FileSystemManager.makeFile(tempDir + "\\META-INF\\", "container.xml", EPUBFileCreator.containerFile);
@@ -345,13 +366,33 @@ function createFileStructure() {
     FileSystemManager.makeFolder(tempDir + "\\images\\", "notice");
     FileSystemManager.makeFolder(tempDir, "Misc");
     FileSystemManager.makeFolder(tempDir, "xhtml");
-
-    pickTempName();
   });
 }
 
 function setPages(p) {
   pages = p;
+}
+
+//unpack the Promises, this looks horendous :O
+function makeEPUB() {
+  let n = newDirName;
+  directory.then((value) => {
+    ZipHandler.makeEPUB(value["filePaths"][0] + "\\" + newDirName + "\\").then(() => {
+      fs.rename(value["filePaths"][0] + "\\" + newDirName + ".zip", value["filePaths"][0] + "\\" + newDirName + ".epub", (error) => {
+        if (error) {
+          // Show the error
+          console.log("What?");
+          console.log(newDirName);
+          console.log("");
+          console.log(error);
+        } else {
+          // List all the filenames after renaming
+          console.log("\nFile Renamed\n");
+          console.log(newDirName);
+        }
+      });
+    });
+  });
 }
 
 exports.setPages = setPages;
@@ -360,3 +401,4 @@ exports.importSelectedFiles = importSelectedFiles;
 exports.createFileStructure = createFileStructure;
 exports.setDirectory = setDirectory;
 exports.getDirectory = getDirectory;
+exports.makeEPUB = makeEPUB;

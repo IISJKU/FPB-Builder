@@ -126,6 +126,7 @@ ipcMain.on("generateTestFiles", () => {
 
   EPUBMaker.setPages(pages);
   EPUBMaker.importSelectedFiles(importedFiles);
+  EPUBMaker.makeEPUB();
 });
 
 //Allows you to import a file!#

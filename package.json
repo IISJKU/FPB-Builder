@@ -13,6 +13,10 @@
     "electron": "^29.1.1"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3"
+    "archiver": "^7.0.1",
+    "bootstrap": "^5.3.3",
+    "file-saver": "^2.0.5",
+    "filesaver": "^0.0.13",
+    "jszip": "^3.10.1"
   }
 }
