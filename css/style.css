@@ -1,7 +1,3 @@
-#main {
-   /* margin-top: 58px */
-}
-
 #pageContainer {
     /*padding-left: 0px;
     padding-right: 0px;
@@ -56,11 +52,21 @@
 }
 
 .logo {
-    width: -webkit-fill-available;
-    position: relative;
+    width: 100%;
     padding-right: 5px;
     padding-left: 5px;
     bottom: 0px;
+}
+
+/* @media screen and (max-width: 1024px) { 
+  
+} */
+
+.logoGroup {
+    position: absolute;
+    align-self: end;
+    margin-bottom: 7px;
+    width: 16%;
 }
 
 #tabContent {
@@ -74,10 +80,10 @@
 }
 
 .settings{
-        border: solid;
-        color: lightgray;
-        border-radius: 5px;
-        border-width: 1px;
+    border: solid;
+    color: lightgray;
+    border-radius: 5px;
+    border-width: 1px;
 }
 
 input[type=file]:after {
@@ -142,3 +148,52 @@ input[type=file]::-webkit-file-upload-button {
     padding-left: 7px;
 }
 
+.btnColumn{
+    align-self: center;
+    padding-left: 25px;
+    text-align: center;
+}
+
+#addBtn{
+    margin-bottom: 15px;
+}
+
+#selectedBoxColumn{
+    padding-right: 20px;
+}
+
+#selectedBox{
+    height: 91%;
+    max-height: 425px;
+    border: solid 0.5px #dee2e6;
+    border-radius: 0px;
+    overflow: scroll;
+}
+
+#metadataInfo{
+    resize: none; 
+}
+
+.bi-person-wheelchair::before {
+    color: blue;
+}
+
+/* th {
+    text-align: center;
+} */
+
+.bi-plus-square-fill {
+    color: blue;
+    font-size: larger;
+    float: right;
+}
+
+.bi-pencil-square, .bi-trash3-fill {
+    color: blue;
+    float: right;
+}
+
+th.required::after{
+    content:' *';
+    color:red;
+}

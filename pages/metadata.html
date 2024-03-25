@@ -1,43 +1,40 @@
 <form>
     <div class="row" >
-        <div class="col-md-12" id="">
+        <div class="col-md-6" id="metadataColumn">
             <div class="row">
-                <div class="col-md-4">
-                    Available metadata
+                <div class="col-md-8">
+                    <label for="itemBox">Available metadata</label>
                     <select id="itemBox" multiple="multiple" class="form-control" size=13>
-                    <option value="contributor">Contributor</option>
-                    <option value="creator">Creator</option>
-                    <option value="publisher">Publisher</option>
-                    <option value="publishingDate">Publishing date</option>
-                    <option value="subject">Subject</option>
-                    <option value="type">Type</option>
-                    <option class="bi bi-person-wheelchair" value="mode">Mode </option>
-                    <option class="bi bi-person-wheelchair" value="feature"><label class="bi bi-person-wheelchair" alt="accessibility"></label> Feature </option>
-                    <option class="bi bi-person-wheelchair" value="hazard">Hazard </option>
-                    <option class="bi bi-person-wheelchair" value="summary">Summary <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
-                    <option class="bi bi-person-wheelchair" value="modeSufficient">Mode Sufficient <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
-                    <option class="bi bi-person-wheelchair" value="conformsTo">Conforms to <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
-                    <option class="bi bi-person-wheelchair" value="certifiedBy">Certified by <i class="bi bi-person-wheelchair" alt="accessibility"></i></option>
+                    <option value="contributor" data-tokens="contributor">Contributor</option>
+                    <option value="creator" data-tokens="Creator">Creator</option>
+                    <option value="publisher" data-tokens="Publisher">Publisher</option>
+                    <option value="publishingdate" data-tokens="Publishing date">Publishing date</option>
+                    <!-- <option value="subject" data-tokens="Subject">Subject</option>
+                    <option value="type" data-tokens="Type">Type</option> -->
+                    <option class="bi bi-person-wheelchair" value="mode" data-tokens="Mode">Mode</option>
+                    <option class="bi bi-person-wheelchair" value="feature" data-tokens="Feature">Feature</option>
+                    <option class="bi bi-person-wheelchair" value="hazard" data-tokens="Hazard">Hazard</option>
+                    <option class="bi bi-person-wheelchair" value="summary" data-tokens="Summary">Summary</option>
+                    <option class="bi bi-person-wheelchair" value="modesufficient" data-tokens="Mode Sufficient">Mode Sufficient</option>
+                    <option class="bi bi-person-wheelchair" value="conformsto" data-tokens="Conforms to">Conforms to</option>
+                    <option class="bi bi-person-wheelchair" value="certifiedby" data-tokens="Certified by">Certified by</option>
                     </select>
                 </div>
-                <div class="col-md-2 btnColumn">
-                    <a id="addBtn" class="btn btn-block btn-primary">Add >> </a>
-                    <a id="removeBtn" onclick="removeBtn()" class="btn btn-block btn-primary"><< Remove</a>
+                <div class="col-md-4 btnColumn">
+                    <a id="addBtn" onclick="addBtn()" class="btn btn-block btn-primary" alt="Add button">Add >> </a>
+                    <a id="removeBtn" onclick="removeBtn()" class="btn btn-block btn-primary" alt="Remove button"><< Remove</a>
                 </div>
-                <div class="col-md-6" id="selectedBoxColumn">
-                    Added metadata
-                    <select id="selectedBox" multiple="multiple" class="form-control" size=13>
-                    </select>
-                </div>
-            </div>
-           <!--- <div class="row"> -->
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group mb-3">
                         <label for="metadataInfo">Info</label>
-                        <textarea class="form-control" id="metadataInfo" rows="3" readonly> This textarea value cannot be changed</textarea>
+                        <textarea class="form-control" id="metadataInfo" rows="3" readonly>A human sensory perceptual system or cognitive faculty necessary to process or perceive the content (e.g., textual, visual, auditory, tactile)</textarea>
                       </div>
                 </div>
-           <!--- </div> -->
+            </div>
         </div>
+            <div class="col-md-6" id="selectedBoxColumn">
+                <label for="selectedBox">Added metadata</label>
+                <div class="list-group" id="selectedBox"></div>
+            </div>
     </div>
 </form>
