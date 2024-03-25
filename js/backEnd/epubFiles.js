@@ -1,13 +1,22 @@
 const path = require("path");
 
 let fs = require("fs");
-const { title } = require("process");
+
+const Language = {
+  German: "de",
+  English: "en",
+  French: "fr",
+  Lithuanian: "lit",
+  Italian: "it",
+};
+
+const languagePath = "";
 
 //THIS IS FAKE-DATA FOR TESTING PURPOSES
 //later this info will come from the frontend
 //add posibility for multiple authors / contributors
-let bookTitle = "Ben will eine Fledermaus.";
-let language = "de"; //look into the possible languages & create an enum containing all of the possible values
+let title = "Ben will eine Fledermaus.";
+let language = Language.English;
 let pubISBN = "978-2-36593-153-3";
 let originalISBN = "978-2-07064-424-7";
 let author1 = "Les doigts qui rêvent";
@@ -60,7 +69,7 @@ let menuItems = [
 
 let menuItems = [
   new MenuItem("Einstellungen", "xhtml/page00.xhtml#toc-epubtools-22"),
-  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
+  new MenuItem('Anleitung zu "' + title + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/notice_toc.xhtml#toc-epubtools-16"),
   new MenuItem("Menü", "xhtml/notice.xhtml#toc-epubtools-5"),
   new MenuItem("Textmenü", "xhtml/notice.xhtml#toc-epubtools-6"),
@@ -70,8 +79,11 @@ let menuItems = [
   new MenuItem("IMPRESSUM", "xhtml/credits.xhtml#toc-epubtools-1"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/toc.xhtml#toc-epubtools-26"),
 ];
-//TODO
-//Actually write this
+
+function setLanguage(lang) {
+  language = lang;
+}
+
 //prettier-ignore
 function createTOC() {
   let fileContents =
@@ -84,7 +96,7 @@ function createTOC() {
     '    <meta name="dtb:maxPageNumber" content="0"/>\n' +
     "  </head>\n" +
     "  <docTitle>\n" +
-    "    <text>" + bookTitle + "</text>\n" +
+    "    <text>" + title + "</text>\n" +
     "  </docTitle>\n" +
     "<navMap>\n\n";
 
@@ -109,20 +121,19 @@ function createTOC() {
   return fileContents;
 }
 
-//TODO
-//Still not finished!
 // prettier-ignore
 function createContentFile(files, spineFiles) {
   let header = "<?xml version='1.0' encoding='utf-8'?>\n" + '<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="pub-id" xml:lang="' + language + '">\n';
   let startMetadataTag = '  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ibooks="http://apple.com/ibooks/html-extensions">\n\n';
   let endPackageTag ="</package>";
 
+ 
   let metaDataContents =
     '   <dc:language id="pub-langage">' + language + "</dc:language>\n" +
     '   <dc:identifier id="pub-id">urn:isbn:' + pubISBN + "</dc:identifier>\n" +
     '   <dc:source id="src-id">urn:isbn:' + originalISBN + "</dc:source>\n" +
     "\n" +
-    '   <dc:title id="titre">'+ bookTitle + '</dc:title>\n' + //Here, id-tags are used: look into, whether or not we should replace them dynamically
+    '   <dc:title id="titre">'+ title + '</dc:title>\n' + //Here, id-tags are used: look into, whether or not we should replace them dynamically
     '   <meta refines="#titre" property="title-type">main</meta>\n' +
     "\n" +
     '   <dc:creator id="auteur1">' + author1 + '</dc:creator>\n' +
@@ -187,6 +198,7 @@ function createContentFile(files, spineFiles) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if(filename.includes(".jpg")){
       if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/jpeg" />';
+      else if(filename.includes("cover.jpg"))line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/jpeg" properties="cover-image" />';
       else line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/jpeg" />'
     }else if(filename.includes(".png")){
       if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/png" />';
@@ -227,7 +239,7 @@ function createContentFile(files, spineFiles) {
 function createPage00() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/page00.xhtml", "utf-8");
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
 
   return str;
@@ -241,15 +253,17 @@ function createPage00() {
 function createNotice() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/noticeGer.xhtml", "utf-8");
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/notice.xhtml", "utf-8");
+  str = str.replace("{title}", title);
 
   return str;
 }
 
 function createTocXHTML(pages) {
   let str = "";
-  str = fs.readFileSync("./js/backEnd/templates/toc.xhtml", "utf-8");
-  str = str.replaceAll("{lang}", language);
+
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
+
   str = str.replaceAll("{title}", title);
 
   pagesText = "";
@@ -268,7 +282,7 @@ function createTocXHTML(pages) {
 function createCredits() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/credits.xhtml", "utf-8");
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/credits.xhtml", "utf-8");
 
   let tempCredits = [
     'Digitaler illustrierter Band aus der Reihe <span lang="fr">Les Doigts Qui Rêvent</span> (Frankreich)',
@@ -309,9 +323,8 @@ function createCredits() {
 function createNoticeToc() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/noticeTocGer.xhtml", "utf-8");
-  str = str.replaceAll("{title}", bookTitle);
-  str = str.replaceAll("{lang}", language);
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/notice_toc.xhtml", "utf-8");
+  str = str.replaceAll("{title}", title);
 
   return str;
 }
@@ -434,6 +447,7 @@ function createCover(title, cover, altText, audio){
   return str;
 }
 
+exports.setLanguage = setLanguage;
 exports.createPage00 = createPage00;
 exports.createCredits = createCredits;
 exports.createNoticeToc = createNoticeToc;

@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" xml:lang="de" lang="de">
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" xml:lang="lt" lang="lt">
 
 <head>
-  <title class="tslt_configuration">Einstellungen</title>
+  <title class="tslt_configuration">Nustatymai</title>
   <link type="text/javascript" href="../Misc/localforage.min.js" rel="preload" as="script" />
   <link type="text/javascript" href="../Misc/ldqr.min.js" rel="preload" as="script" />
   <link id="mainCss" type="text/css" href="../css/ldqr_main.min.css" rel="stylesheet" />
   <link id="couleurCssSvg" type="text/css" href="../css/page00_svg.css" rel="stylesheet" />
-  <link type="text/css" href="../css/colorisation.css" rel="stylesheet" />
   <script src="../Misc/SVGPanZoom.min.js"></script>
   <script src="../Misc/localforage.min.js" type="text/javascript"></script>
-  <script src="../Misc/colorisation.min.js" type="text/javascript"></script>
   <script src="../Misc/radiobutton.js" type="text/javascript"></script>
   <script src="../Misc/radiogroup.js" type="text/javascript"></script>
   <script src="../Misc/ldqr.min.js" type="text/javascript"></script>
   <script src="../Misc/page00.min.js" type="text/javascript"></script>
   <style>
-    .tslt_texte_exemple{
-      font-size: 24pt;
-    }
     #monTexte {
       /* position: absolute; */
-      width:100%;
+      width: 100%;
       height: 100%;
       /* min-height: 200px;
       max-height: 300px; */
@@ -30,33 +25,36 @@
       border-top-width: 1px;
     }
 
+    .pa-menu-bouton {
+      transform-origin: center;
+      transform: scale(1.5);
+      transform-box: fill-box;
+    }
+
     body,
     html {
       height: 98vh;
     }
+
   </style>
 </head>
 
 <body class="body">
-  <audio preload="auto" id="monTexteAudio">
-    <source src="../audio/page01.mp3" type="audio/mpeg">
-    </source>
-  </audio>
   <div class="zoomElt notDisplay">
     <svg class="zoomEltSvg" aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
       <rect x="0" y="0" width="2000" fill="white" height="2000"/>
     </svg>
     <svg class="closeButtonSvg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" xml:space="preserve">
       <g id="closeButton" class="close-bouton">
-        <rect x="0" y="0" width="158" height="40" rx="5"/>
-        <text class="tslt_fermer" x="50%" y="22" text-anchor="middle" alignment-baseline="middle" font-size="20pt">Schließen</text>
+        <rect x="0" y="0" width="189.623046875" height="40" rx="5"/>
+        <text class="tslt_fermer" x="50%" y="22" text-anchor="middle" alignment-baseline="middle" font-size="20pt">Uždaryti</text>
       </g>
     </svg>
   </div>
   <section class="page00" role="doc-chapter" epub:type="chapter">
-    <h1 class="notDisplay tslt_configuration" id="toc-epubtools-22">Einstellungen</h1>
+    <h1 class="notDisplay tslt_configuration" id="toc-epubtools-22">Nustatymai</h1>
     <figure class="svg-container" id="Emile_Image">
-      <svg class="svg-content" id="Emile_Image_SVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMax meet" viewBox="0 0 748 1024">
+      <svg class="svg-content" id="Emile_Image_SVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMin meet" viewBox="0 0 748 1024">
         <defs aria-hidden="true">
           <linearGradient id="MyGradientColor" x1="0.5" x2="0" y1="0" y2=".5">
             <stop offset="50%" stop-color="red"/>
@@ -67,27 +65,35 @@
             <stop offset="50%" stop-color="white"/>
           </linearGradient>
         </defs>
-        <rect id="fondImage" x="-100" y="0" width="1000" height="2000" fill="white" stroke="none"/>
+        <rect id="fondImage" x="0" y="0" width="748" height="1024" fill="white" stroke="none"/>
         <g class="st1" id="Accueil">
           <g class="st1 svg-bouton pa-menu-bouton" id="TexteBoutonChoix">
-            <rect x="122.5" y="100" width="105" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-            <text class="tslt_texte" alignment-baseline="middle" text-anchor="middle" x="175" y="135" font-family="Luciole" font-size="24pt">TEXT</text>
+            <g transform="translate(-50 0)">
+              <rect x="92.78369140625" y="100" width="154.4326171875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_texte" alignment-baseline="middle" text-anchor="middle" x="170" y="135" font-family="Luciole" font-size="20pt">Tekstas</text>
+            </g>
           </g>
           <g class="st1 svg-bouton pa-menu-bouton" id="ImageBoutonChoix">
-            <rect x="321.5" y="100" width="107" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-            <text class="tslt_image" alignment-baseline="middle" text-anchor="middle" x="375" y="135" font-family="Luciole" font-size="24pt">BILD</text>
+            <rect x="286.34375" y="100" width="167.3125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+            <text class="tslt_image" alignment-baseline="middle" text-anchor="middle" x="370" y="135" font-family="Luciole" font-size="20pt">Vaizdas</text>
           </g>
           <g class="st1 svg-bouton pa-menu-bouton" id="AudioBoutonChoix">
-            <rect x="505.5" y="100" width="139" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-            <text class="tslt_audio" alignment-baseline="middle" text-anchor="middle" x="575" y="135" font-family="Luciole" font-size="24pt">AUDIO</text>
+            <g transform="translate(50 0)">
+              <rect x="497.61572265625" y="100" width="154.7685546875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_audio" alignment-baseline="middle" text-anchor="middle" x="575" y="135" font-family="Luciole" font-size="20pt">Garsas</text>
+            </g>
           </g>
-          <g class="st1 svg-bouton bouton-notice" id="NoticeBoutonChoix">
-            <rect x="157" y="770" width="216" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-            <text class="tslt_notice" alignment-baseline="middle" text-anchor="middle" x="265" y="805" font-family="Luciole" font-size="24pt">ANLEITUNG</text>
+          <g class="st1 svg-bouton pa-menu-bouton bouton-notice" id="NoticeBoutonChoix">
+            <g transform="translate(-80 0)">
+              <rect x="232.02490234375" y="770" width="225.9501953125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_notice" alignment-baseline="middle" text-anchor="middle" x="345" y="805" font-family="Luciole" font-size="18pt">Instrukcijos</text>
+            </g>
           </g>
-          <g class="st1 svg-bouton bouton-credits" id="CreditBoutonChoix">
-            <rect x="408" y="770" width="224" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-            <text class="tslt_credits" alignment-baseline="middle" text-anchor="middle" x="520" y="805" font-family="Luciole" font-size="24pt">IMPRESSUM</text>
+          <g class="st1 svg-bouton pa-menu-bouton bouton-credits" id="CreditBoutonChoix">
+            <g>
+              <rect x="484.8798828125" y="770" width="130.240234375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_credits" alignment-baseline="middle" text-anchor="middle" x="550" y="805" font-family="Luciole" font-size="18pt">Padėka</text>
+            </g>
           </g>
           <g class="st1" id="groupeImage" aria-hidden="true">
             <g id="emile">
@@ -163,7 +169,7 @@
                   </g>
                 </g>
               </g>
-              <g id="ombresEmile">
+              <g id="ombresEmile" class="version01">
                 <g id="ombresEmileDecor">
                   <path class="st12" d="M328.1,679.7c-2,0.8-4.2,1.7-5.1,3.7c-1.8,3.9,2.8,7.8,6.9,9.2c7.2,2.6,14.9,3.4,22.5,4.1                       c52.5,5.1,105.5,10.3,157.8,3.5c3.1-0.4,6.3-0.9,9-2.5c2.7-1.6,4.6-4.8,4-7.9c-0.4-1.7-1.4-3.1-2.6-4.3c-1.5-1.6-3.3-3-5.2-4.2                       c-0.5-0.3-1-0.6-1.5-0.9c-0.4-0.2-0.7-0.5-1.1-0.7c-0.4-0.2-0.7-0.2-1.1-0.1c-0.3,0.1-0.6,0.1-0.9,0.2c-0.1,0-0.8,0.2-0.8,0.2                       c1,1.4,1.4,3.1,1.8,4.8c0.3,1.6,0.7,3.3,0.7,4.9c0,1.6-0.4,3.4-1.4,4.7c-1.4,1.8-3.8,2.6-6.1,2.9c-0.3,0-0.5,0.1-0.8,0.1                       c-1.6,0.2-3.2,0.2-4.8,0c-0.8-0.1-1.6-0.2-2.4-0.4c-0.9-0.2-1.8-0.3-2.7-0.6c-2.7-0.9-5.3-2-7.7-3.4c-1.3-0.7-2.6-1.6-3.8-2.4                       c-0.1-0.1-0.3-0.3-0.5-0.3c-0.1,0-0.4,0.1-0.5,0.1c-0.2,0.1-0.4,0.2-0.6,0.3c-1,0.5-2.4,0.4-3.4,0.3c-1.7-0.2-3.3-0.9-4.5-2                       c-1.1-1-2-2.2-2.7-3.5c-0.4-0.8-0.8-1.5-1.1-2.3c-0.6-1.4-1.1-2.9-1.4-4.4c-0.2-0.7-0.3-1.5-0.4-2.3c-0.1-0.4-0.1-0.8-0.1-1.1                       c0-0.2,0-0.3-0.1-0.4c-0.1-0.3-0.4-0.5-0.5-0.8c0.3,3.1-1.1,6.4-3.6,8.3c-2.3,1.7-5.2,2.3-8,2.9c-2.3,0.5-4.6,0.9-7,1.4                       c-0.6,0.1-1.6,0.1-2.1,0.7c-1.8,2.2-4.3,3.9-6.7,5.3c-3.9,2.4-8.1,4.7-12.6,5.8c-2.2,0.6-4.4,0.9-6.6,0.8                       c-1.5,0-3.1-0.2-4.6-0.6c-0.7-0.2-1.5-0.4-2.2-0.7c-0.2-0.1-0.4-0.3-0.6-0.4c-0.4-0.2-1-0.3-1.4-0.5c-0.9-0.3-1.8-0.7-2.6-1.1                       c-0.9-0.4-1.8-0.8-2.5-1.5c-0.7-0.6-1.2-1.3-1.5-2.1c-0.5-1.1-0.6-2.4-0.5-3.6c0.1-0.6,0.2-1.2,0.4-1.8c0.4-1.1,1.2-2,1.7-3.1                       c0.3-0.6,0.6-1.2,0.9-1.9c0.3-0.5,0.7-1,1.1-1.4c0.2-0.2,0.4-0.4,0.6-0.6c0.1-0.1,0.2-0.2,0.3-0.3c0.1-0.1,0.2-0.3,0.3-0.5                       c0.4-0.5,1-0.8,1.4-1.4c0.1-0.1,0.1-0.2,0.1-0.2c0-0.1,0-0.2-0.1-0.2c-0.9-1.6-1.4-3.5-1.3-5.4c-0.4,0.1-0.7,0-1-0.1                       c-0.1,0-0.2,0-0.3,0c-0.8,0.1-1.5,0-2.3,0c-3.5-0.1-7-0.7-10.5-1.1c-10.8-1.1-21.7-1.1-32.5,0.1c-10.7,1.2-21.2,3.6-31.4,7.1                       C330.6,678.7,329.4,679.2,328.1,679.7z"/>
                 </g>
@@ -228,14 +234,14 @@
                 </g>
               </g>
               <g id="detail2Emile">
-                <g id="boucheEmile">
+                <g id="boucheEmile" class="version01 version02 version03">
                   <path class="st7" d="M465.2,477.4c-1.9,0.5-4,0.6-5.9,0.1c-0.7-0.2-1.6-0.3-1.8,0.4"/>
                 </g>
-                <g id="colEmile">
+                <g id="colEmile" class="version01 version02 version03 version04">
                   <path class="st7" d="M474.8,484.9c1,0.5,1.9,1,2.8,1.6c5.4,3.5,10.3,7.7,14.5,12.5c5.7-5.3,6.9-12.6,2.8-18.9"/>
                   <path class="st7" d="M452.5,484.3c2.3,1.6-0.5,2.7-1.9,3.5c-2.4,1.4-4.9,2.8-7.3,4.2c-4.1,2.3-8.3,4.8-11,8.7                       c-1-2.4-1.9-4.7-2.9-7.1c-1.3-3.2-2.7-6.7-2-10.1c0.1-0.7,1.2-4.6,1.7-5.2"/>
                 </g>
-                <g id="traitsEmile">
+                <g id="traitsEmile" class="version01 version02 version03">
                   <path class="st7" d="M471.2,484.6c-1.8-0.8-5.7,0.9-6.9,2.4c-1.2,1.5-1.7,3.5-1.8,5.5c-0.3,4.3,0.7,8.6,0.9,13                       c0.3,5.5-0.7,11.1-2.9,16.1c-0.5-2.1-0.2-4.2,0-6.3c0.6-6.9,0.4-13.8-0.8-20.6c-0.7-4.1-2.3-8.7-6.2-9.9"/>
                   <path class="st7" d="M506.7,516.6c0.7-0.5,0.8-1.4,0.8-2.2c0.3-5.7,0.6-11.5,1-17.2c2.2,5.9,3.6,12.2,4,18.5"/>
                   <path class="st7" d="M480,556.8c-0.1,3-1.1,6-2.7,8.6c-1.4,2.2-3.8,4.2-6.3,3.6"/>
@@ -252,17 +258,17 @@
                   <path class="st7" d="M489.4,400c-0.3-2.5,1.5-5.1,3.9-5.6c0.7-0.2,1.5-0.2,2,0.3c0.3,0.2,0.5,0.6,0.7,1c0.6,1.1,1,2.2,1.3,3.4">
                   </path>
                 </g>
-                <g id="boutonsTshirtEmile">
+                <g id="boutonsTshirtEmile" class="version01 version02 version03 version04">
                   <path d="M464.7,500.2c-0.7-1.5,0.2-3.5,1.8-4c1.5-0.5,3.4,0.3,4.1,1.8c1.1,2.1-0.5,5.1-2.9,5.3c-2.4,0.2-4.4-2.8-3.2-4.8                       c0.2-0.4,0.7-0.8,1.1-0.6"/>
                   <path d="M465.5,511.5c-0.7-1.5,0.2-3.5,1.8-4c1.5-0.5,3.4,0.3,4.1,1.8c1.1,2.1-0.5,5.1-2.9,5.3c-2.4,0.2-4.4-2.8-3.2-4.8                       c0.2-0.4,0.7-0.8,1.1-0.6"/>
                   <path d="M462.2,521.7c-0.7-1.5,0.2-3.5,1.8-4c1.5-0.5,3.4,0.3,4.1,1.8c1.1,2.1-0.5,5.1-2.9,5.3c-2.4,0.2-4.4-2.8-3.2-4.8                       c0.2-0.4,0.7-0.8,1.1-0.6"/>
                 </g>
-                <g id="nezEmile">
+                <g id="nezEmile" class="version01 version02 version03 version04">
                   <path class="st7" d="M455.7,415.2c2.5,7.3-0.1,15.6-4.4,22.1c-1.6,2.4-3.4,4.7-4.6,7.3c-2.3,5.3-1.7,11.7,1.6,16.4                       c3.3,4.7,9.2,7.4,14.9,7"/>
                 </g>
               </g>
               <g id="detail1Emile">
-                <g id="reliefVisageEmile">
+                <g id="reliefVisageEmile" class="version01 version02">
                   <path class="st10" d="M384.6,426c-0.1,0.1-0.2,0.3-0.2,0.4c-0.2,0.5-0.5,0.9-0.8,1.4c-0.4,0.6-0.7,1.3-1,2                       c-0.1,0.3-0.1,0.5-0.3,0.7c-0.1,0.1-0.1,0.2-0.1,0.3c0,0.2,0.1,0.4,0.3,0.6c0.3,0.2,0.6,0.3,0.9,0.4c0.7,0.1,1.5,0.3,2.1,0.7                       c0.4,0.4,0.7,1,0.6,1.6c-0.1,0.4-0.5,0.8-0.7,1.1c-0.2,0.3-0.4,0.7-0.2,1.1c0.1,0.2,0.4,0.3,0.6,0.5c0.6,0.6,1.1,1.1,1.9,1.5                       c1.2,0.7,2.8,0.8,3.9,0c1.4-1,1.4-3.2,0.6-4.7c-0.9-1.5-2.4-2.4-3.9-3.2c-0.9-0.5-1.9-1.4-1.3-2.2c0.7-0.9,2,0.2,3.2,0.4                       c1,0.2,2-0.7,2.4-1.6c0.3-0.8,0.3-1.7,0.1-2.6c-0.1-0.4-0.2-1-0.4-1.4c-0.1-0.2-0.2-0.3-0.3-0.4c0-0.1-0.2-0.6-0.2-0.6                       c-0.7,0-1.4-0.1-2.1-0.3c-0.3-0.1-0.5-0.3-0.7-0.5c-0.3-0.2-0.6-0.4-0.9-0.6c-0.3-0.2-1-0.5-1.2,0c-0.1,0.1-0.1,0.3-0.2,0.4                       c-0.1,0.1-0.2,0.1-0.4,0.2c-0.2,0.1-0.9,0.4-0.9,0.7c0,0.1,0.1,0.1,0.1,0.1c0.9,0.7,2.2,1.1,2.5,2.1c0.2,0.6,0,1.4-0.5,1.8                       c-0.4,0.3-0.9,0.5-1.4,0.3C385.6,426.2,385,425.6,384.6,426z"/>
                   <path class="st10" d="M401,409.2c1.9,0.7,4-0.5,5.6-1.7c3.2-2.3,6.3-4.6,9.5-6.9c0.6,1.2,2.2,1.5,3.5,1.1s2.3-1.4,3.3-2.2                       c3.6-2.7,8.1-3.9,12.2-5.7s8.2-4.9,9-9.3c-1.7,0-3.4,0.1-5.1,0.3c-0.4,0.1-0.9,0.1-1.2,0.3c-0.2,0.1-0.4,0.2-0.6,0.3                       c-0.4,0.2-0.9,0.5-1.3,0.8c-0.9,0.6-1.8,1.2-2.6,1.9c-0.3,0.3-0.7,0.6-1.1,0.8c-0.3,0.2-0.6,0.3-0.9,0.5                       c-0.8,0.6-1.6,1.3-2.3,2.1c-0.3,0.3-0.6,0.5-0.9,0.7c-0.4,0.2-0.8,0.2-1.1-0.1c-0.3-0.3-0.3-0.7-0.3-1c0.1-0.4,0.3-0.7,0.4-1.1                       c0.1-0.2,0.2-0.7-0.1-0.8c-0.1,0-0.2,0-0.3,0c-0.5,0-1-0.5-1.4-0.7c-0.2-0.1-0.4-0.2-0.6-0.1c-0.1,0.1-0.2,0.2-0.4,0.3                       c-0.3,0.2-0.6,0.4-0.8,0.6c-0.5,0.5-1,1-1.5,1.5c-1.3,1.3-2.7,2.6-4.2,3.8c-0.2,0.1-0.3,0.1-0.5,0.1s-0.3-0.1-0.5-0.2                       c-0.2-0.2-0.3-0.6-0.2-0.9c0.1-0.3,0.3-0.6,0.4-0.9c0.1-0.3,0.1-0.7-0.1-0.9c-0.1-0.2-0.4-0.2-0.6-0.2c-0.1,0-0.2,0.1-0.2,0.2                       c-0.2,0.1-0.6,0.2-0.8,0.3c-0.4,0.1-0.7,0.3-1.1,0.4c-0.2,0.1-0.5,0.2-0.7,0.3c-0.2,0.1-0.5,0.1-0.7,0.2                       c-0.2,0.1-0.4,0.4-0.6,0.6c-0.2,0.2-0.4,0.4-0.6,0.6c-1.6,1.6-3.1,3.3-4.7,5c-0.7,0.8-1.4,1.5-2.1,2.3                       c-0.7,0.8-1.3,1.6-1.9,2.5c-0.1,0.2-0.2,0.3-0.4,0.5c-0.1,0.2-0.2,0.4-0.3,0.5c-0.2,0.3-0.3,0.6-0.4,0.9                       C402,406.2,400.6,409.1,401,409.2z"/>
                   <path class="st10" d="M478.4,378.4c-0.1-0.1-0.3-0.2-0.4-0.4c-0.1,0.1-0.2,0.2-0.3,0.3c-0.1,0.1-0.3,0.2-0.4,0.3                       c-0.2,0.1-0.4,0.2-0.6,0.3c0,0,0.3,0.8,0.3,0.9c0.1,0.3,0.2,0.5,0.3,0.7c0.2,0.6,0.4,1.3,0.5,1.9c0.1,0.3,0.1,0.6,0,0.9                       c-0.1,0.3-0.4,0.5-0.7,0.5c-0.2,0-0.3-0.2-0.5-0.3c-1-0.9-1.9-1.8-2.8-2.9c-0.2-0.2-0.4-0.4-0.6-0.5c-0.2-0.1-0.4-0.1-0.6-0.1                       c-0.9,0-1.7-0.4-2.5-0.9c-1.2-0.7-1.2,0.8-1,1.8c0.4,1.6,1.8,3.2,2.7,4.5c1.3,1.7,2.8,3.3,4.5,4.6c0.1-0.6,0.2-1.2,0.3-1.8                       c0.1-0.5,0.1-1,0.3-1.4c0-0.2,0.1-0.3,0.1-0.5c0.2-0.3,0.5-0.6,0.8-0.8c0.9-0.4,1.9-0.4,2.7,0.1c0.2,0.1,0.3,0.1,0.5,0.2                       c0.3,0.1,0.5,0.2,0.7,0.3c0.5,0.2,1,0.5,1.6,0.7c0.5,0.2,1.1,0.4,1.5,0.7c0.2,0.1,0.4,0.2,0.6,0.2c0.4,0.1,0.8,0.1,1.2,0                       c0.7-0.2,1.2-0.8,1.4-1.4c0.1-0.4,0.1-0.8,0.2-1.2c0.3-1.7,1.9-3.1,3.6-3.4c1-0.2,2-0.1,3,0.1c0.5,0.1,1,0.3,1.4,0.5                       c0.5,0.2,0.9,0.5,1.3,0.7c1.3,0.7,2.6,1.6,3.9,2.5c2.3,1.6,4.6,3.2,6.9,4.8c1.2,0.8,2.3,1.6,3.5,2.4c0.5,0.4,1.1,0.7,1.6,1.1                       c0.1,0.1,0.1,0.1,0.2,0.2c0.5,0.8,1.3,1.4,2,1.9c0.4,0.3,0.8,0.5,1.2,0.6c0.5,0.2,1,0.3,1.5,0.2c0.5-0.1,0.8-0.5,1.2-0.8                       c0.7-0.7,1.5-1.4,2.5-1.7c0.4-0.2,0.9-0.2,1.4-0.2c0.5,0,0.9,0.2,1.3,0.4c0.4,0.1,0.7,0.3,1.1,0.5c0.5,0.3,0.9,0.5,1.4,0.8                       c1.9,1,3.7,2.1,5.5,3.1c1.8,1.1,3.6,2.2,5.4,3.3c1.8,1.1,3.6,2.3,5.3,3.5c1.8,1.2,3.5,2.4,5.2,3.7c0.9,0.7,1.8,1.4,2.7,2.1                       c1.8,1.4,4.3,2.8,6.1,1.5c-0.1,0-0.3-0.4-0.4-0.4c-0.1-0.1-0.3-0.3-0.4-0.4c-0.2-0.3-0.5-0.6-0.7-0.8c-0.2-0.2-0.2-0.4-0.4-0.6                       c-0.3-0.3-0.6-0.5-0.8-0.7c-1.7-1.4-3.3-2.7-5-4c-1.7-1.3-3.4-2.6-5.1-3.9c-1.7-1.3-3.4-2.6-5.2-3.9s-3.5-2.5-5.2-3.8                       c-1.8-1.2-3.5-2.5-5.3-3.7c-1.8-1.2-3.6-2.4-5.4-3.6c-0.9-0.6-1.8-1.2-2.7-1.7c-0.5-0.3-0.9-0.6-1.4-0.9                       c-0.8-0.5-1.6-0.9-2.4-1.4c-1.1-0.7-2.3-1.3-3.4-2c-0.5-0.3-1-0.6-1.5-0.6c-0.7,0-1.3,0.6-1,1.3c0.1,0.3,0.3,0.5,0.5,0.7                       c0.1,0.1,0.2,0.3,0.3,0.4c0.6,0.8,1.2,1.7,1.9,2.5c1.3,1.6,2.7,3.2,4.1,4.7c0.3,0.3,0.7,0.7,0.5,1.1c-0.1,0.4-0.6,0.6-1,0.5                       c-0.4-0.1-0.8-0.3-1.1-0.6c-0.3-0.2-0.5-0.4-0.8-0.6c-1.7-1.3-3.4-2.7-5-4.1c-0.8-0.7-1.6-1.4-2.4-2.2                       c-0.4-0.4-0.8-0.7-1.2-1.1c-0.5-0.6-1.1-1-1.7-1.4c-1.1-0.8-2.2-1.7-3.2-2.5c-0.9-0.6-1.7-1.3-2.6-1.9                       c-0.4-0.3-0.9-0.6-1.3-0.9c-0.2-0.1-0.3-0.2-0.5-0.3c-0.4-0.2-0.9-0.6-1.3-0.8c-0.5-0.3-1.1-0.7-1.6-0.9                       c-1.3-0.6-2.8-0.9-4.3-0.8c-0.3,0-0.6,0.1-0.8,0.3c-0.2,0.2-0.3,0.5-0.3,0.8c-0.1,1.3,0.2,2.6,0.8,3.8c0.2,0.3,0.4,0.7,0.4,1                       c0,0.4-0.3,0.8-0.7,0.7c-0.1,0-0.3-0.1-0.4-0.2c-1.3-1.1-2.6-2.2-3.9-3.3c-0.9-0.9-1.9-1.9-3.2-2.1c-0.4-0.1-0.8,0-0.9,0.3                       c-0.1,0.1-0.1,0.3,0,0.4c0.2,1.3,1,2.4,1.8,3.4c1,1.3,2.1,2.6,3.1,3.9c0.2,0.2,0.4,0.5,0.4,0.8c0.1,0.3,0,0.6-0.3,0.8                       c-0.2,0.1-0.5,0.1-0.8,0c-1.3-0.4-2.3-1.3-3.3-2.2C481.3,380.9,479.8,379.6,478.4,378.4z"/>
@@ -272,7 +278,7 @@
                   <circle class="st10" cx="425.6" cy="436" r="6.5"/>
                   <circle class="st10" cx="497.2" cy="436" r="6.5"/>
                 </g>
-                <g id="couleurCheveuxEmile">
+                <g id="couleurCheveuxEmile" class="version01 version02">
                   <path class="st14" d="M497.6,372.5c-0.5-0.6-1.3-1.1-2.1-1.3c-0.1-0.7,0.7-1.1,1.3-1.3c2.2-0.5,4.7,0.2,6.4,1.7                       c1.7,1.5,2.7,3.9,2.5,6.1c-2.6-2.9-6.1-5.1-9.9-6.1c-0.4,0,0.4-2-0.1-1.9C496.1,370.8,496.6,372.2,497.6,372.5z">
                   </path>
                   <path class="st14" d="M529,385.8c-0.2-0.4-0.4-0.8-0.6-1.1c-1.7-3-4.7-6.3-8.1-7.4c-1.2-0.4-1.5,0.4-1.3,1.6                       c0.3,1.8,1.9,2.3,3.3,3C524.6,383.1,526.8,384.5,529,385.8z"/>
@@ -349,30 +355,30 @@
                 </g>
               </g>
               <g id="detailCS2">
-                <g id="AileTraitsCS">
+                <g id="AileTraitsCS" class="version01 version02">
                   <path class="st7" d="M361.4,286.5c12.3,8.6,24.7,18,32.3,31"/>
                   <path class="st7" d="M323.2,314.3c10.4,10.2,18,23.3,21.8,37.4"/>
                   <path class="st7" d="M209.3,293.4c-3.8,5.5-7.7,11.1-10.7,17.1c-2.5,5-4.4,10.3-5.6,15.8"/>
                   <path class="st7" d="M178.4,276.9c-2.6,2.4-6.8,5.3-9.3,7.7c-2.9,2.8-7.4,7.1-9.7,10.4c-2.6,3.8-9.1,17.5-10.6,21.9">
                   </path>
                 </g>
-                <g id="oreillesTraitsCS">
+                <g id="oreillesTraitsCS" class="version01 version02">
                   <path class="st7" d="M253.4,294.6c-1.5,3.1-1.8,6.7-1,10c0.2,1.1,0.7,2.1,1,3.2c0.1,0.2,0.1,0.4,0.2,0.6c0.4,0.7,1,1.3,1.5,1.9                       c0.5,0.7,1.1,1.3,1.6,2c0.3,0.4,0.7,0.8,1.2,0.9c0.3,0,0.6-0.1,0.9-0.2c1.5-0.6,3.2-1,4.7-1.7c1.2-0.6,0.7-1.7,0.3-2.6                       c-1.3-2.7-3-5.2-4.8-7.6c-0.9-1.2-1.8-2.3-2.7-3.4c-0.5-0.5-1-1.1-1.4-1.6C254.7,296,253.4,294.8,253.4,294.6z">
                   </path>
                   <path class="st7" d="M293.5,296.4c2-1.9,4.7-2.9,7.2-3.9c-1.5,2.2-1.3,5-1.7,7.7c-0.3,2.2-1.1,4.4-2.2,6.3                       c-1,1.6-2.5,4-4.3,4.8c-1.6,0.7-3-0.6-3.7-2c-1-2.1-0.3-3.9,0.5-5.9C290.4,300.8,291.5,298.3,293.5,296.4z"/>
                 </g>
-                <g id="nezCS">
+                <g id="nezCS" class="version01 version02 version03 version04">
                   <g>
                     <path class="st10" d="M268.1,340.6c-0.3,1-0.3,2,0.1,2.9c0.4,1.1,1.4,2,2.5,2.4s2.3,0.6,3.5,0.6c1.5,0,3-0.2,4.4-0.5                         c0.9-0.2,1.9-0.5,2.5-1.2c1.2-1.3,0.9-3.1,0.3-4.6c-0.4-1-0.9-2.2-1.6-3c-0.8-0.8-2.1-1.3-3.2-1.6c-1.8-0.5-3.7-0.3-5.3,0.7                         C269.7,337.4,268.6,338.9,268.1,340.6z"/>
                   </g>
                   <ellipse cx="277.3" cy="340.2" rx="1.2" ry="1.5"/>
                   <ellipse cx="272.5" cy="340.2" rx="1.2" ry="1.5"/>
                 </g>
-                <g id="boucheCS">
+                <g id="boucheCS" class="version01 version02 version03">
                   <path class="st10" d="M273.5,351.2c-0.8-0.5-1.9-0.7-2.7-0.2c-1.1,0.8-0.8,2.6,0.2,3.5s2.4,1.1,3.8,1.2c0.7,0.1,1.3,0.1,2,0.2                       c1.9,0.2,3.9,0.4,5.5-0.7c1-0.7,1.4-1.7,0.9-2.8c-0.4-1-1.3-1.7-2.3-2c-1.3-0.4-2.3,0.2-3.1,1.3c-0.5,0.7-0.9,1.9-1.9,1.3                       C274.9,352.6,274.3,351.7,273.5,351.2z"/>
                 </g>
               </g>
-              <g id="detailCS">
+              <g id="detailCS" class="version01 version02">
                 <g id="couleurNoirOreillesCS">
                   <path d="M252.5,303.7c0.3,1.4,0.7,2.9,1,4.3c0.2,0.8,0.4,1.6,0.8,2.4c0.6,1.2,1.8,2.2,2.8,3.1c0.3,0.3,0.7,0.6,1.1,0.6                       c0.4,0.1,0.9,0,1.3-0.1c1.1-0.3,2.2-0.6,3.4-0.9c0.3-0.1,0.7-0.2,0.9-0.5c0.3-0.4,0.1-1.1-0.1-1.6c-0.5-1.2-1-2.3-1.5-3.5                       c-0.8-1.8-1.6-3.7-2.7-5.4c-1-1.4-2.3-2.9-3.9-3.7c-1.5-0.8-3,0.6-3.3,2.1C252,301.5,252.2,302.6,252.5,303.7z">
                   </path>
@@ -401,43 +407,68 @@
           </g>
         </g>
         <g class="notDisplay" id="configTexte">
-          <g id="choixPolice" role="radiogroup" aria-labelledby="textePolice" transform="translate(0,60)">
-            <text id="textePolice" class="titre-menu tslt_police" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">RICHTLINIEN</text>
+          <text class="tslt_param_texte" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Teksto nustatymai</text>
+          <g id="choixPolice" role="radiogroup" aria-labelledby="textePolice" transform="translate(0,70)">
+            <text id="textePolice" class="titre-menu tslt_police" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Šriftas</text>
             <g id="groupeLuciole">
               <g id="choixLuciole" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="150" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="85" y="80" class="ldqr-font-luciole" font-size="24pt"> Luciole </text>
+                <rect x="10" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="105" y="80" class="ldqr-font-luciole" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">Lu</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">ci</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">o</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">le</tspan> </text>
               </g>
               <g id="choixLucioleBold" aria-label="Luciole gras" role="radio" aria-checked="true" transform="translate(0,70)" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="150" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="85" y="80" class="ldqr-font-luciole ldqr-font-bold" font-size="24pt"> Luciole </text>
+                <rect x="10" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="105" y="80" class="ldqr-font-luciole ldqr-font-bold" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">Lu</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">ci</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">o</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">le</tspan> </text>
               </g>
             </g>
-            <g id="groupeVerdana" transform="translate(160,0)">
+            <g id="groupeVerdana" transform="translate(210,0)">
               <g id="choixVerdana" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="170" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="95" y="80" class="ldqr-font-verdana" font-size="24pt"> Verdana </text>
+                <rect x="10" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="105" y="80" class="ldqr-font-verdana" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">Ver</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">da</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">na</tspan> </text>
               </g>
               <g id="choixVerdanaBold" aria-label="verdana gras" role="radio" aria-checked="false" transform="translate(0,70)" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="170" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="95" y="80" class="ldqr-font-verdana ldqr-font-bold" font-size="24pt"> Verdana </text>
+                <rect x="10" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="105" y="80" class="ldqr-font-verdana ldqr-font-bold" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">Ver</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">da</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">na</tspan> </text>
               </g>
             </g>
-            <g id="groupeArialBlack" transform="translate(340,0)">
+            <g id="groupeArialBlack" transform="translate(420,0)">
               <g id="choixArialBlack" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="200" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-arial-black" font-size="24pt"> Arial Black</text>
+                <rect x="10" y="50" width="260" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="140" y="80" class="ldqr-font-arial-black" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">A</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">ri</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">al</tspan> <tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">Black</tspan> </text>
               </g>
             </g>
-            <g id="groupeOpenDys" transform="translate(340,70)">
+            <g id="groupeOpenDys" transform="translate(420,70)">
               <g id="choixOpenDys" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="200" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-                <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-dys" font-size="24pt"> OpenDys</text>
+                <rect x="10" y="50" width="260" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text alignment-baseline="middle" text-anchor="middle" x="140" y="80" class="ldqr-font-dys" font-size="24pt"><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">O</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-1">pen</tspan><tspan alignment-baseline="middle" text-anchor="middle" class="couleur-dys-0">Dys</tspan> </text>
               </g>
             </g>
           </g>
-          <g id="choixCouleurFond" role="radiogroup" aria-labelledby="texteFond" transform="translate(0,130)">
-            <text id="texteFond" class="titre-menu tslt_fond" alignment-baseline="hanging" text-anchor="start" x="10" y="140" font-family="Luciole" font-size="24pt">HINTERGRUND</text>
+          <g id="choixTexte" role="radiogroup" aria-labelledby="texteTexte" transform="translate(0,300)">
+            <text id="texteTexte" class="titre-menu tslt_texte" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Tekstas</text>
+            <g id="choixMinusculeMajuscule">
+              <g id="activerMajuscule" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-majuscule-active">
+                <rect x="10" y="50" width="325.791015625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text class="tslt_majuscule" alignment-baseline="middle" text-anchor="middle" x="172.8955078125" y="80" font-family="Luciole" font-size="22pt">DIDŽIOJI RAIDĖ</text>
+              </g>
+              <g id="activerMinuscule" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-majuscule-active">
+                <rect x="345.6806640625" y="50" width="328.638671875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+                <text id="txt_minuscule" class="tslt_minuscule" alignment-baseline="middle" text-anchor="middle" x="510" y="80" font-family="Luciole" font-size="24pt">Mažosios raidės</text>
+              </g>
+            </g>
+            <!-- <g id="choixBulleLigne" transform="translate(0,70)">
+              <g id="activerBulle" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-bulle-active">
+                <rect x="10" y="50" width="240" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
+                <text class="tslt_bulle" alignment-baseline="middle" text-anchor="middle" x="130" y="80" font-family="Luciole" font-size="24pt"> Bulle </text>
+              </g>
+              <g id="activerLigne" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-bulle-active">
+                <rect x="270" y="50" width="240" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
+                <text class="tslt_ligne" alignment-baseline="middle" text-anchor="middle" x="390" y="80" font-family="Luciole" font-size="24pt"> Ligne </text>
+              </g>
+            </g> -->
+
+          </g>
+          <g id="choixCouleurFond" role="radiogroup" aria-labelledby="texteFond" transform="translate(0,330)">
+            <text id="texteFond" class="titre-menu tslt_fond" alignment-baseline="hanging" text-anchor="start" x="10" y="140" font-family="Luciole" font-size="24pt">Fonas</text>
             <g id="bouton01Fond">
               <g transform="translate(0,70)" role="radio" aria-checked="false" aria-label="texte noir sur fond blanc" id="ldqr-couleur-fond-blanc" class="svg-bouton couleur-fond bouton-fond ldqr-couleur-fond-blanc">
                 <rect x="20" y="110" width="60" height="60" stroke="black" stroke-width="1" rx="20" ry="20"/>
@@ -464,35 +495,34 @@
             </g>
           </g>
           
-          <text class="tslt_param_texte" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">TEXTEINSTELLUNGEN</text>
-          <g transform="translate(0,425)" id="boutonValEtReinit">
-            <g id="boutonValiderConfigTexte" role="button" tabindex="0" class="bouton-fond svg-bouton bouton-valider">
-              <rect x="10" y="50" width="197" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="108.5" y="80" font-family="Luciole" font-size="24pt">Bestätigen</text>
-            </g>
-            <g role="button" tabindex="1" id="boutonReinitialiserConfigTexte" class="bouton-fond svg-bouton bouton-reinitialiser">
-              <rect x="227" y="50" width="240" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="347" y="80" font-family="Luciole" font-size="24pt">Zurücksetzen</text>
-            </g>
-          </g>
-          <g transform="translate(0,550)" id="texteBas">
-            <foreignObject x="0" y="0" width="748" height="300">
-              <!--
-                In the context of SVG embedded in an HTML document, the XHTML
-                namespace could be omitted, but it is mandatory in the
-                context of an SVG document
-              -->
+          <g transform="translate(0,730)">
+            <foreignObject x="0" y="0" width="748" height="140">
+
               <section xmlns="http://www.w3.org/1999/xhtml" id="monTexte" class="section-texte ldqr-font-luciole ldqr-font-bold">
                 <div class="texte">
-                  <p class="tslt_texte_exemple">{title}</p>
+                  <p class="tslt_texte_exemple">Emilis nori šikšnosparnio.</p>
                 </div>
               </section>
             </foreignObject>
           </g>
+
+
+          <g transform="translate(0,870)">
+            <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black"/>
+            <g id="boutonValiderConfigTexte" role="button" tabindex="0" class="bouton-fond svg-bouton bouton-valider">
+              <rect x="10" y="30" width="257.1181640625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="138.55908203125" y="70" font-family="Luciole" font-size="24pt">Patvirtinti</text>
+            </g>
+            <g role="button" tabindex="1" id="boutonReinitialiserConfigTexte" class="bouton-fond svg-bouton bouton-reinitialiser">
+              <rect x="297.1181640625" y="30" width="189.53515625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="391.8857421875" y="70" font-family="Luciole" font-size="24pt">Atkurti</text>
+            </g>
+          </g>
+
         </g>
         <g class="notDisplay" id="configImage">
           <g id="choixVersionImage" transform="translate(0,-400)">
-            <g id="groupeImage2" transform="translate(50,460)">
+            <g id="groupeImage2" transform="translate(50,380)">
               <g class="imagesVersion version01" id="images-version01-coul">
                 <image xlink:href="../images/version01-coul.png" x="-80" y="0" height="600px" width="600px"/>
               </g>
@@ -524,126 +554,139 @@
                 <image xlink:href="../images/version05-nb.png" x="-80" y="0" height="600px" width="600px"/>
               </g>
             </g>
-            <g id="boutonsCouleurImage" aria-hidden="true" class="svg-bouton" transform="translate(425,500)">
-              <g id="boutonCouleur">
-                <circle class="bouton-couleur" cx="0" cy="0" r="25"/>
-              </g>
-              <g id="boutonBW">
-                <circle class="bouton-BW" cx="0" cy="0" r="25"/>
-              </g>
-            </g>
-            <g id="boutonsAllVersion" aria-hidden="true" transform="translate(50,450)">
-              <g id="version01" class="svg-bouton def-image">
-                <circle class="fond-bouton-version" cx="0" cy="50" r="25"/>
-                <g transform="translate(0 50)">
-                  <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">1</text>
+            <g transform="translate(50,460)">
+              <g id="boutonsCouleurImage" aria-hidden="true" class="svg-bouton" transform="translate(425,500)">
+                <g id="boutonCouleur">
+                  <circle class="bouton-couleur" cx="0" cy="0" r="25"/>
+                </g>
+                <g id="boutonBW">
+                  <circle class="bouton-BW" cx="0" cy="0" r="25"/>
                 </g>
               </g>
-              <g id="version02" class="svg-bouton def-image">
-                <circle class="fond-bouton-version" cx="75" cy="50" r="25"/>
-                <g transform="translate(75 50)">
-                  <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">2</text>
+              <g id="boutonsAllVersion" aria-hidden="true" transform="translate(50,450)">
+                <g id="version01" class="svg-bouton def-image">
+                  <circle class="fond-bouton-version" cx="0" cy="50" r="25"/>
+                  <g transform="translate(0 50)">
+                    <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">1</text>
+                  </g>
                 </g>
-              </g>
-              <g id="version03" class="svg-bouton def-image">
-                <circle class="fond-bouton-version" cx="150" cy="50" r="25"/>
-                <g transform="translate(150 50)">
-                  <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">3</text>
+                <g id="version02" class="svg-bouton def-image">
+                  <circle class="fond-bouton-version" cx="75" cy="50" r="25"/>
+                  <g transform="translate(75 50)">
+                    <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">2</text>
+                  </g>
                 </g>
-              </g>
-              <g id="version04" class="svg-bouton def-image">
-                <circle class="fond-bouton-version" cx="225" cy="50" r="25"/>
-                <g transform="translate(225 50)">
-                  <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">4</text>
+                <g id="version03" class="svg-bouton def-image">
+                  <circle class="fond-bouton-version" cx="150" cy="50" r="25"/>
+                  <g transform="translate(150 50)">
+                    <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">3</text>
+                  </g>
                 </g>
-              </g>
-              <g id="version05" class="svg-bouton def-image">
-                <circle class="fond-bouton-version" cx="300" cy="50" r="25"/>
-                <g transform="translate(300 50)">
-                  <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">5</text>
+                <g id="version04" class="svg-bouton def-image">
+                  <circle class="fond-bouton-version" cx="225" cy="50" r="25"/>
+                  <g transform="translate(225 50)">
+                    <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">4</text>
+                  </g>
                 </g>
+                <g id="version05" class="svg-bouton def-image">
+                  <circle class="fond-bouton-version" cx="300" cy="50" r="25"/>
+                  <g transform="translate(300 50)">
+                    <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">5</text>
+                  </g>
+                </g>
+             
               </g>
             </g>
           </g>
           <g class="st1" id="choixImageVersion" role="radiogroup" aria-labelledby="texteVersion" transform="translate(0,610)">
-            <text id="texteVersion" class="titre-menu tslt_btn_version" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">VERSIONS-TASTE</text>
+            <text id="texteVersion" class="titre-menu tslt_btn_version" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Supaprastinimo mygtukas</text>
             <g id="activerImageVersion" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-version-active">
-              <rect x="10" y="50" width="147" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="83.5" y="80" font-family="Luciole" font-size="24pt">Ansicht</text>
+              <rect x="10" y="50" width="181.5673828125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="100.78369140625" y="80" font-family="Luciole" font-size="24pt">Matyti</text>
             </g>
             <g id="desactiverImageVersion" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-version-active">
-              <rect x="177" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="272" y="80" font-family="Luciole" font-size="24pt">Verbergen</text>
+              <rect x="201.5673828125" y="50" width="167.966796875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="285.55078125" y="80" font-family="Luciole" font-size="24pt">Slėpti</text>
             </g>
           </g>
           <g class="st1" id="choixCouleurImage" role="radiogroup" aria-labelledby="texteCouleur" transform="translate(0,740)">
-            <text id="texteCouleur" class="titre-menu tslt_btn_noir_blanc" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">SCHWARZWEISS-TASTE</text>
+            <text id="texteCouleur" class="titre-menu tslt_btn_noir_blanc" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Juodai balta mygtukas</text>
             <g id="activerCouleurImage" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-couleur-active">
-              <rect x="10" y="50" width="147" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="83.5" y="80" font-family="Luciole" font-size="24pt">Ansicht</text>
+              <rect x="10" y="50" width="181.5673828125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="100.78369140625" y="80" font-family="Luciole" font-size="24pt">Matyti</text>
             </g>
             <g id="desactiverCouleurImage" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-couleur-active">
-              <rect x="177" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="272" y="80" font-family="Luciole" font-size="24pt">Verbergen</text>
+              <rect x="201.5673828125" y="50" width="167.966796875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="285.55078125" y="80" font-family="Luciole" font-size="24pt">Slėpti</text>
             </g>
             <g>
             </g>
           </g>
-          <text class="tslt_param_image" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">BILDEINSTELLUNGEN</text>
-          <g transform="translate(0,840)">
+          <text class="tslt_param_image" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Vaizdo nustatymai</text>
+          <g transform="translate(0,870)">
+            <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black"/>
             <g id="boutonValiderConfigImage" role="button" tabindex="2" class="bouton-fond svg-bouton bouton-valider">
-              <rect x="10" y="50" width="197" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="108.5" y="80" font-family="Luciole" font-size="24pt">Bestätigen</text>
+              <rect x="10" y="30" width="257.1181640625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="138.55908203125" y="70" font-family="Luciole" font-size="24pt">Patvirtinti</text>
             </g>
             <g role="button" tabindex="3" id="boutonReinitialiserConfigImage" class="bouton-fond svg-bouton bouton-reinitialiser">
-              <rect x="227" y="50" width="240" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="347" y="80" font-family="Luciole" font-size="24pt">Zurücksetzen</text>
+              <rect x="297.1181640625" y="30" width="189.53515625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="391.8857421875" y="70" font-family="Luciole" font-size="24pt">Atkurti</text>
             </g>
           </g>
         </g>
         <g class="notDisplay" id="configAudio">
           <g class="st1" id="choixAudio" role="radiogroup" aria-labelledby="texteAudio" transform="translate(0,60)">
-            <text id="texteAudio" class="titre-menu tslt_btn_audio" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">AUDIO-TASTE</text>
+            <text id="texteAudio" class="titre-menu tslt_btn_audio" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Garso mygtukas</text>
             <g id="activerAudio" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-audio-active">
-              <rect x="10" y="50" width="147" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="83.5" y="80" font-family="Luciole" font-size="24pt">Ansicht</text>
+              <rect x="10" y="50" width="181.5673828125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="100.78369140625" y="80" font-family="Luciole" font-size="24pt">Matyti</text>
             </g>
             <g id="desactiverAudio" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-audio-active">
-              <rect x="177" y="50" width="190" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="272" y="80" font-family="Luciole" font-size="24pt">Verbergen</text>
+              <rect x="201.5673828125" y="50" width="167.966796875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="285.55078125" y="80" font-family="Luciole" font-size="24pt">Slėpti</text>
             </g>
           </g>
-          <g class="st1" id="choixVitesseAudio" transform="translate(0,180)">
-            <text class="titre-menu tslt_vitesse_lecture" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">LESEGESCHWINDIGKEIT</text>
+
+
+          
+          <!-- <g class="st1" id="choixVitesseAudio" transform="translate(0,180)">
+            <text class="titre-menu tslt_vitesse_lecture" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt"> VITESSE DE LECTURE </text>
             <g id="audioMoins" role="button" tabindex="4" class="bouton-fond svg-bouton">
-              <rect x="10" y="50" width="200" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_moins" alignment-baseline="middle" text-anchor="middle" x="110" y="80" font-family="Luciole" font-size="24pt">Langsamer</text>
+              <rect x="10" y="50" width="150" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
+              <text class="tslt_moins" alignment-baseline="middle" text-anchor="middle" x="85" y="80" font-family="Luciole" font-size="24pt"> Moins </text>
             </g>
             <g id="audioPlus" role="button" tabindex="5" class="bouton-fond svg-bouton">
-              <rect x="320" y="50" width="172" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_plus" alignment-baseline="middle" text-anchor="middle" x="406" y="80" font-family="Luciole" font-size="24pt">Schneller</text>
+              <rect x="250" y="50" width="170" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
+              <text class="tslt_plus" alignment-baseline="middle" text-anchor="middle" x="335" y="80" font-family="Luciole" font-size="24pt"> Plus </text>
             </g>
             <g id="vitesseAudioVal" class="chiffre-vitesse bouton-fond">
-              <rect x="230" y="50" width="70" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text alignment-baseline="middle" text-anchor="middle" x="265" y="80" font-family="Luciole" font-size="24pt"> 1 </text>
+              <rect x="170" y="50" width="70" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
+              <text alignment-baseline="middle" text-anchor="middle" x="205" y="80" font-family="Luciole" font-size="24pt"> 1 </text>
             </g>
-          </g>
-          <text id="paramAudio" class="tslt_param_audio" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">AUDIOEINSTELLUNGEN</text>
-          <g transform="translate(0,320)">
+          </g> -->
+          <text id="paramAudio" class="tslt_param_audio" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">Garso nustatymai</text>
+          <g transform="translate(0,870)">
+            <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black"/>
+
             <g id="boutonValiderConfigAudio" role="button" tabindex="6" aria-labelledby="paramAudio" class="bouton-fond svg-bouton bouton-valider">
-              <rect x="10" y="50" width="197" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="108.5" y="80" font-family="Luciole" font-size="24pt">Bestätigen</text>
+              <rect x="10" y="30" width="257.1181640625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="138.55908203125" y="70" font-family="Luciole" font-size="24pt">Patvirtinti</text>
             </g>
             <g aria-labelledby="paramAudio" id="boutonReinitialiserConfigAudio" role="button" tabindex="7" class="bouton-fond svg-bouton bouton-reinitialiser">
-              <rect x="227" y="50" width="240" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
-              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="347" y="80" font-family="Luciole" font-size="24pt">Zurücksetzen</text>
+              <rect x="297.1181640625" y="30" width="189.53515625" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>
+              <text class="tslt_reinitialiser" alignment-baseline="middle" text-anchor="middle" x="391.8857421875" y="70" font-family="Luciole" font-size="24pt">Atkurti</text>
             </g>
           </g>
         </g>
       </svg>
     </figure>
   </section>
- 
+  <!-- <section id="monTexte" class="notDisplay section-texte ldqr-font-luciole ldqr-font-bold">
+    <div class="texte">
+      <p class="tslt_texte_exemple">C'est quoi ?</p>
+    </div>
+  </section> -->
   <script>
     //<![CDATA[
     var mesBoutons = document.querySelectorAll(".svg-bouton");
@@ -659,7 +702,7 @@
         e.preventDefault();
       });
     }
-  
+
     //]]>
   </script>
 </body>
