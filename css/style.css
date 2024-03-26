@@ -113,12 +113,6 @@ input[type=file]::-webkit-file-upload-button {
     border-right-width: 0px;
 }
 
-#listTab{
-    /*min-height: 54%;
-    display: flex;
-    flex-direction: column;*/
-}
-
 #projectColumn{
     margin-top: 15px;
 }
