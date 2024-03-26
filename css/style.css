@@ -1,8 +1,4 @@
 #pageContainer {
-    /*padding-left: 0px;
-    padding-right: 0px;
-    margin-left: 10px;
-    margin-right: 0px;*/
     border-style: solid;
     border-width: 2px;
 }
@@ -49,10 +45,11 @@
     padding-right: 0px;
     margin-left: 12px;
     width: 80%;
+    min-height: 480px;
 }
 
 .logo {
-    width: 106%;
+    width: 107%;
     padding-right: 5px;
     padding-left: 5px;
     bottom: 0px;
@@ -73,126 +70,4 @@
 
 #tabContent {
     padding-left: 8px;
-}
-
-.settDiv{
-    display: block;
-    text-align: left;
-    border: unset;
-}
-
-.settings{
-    border: solid;
-    color: lightgray;
-    border-radius: 5px;
-    border-width: 1px;
-}
-
-input[type=file]:after {
-    content:'Browse';
-    left: 100%;
-    position: sticky;
-    background-color:#e3e3e3;
-    color:#333;
-    border:1px solid #e6e6e6;
-    border-radius:3px;
-    padding:7px 12px;
-    font-size:16px;
-}
- 
-input[type=file]::file-selector-button {
-    display: none;
-}
- 
-input[type=file]::-webkit-file-upload-button {
-   display: none;
-}
-  
-#directory{
-    padding-right: 0px;
-    border-right-width: 0px;
-}
-
-#projectColumn{
-    margin-top: 15px;
-}
-
-#recentColumn{
-    border-style: solid;
-    border-width: 2px;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    width: 48%;
-}
-
-#recentColumn .list-group {
-    border-radius: 0px;
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
-#recentColumn .list-group-item {
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
-#recentProjects{
-    margin-bottom: 5px;
-    padding-left: 7px;
-}
-
-.btnColumn{
-    align-self: center;
-    padding-left: 25px;
-    text-align: center;
-}
-
-#addBtn{
-    margin-bottom: 15px;
-}
-
-#selectedBoxColumn{
-    padding-right: 20px;
-}
-
-#selectedBox{
-    height: 91%;
-    max-height: 425px;
-    border: solid 0.5px #dee2e6;
-    border-radius: 0px;
-    overflow: scroll;
-}
-
-#metadataInfo{
-    width: 435px;
-    height: 104px;
-    margin: 0 auto;
-    overflow: auto;
-    border: 1px solid #dee2e6;
-    padding: 2px;
-    text-align: justify;
-    background: transparent;
-}
-
-.bi-person-wheelchair::before {
-    color: blue;
-}
-
-.bi-plus-square-fill {
-    color: blue;
-    font-size: larger;
-    float: right;
-}
-
-.bi-pencil-square, .bi-trash3-fill {
-    color: blue;
-    float: right;
-}
-
-th.required::after{
-    content:' *';
-    color:red;
 }
