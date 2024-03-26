@@ -52,15 +52,17 @@
 }
 
 .logo {
-    width: 100%;
+    width: 106%;
     padding-right: 5px;
     padding-left: 5px;
     bottom: 0px;
 }
 
-/* @media screen and (max-width: 1024px) { 
-  
-} */
+ @media (min-width: 1290px) { 
+  .logo {
+    width: 77%;
+  }
+} 
 
 .logoGroup {
     position: absolute;
@@ -171,16 +173,19 @@ input[type=file]::-webkit-file-upload-button {
 }
 
 #metadataInfo{
-    resize: none; 
+    width: 435px;
+    height: 104px;
+    margin: 0 auto;
+    overflow: auto;
+    border: 1px solid #dee2e6;
+    padding: 2px;
+    text-align: justify;
+    background: transparent;
 }
 
 .bi-person-wheelchair::before {
     color: blue;
 }
-
-/* th {
-    text-align: center;
-} */
 
 .bi-plus-square-fill {
     color: blue;

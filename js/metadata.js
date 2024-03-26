@@ -17,6 +17,22 @@ var bookDetails={
     4: "Agata Lia",
   },
 };
+var infoText ='More';
+var infoObj={
+  'title': "Represents an instance of a name for the EPUB publication. <a href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
+  'identifier': "Contains an identifier such as a UUID, DOI or ISBN. <a href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
+  'contributor': "Represent the name of a person, organization, etc. that played a secondary role in the creation of the content. <a href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" + infoText + "</a>",
+  'creator': "Represents the name of a person, organization, etc. responsible for the creation of the content. <a href='https://www.w3.org/TR/epub-33/#dfn-dc-creator'>" + infoText + "</a>",
+  'publisher': "Refer to a publishing company or organization, or to an individual who leads a publishing company. <a href='https://www.w3.org/TR/epub-33/#sec-opf-dcmes-optional-def'>" + infoText + "</a>",
+  'publishingdate': "Defines the publication date of the EPUB publication. The publication date is not the same as the last modified date. <a href='https://www.w3.org/TR/epub-33/#dfn-dc-date'>" + infoText + "</a>",
+  'mode': "A human sensory perceptual system or cognitive faculty necessary to process or perceive the content (e.g., textual, visual, auditory, tactile). <a href='https://schema.org/accessMode'>" + infoText + "</a>",
+  'feature': "Features and adaptations that contribute to the overall accessibility of the content (e.g., alternative text, extended descriptions, captions). <a href='https://schema.org/accessibilityFeature'>" + infoText + "</a>",
+  'hazard': "Any potential hazards that the content presents (e.g., flashing, motion simulation, sound). <a href='https://schema.org/accessibilityHazard'>" + infoText + "</a>",
+  'summary': "A human-readable summary of the accessibility that complements, but does not duplicate, the other discoverability metadata. It also describes any known deficiencies (e.g., lack of extended descriptions, specific hazards). <a href='https://schema.org/accessibilitySummary'>" + infoText + "</a>",
+  'modesufficient': "A set of one or more access modes sufficient to consume the content without significant loss of information. The publication can have more than one set of sufficient access modes for its consumption depending on the types of content it includes. <a href='https://schema.org/accessModeSufficient'>" + infoText + "</a>",
+  'conformsto': "Identify the accessibility requirements or guidelines the publication follows. <a href='https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/conformsTo/'>" + infoText + "</a>",
+  'certifiedby': "Identifies a party responsible for the testing and certification of the accessibility of an EPUB publication. <a href='https://www.w3.org/TR/epub-a11y-11/#certifiedBy'>" + infoText + "</a>",
+};
 
 if (!sessionStorage.getItem("bookDetails")){
   sessionStorage.setItem("bookDetails", (JSON.stringify(bookDetails)));
@@ -57,8 +73,13 @@ function removeBtn(){
 
 function createTable(tableTitle, elemID){
   var bookDetObj = parseBookData()
+  // check if the table doesn't have values
   if (bookDetObj[tableTitle] == undefined) {
     createNewTable(tableTitle, elemID);
+    return;
+  }
+  // check if the table is already exisit for the table title
+  if (checkAddedList(tableTitle) == 1){
     return;
   }
   var tbl = document.createElement('table');
@@ -74,7 +95,9 @@ function createTable(tableTitle, elemID){
     tr.appendChild(th);
     var td = document.createElement('td');
     td.appendChild(document.createTextNode(bookDetObj[tableTitle][val]));
-    createIcon(td, 'bi bi-trash3-fill','delete entry')
+    if (!reqMeta.includes(tableTitle)){
+      createIcon(td, 'bi bi-trash3-fill','delete entry')
+    }
     createIcon(td, 'bi bi-pencil-square','#editMetaModal','edit entry')
     tr.appendChild(td)
     tbdy.appendChild(tr);
@@ -94,7 +117,9 @@ function tableHeader(tbl, tableTitle){
   }
   thdthText= document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
-  createIcon(thdth, 'bi bi-plus-square-fill', '#addMetaModal','Add new entry')
+  if (!reqMeta.includes(tableTitle)){
+    createIcon(thdth, 'bi bi-plus-square-fill', '#addMetaModal','Add new entry')
+  }
   thdtr.appendChild(thdth);
   thd.appendChild(thdtr);
   tbl.appendChild(thd);
@@ -129,6 +154,7 @@ function events(){
       $("#selectedBox .list-group-item").removeClass("active");
     }
     $(e.target).addClass("active");
+    document.getElementById("metadataInfo").innerHTML = infoObj[$(this).attr('id').toLowerCase()]
   });
 
   $("i.bi-trash3-fill").on("click", function(e) {
@@ -217,8 +243,8 @@ function updateBookData(title, key, mode, val){
   updateAddedList();
 }
 
+// update the list to get the updated values
 function updateAddedList(){
-  // Add the list again to get the updated values
   $("#selectedBox .table").each(function(){
     if ($(this)){
       var currtitle = $(this).children('thead').text();
@@ -226,4 +252,18 @@ function updateAddedList(){
       createTable(currtitle,"selectedBox");
     }
   });
+}
+
+//check if the metadata is already in the added list box
+function checkAddedList(title){
+  return $("#selectedBox #"+title).length
+}
+
+//Update info panel value
+function updateInfo(e){
+  var selectedOpts = $('#itemBox option:selected');
+  if (selectedOpts.length == 0) {
+    return;
+  }
+  document.getElementById("metadataInfo").innerHTML = infoObj[selectedOpts.val()]
 }
