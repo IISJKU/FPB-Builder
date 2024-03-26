@@ -1,14 +1,24 @@
 const Language = require("./classes/Languages.js");
 const Metadata = require("./classes/Metadata.js");
-const ProjectSettings = require("./projectSetting.js");
+const ErrorList = require("./classes/ErrorList.js");
+const storage = require("electron-json-storage");
 
-const languages = [];
-const details = ""; // maybe rename this "field"
-const metadata = [];
+let languages = [];
+let details = ""; // maybe rename this "field"
+let window;
+let metadata;
 
-function fetchDataFromFrontend() {
+function setLanguages(lang) {
+  languages = lang;
+}
+
+/**
+ *  Metadata is fetched out of the session storage.
+ * At the moment, all data used is dummy data.
+ */
+function fetchMetadataFromFrontend() {
   //get object bookDetails from session storage, but im defining it here, for testing puroses
-  var bookDetails = {
+  let bookDetails = {
     Title: {
       EN: "Little Red Riding Hood",
       IT: "Cappuccetto Rosso",
@@ -17,57 +27,113 @@ function fetchDataFromFrontend() {
       EN: "978-0-5490-2195-4",
       IT: "978-0-5490-2196-4",
     },
-    Contributor: {
-      1: "Viviano Pierpaolo",
-      2: "Maëlie Celestine",
-      3: "Vincentas Élisabeth",
-      4: "Agata Lia",
-    },
+    Contributor: ["Viviano Pierpaolo", "Maëlie Celestine", "Vincentas Élisabeth", "Agata Lia"],
   };
 
-  details = JSON.stringify(bookDetails);
-
-  //get list of selected Languages from session, now I'm going to add test language data
-  languages.push(Language.English);
-  languages.push(Language.Italian);
+  details = bookDetails;
 }
 
-//check if necessary data is here!
-function validateMetadata() {
+/**
+ * Checks if the necessary data is here.
+ * Adds an ErrorList, containing all missing Data into the storage
+ * .
+ * @returns True, if all the neccessary data is here.
+ */
+//prettier-ignore
+function validate() {
+  //fetches the error list from the session storage
+  metadata = new Metadata();
+
+  let errorList = new ErrorList();
+
+  
+  //validate unique fields
+  if (details["AccessMode"] != undefined && details["AccessMode"][lang] != undefined) {
+    metadata.identifier = details["AccessMode"][lang];
+  } else {
+    errorList.metadata.accModeMissing.push("missing");
+  }
+  if (details["AccessibilityFeature"] != undefined && details["AccessibilityFeature"][lang] != undefined) {
+    metadata.identifier = details["AccessibilityFeature"][lang];
+  } else {
+    errorList.metadata.accFeatureMissing.push("missing");
+  }
+  if (details["AccessibilityHazard"] != undefined && details["AccessibilityHazard"][lang] != undefined) {
+    metadata.identifier = details["AccessibilityHazard"][lang];
+  } else {
+    errorList.metadata.accHazardMissing.push("missing");
+  }
+  
+  if (details["AccessModeSufficient"] != undefined && details["AccessModeSufficient"][lang] != undefined) {
+    metadata.identifier = details["AccessModeSufficient"][lang];
+  } else {
+    errorList.metadata.accModeSufficcientMissing.push("missing");
+  }
+
+  //check for each language if the required metadata is here!
   languages.forEach((lang) => {
-    let meta = new Metadata();
-    let identifierCheck = false;
-    let titleCheck = false;
-
-    meta.language = lang;
-
-    //change strings in brackets, according to how they are called in the frontend
-    //this checks whether or not the fields where filled in, and should prevent problems that arise down the line
+    metadata.language.push(lang);
+    //
+    // Necessary Metadata
+    //
     if (details["Title"] != undefined && details["Title"][lang] != undefined) {
-      titleCheck = true;
-      meta.title = details["Title"][lang];
+      metadata.title.push(details["Title"][lang]);
+    } else {
+      errorList.metadata.titleMissing.push(lang);
     }
     if (details["Identifier"] != undefined && details["Identifier"][lang] != undefined) {
-      identifierCheck = true;
-      meta.identifier = details["Identifier"][lang];
-    }
-    if (details["Contributor"] != undefined && details["Contributor"][lang] != undefined) meta.contributor = details["Contributor"][lang];
-    if (details["Creator"] != undefined && details["Creator"][lang] != undefined) meta.creator = details["Creator"][lang];
-    if (details["Description"] != undefined && details["Description"][lang] != undefined) meta.description = details["Description"][lang];
-    if (details["Format"] != undefined && details["Format"][lang] != undefined) meta.format = details["Format"][lang];
-    if (details["Publisher"] != undefined && details["Publisher"][lang] != undefined) meta.format = details["Publisher"][lang];
-    if (details["Relation"] != undefined && details["Relation"][lang] != undefined) meta.relation = details["Relation"][lang];
-    if (details["Rights"] != undefined && details["Rights"][lang] != undefined) meta.rights = details["Rights"][lang];
-    if (details["Source"] != undefined && details["Source"][lang] != undefined) meta.source = details["Source"][lang];
-    if (details["Subject"] != undefined && details["Subject"][lang] != undefined) meta.subject = details["Subject"][lang];
-    if (details["Type"] != undefined && details["Type"][lang] != undefined) meta.type = details["Type"][lang];
-
-    if (!titleCheck || !identifierCheck) {
-      console.log("Important metadata is missing!");
+      metadata.identifier.push(details["Identifier"][lang]);
     } else {
-      metadata.push(meta);
+      errorList.metadata.identifierMissing.push(lang);
+    }
+    if (details["AccessibilitySummary"] != undefined && details["AccessibilitySummary"][lang] != undefined) {
+      metadata.identifier = details["AccessibilitySummary"][lang];
+    } else {
+      errorList.metadata.accSummaryMissing.push("missing");
     }
   });
+    //
+    //  Important but not mandataory
+    //
+  if (details["Contributor"] != undefined && details["Contributor"].length != 0) {
+    metadata.contributor = details["Contributor"];
+  }
+
+  if (details["Creator"] != undefined && details["Creator"].length != 0) {
+    metadata.creator = details["Creator"];
+  }
+  if (details["Description"] != undefined && details["Description"].length != 0) {
+    metadata.description = details["Description"];
+  }
+  if (details["Format"] != undefined && details["Format"].length != 0) {
+    metadata.format = details["Format"];
+  }
+  if (details["Publisher"] != undefined && details["Publisher"].length != 0) {
+    metadata.format = details["Publisher"];
+  }
+  if (details["Relation"] != undefined && details["Relation"].length != 0) {
+    metadata.relation = details["Relation"];
+  }
+  if (details["Rights"] != undefined && details["Rights"].length != 0) {
+    metadata.rights = details["Rights"];
+  }
+  if (details["Source"] != undefined && details["Source"].length != 0) {
+    metadata.source = details["Source"];
+  }
+  if (details["Subject"] != undefined && details["Subject"].length != 0) {
+    metadata.subject = details["Subject"];
+  }
+  if (details["Type"] != undefined && details["Type"].length != 0) {
+    metadata.type = details["Type"];
+  }
+
+  let er = JSON.stringify(errorList);
+  storage.set("errors", er);
+
+  console.log(metadata);
+
+
+  return errorList.isEmpty();
 }
 
 function getMetadata() {
@@ -75,5 +141,6 @@ function getMetadata() {
 }
 
 module.exports.getMetadata = getMetadata;
-module.exports.fetchDataFromFrontend = fetchDataFromFrontend;
-module.exports.validateMetadata = validateMetadata;
+module.exports.setWindow = setWindow;
+module.exports.fetchMetadataFromFrontend = fetchMetadataFromFrontend;
+module.exports.validate = validate;

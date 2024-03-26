@@ -1,0 +1,14 @@
+body {
+     user-select: none; 
+}
+
+.overalContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.titleHeader {
+    width: 100%;
+    text-align: center;
+}

@@ -3,8 +3,8 @@ const EPUBFileCreator = require("./epubFiles.js"); //VS Code gives me a warning,
 const PathUtilities = require("./utilities/pathUtilities.js");
 const ZipHandler = require("./utilities/zipHandler.js");
 let fs = require("fs");
-
-let pages = [];
+const { dir } = require("console");
+const { net } = require("electron/main");
 
 //set this to null to let the user pick for themselves
 //let directory = null;
@@ -32,6 +32,8 @@ function setDirectory(d) {
 function getDirectory() {
   return directory;
 }
+
+function setPages() {}
 
 //makes cover and page00
 function makeCover(title, cover, altText, audio) {
@@ -137,6 +139,9 @@ function importSelectedFiles(fileArray) {
     spine.push("credits.xhtml");
 
     //FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "testTxt.xhtml", EPUBFileCreator.createPageText(txt));
+    //
+    //
+    //
     FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "toc.xhtml", EPUBFileCreator.createTocXHTML(pages));
     spine.push("toc.xhtml");
 
@@ -367,10 +372,6 @@ function createFileStructure() {
     FileSystemManager.makeFolder(tempDir, "Misc");
     FileSystemManager.makeFolder(tempDir, "xhtml");
   });
-}
-
-function setPages(p) {
-  pages = p;
 }
 
 //unpack the Promises, this looks horendous :O
