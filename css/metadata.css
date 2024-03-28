@@ -36,13 +36,13 @@
     color: blue;
 }
 
-.bi-plus-square-fill {
+#selectedBox .bi-plus-square-fill {
     color: blue;
     font-size: larger;
     float: right;
 }
 
-.bi-pencil-square, .bi-trash3-fill {
+#selectedBox .bi-pencil-square, #selectedBox .bi-trash3-fill {
     color: blue;
     float: right;
 }
