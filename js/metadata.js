@@ -85,6 +85,7 @@ function createTable(tableTitle, elemID){
   var tbl = document.createElement('table');
   //tbl.style.width = '100%';
   tbl.setAttribute('class', 'table table-sm table-bordered table-striped');
+  tbl.setAttribute('contenteditable', 'true');
   tableHeader(tbl, tableTitle)
   var tbdy = document.createElement('tbody');
   for(var val in bookDetObj[tableTitle]) {
@@ -92,13 +93,14 @@ function createTable(tableTitle, elemID){
     var th = document.createElement('th');
     th.appendChild(document.createTextNode(val));
     th.setAttribute('scope','row');
+    th.setAttribute('contenteditable','false');
     tr.appendChild(th);
     var td = document.createElement('td');
     td.appendChild(document.createTextNode(bookDetObj[tableTitle][val]));
     if (!reqMeta.includes(tableTitle)){
       createIcon(td, 'bi bi-trash3-fill','delete entry')
     }
-    createIcon(td, 'bi bi-pencil-square','edit entry','#editMetaModal')
+    //createIcon(td, 'bi bi-pencil-square','edit entry','#editMetaModal')
     tr.appendChild(td)
     tbdy.appendChild(tr);
   }
@@ -112,6 +114,7 @@ function tableHeader(tbl, tableTitle){
   var thdth = document.createElement('th');
   thdth.setAttribute('scope','col');
   thdth.setAttribute('colspan','2');
+  thdth.setAttribute('contenteditable','false');
   if (reqMeta.includes(tableTitle)){
     thdth.setAttribute('class','required');
   }
@@ -144,7 +147,6 @@ function createIcon(appendElem, iconClass, alt, modalID){
     icon.setAttribute('data-bs-toggle','modal');
     icon.setAttribute('data-bs-target',modalID);
   }
-  
   appendElem.appendChild(icon);
 }
 
@@ -180,7 +182,7 @@ function events(){
     if($(this)){
       var title = $(this).closest('table').children('thead').text();
       var modalID = $(this).attr('data-bs-target');
-      setModalValues(modalID, title, '', '','add')
+      setModalValues(modalID, title, '', '','add');
     }
   });
 
