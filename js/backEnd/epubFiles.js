@@ -8,10 +8,7 @@ function setLanguage(lang) {
   language = lang;
 }
 
-//THIS IS FAKE-DATA FOR TESTING PURPOSES
-//later this info will come from the frontend
-//add posibility for multiple authors / contributors
-let title = "Ben will eine Fledermaus.";
+let title = "";
 
 let pubISBN = "";
 let originalISBN = "CHANGETHIS";
@@ -26,6 +23,7 @@ let dateText = date.substring(0, date.indexOf(".")) + "Z";
 let coverImage = "images/cover.jpg";
 
 function setMetadata(metadata) {
+  title = metadata.title[language];
   pubISBN = metadata.identifier[language];
   authors = metadata.authors;
   publisher = metadata.publisher;

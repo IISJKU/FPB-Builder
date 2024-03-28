@@ -65,12 +65,15 @@ function make() {
   let languages = [];
   languages.push(Language.English);
   languages.push(Language.Italian);
+  languages.push(Language.German);
+  languages.push(Language.French);
+  languages.push(Language.Lithuanian);
 
   MetadataManager.setLanguages(languages);
   MetadataManager.fetchMetadataFromFrontend();
 
   PageManager.fetchPageDataFromFrontend();
-
+  console.log("I do something!");
   if (MetadataManager.validate()) {
     metadata = MetadataManager.getMetadata();
 
