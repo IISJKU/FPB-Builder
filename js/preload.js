@@ -18,4 +18,7 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   generateEpub() {
     ipcRenderer.send("generateEpubs");
   },
+  selectNewPage() {
+    ipcRenderer.send("generateEpubs");
+  },
 });

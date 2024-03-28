@@ -1,0 +1,326 @@
+const FileSystemManager = require("./utilities/fileSystemUtility.js");
+const EPUBFileCreator = require("./epubFiles.js");
+let PathUtilities = require("./utilities/pathUtilities.js");
+tempFile = "";
+
+const relativePaths = new Array();
+let fonts = new Array();
+
+const fs = require("fs");
+
+//this array contains every entry that is later going to be used in the "contents.opf" file
+let contents = [];
+let spine = [];
+
+let metadata;
+let language;
+let pages = [];
+
+function initialize(metad, lang, pag) {
+  spine = [];
+  contents = [];
+  pages = [];
+  fonts = [];
+  metadata = metad;
+  language = lang;
+  pages = pag;
+}
+
+/**
+ * open the file, and replace old paths of css and js with the new paths!
+ * @param {String} filePath
+ */
+function rewriteDependencies(filePath) {
+  tempFile = "";
+  let loadedFile = fs.readFileSync(filePath, "utf8");
+
+  fileSplit = loadedFile.split("\n");
+
+  let linkTag = "href";
+  let hrefTag = "src";
+
+  fileSplit.forEach((line) => {
+    if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
+      let done = false;
+      let index = 0;
+      let tempLine = line;
+
+      //this loop allows us to catch multiple tags in the same row! sometimes, there are multiple link tags in the same one
+      while (!done) {
+        let activeTag = tempLine.includes(linkTag, index) ? linkTag : hrefTag;
+
+        //cut stuff before href tag
+        let firstPart = tempLine.substring(0, tempLine.indexOf(activeTag, index));
+        //cut stuff after href
+        let lastPart = tempLine.substring(tempLine.indexOf(activeTag, index), tempLine.length);
+        lastPart = tempLine.substring(tempLine.indexOf(activeTag, index), tempLine.length);
+
+        let start = null;
+        let end = null;
+
+        for (let i = index; i < lastPart.length; i++) {
+          if (lastPart[i] == "'" || lastPart[i] == '"') {
+            if (start == null) {
+              start = i;
+            } else {
+              end = i;
+              break;
+            }
+          }
+        }
+
+        lastPart = lastPart.substring(end + 1, lastPart.length);
+
+        let name = line.substring(firstPart.length, tempLine.length - lastPart.length);
+        let newName = "";
+        let open = false;
+
+        for (let i = name.length - 1; i > 0; i--) {
+          if (!open && (name[i] == "'" || name[i] == '"')) {
+            open = true;
+          } else if (open && (name[i] == "\\" || name[i] == "/")) {
+            break;
+          } else if (open) {
+            newName = name[i] + newName;
+          }
+        }
+        if (newName.includes(".css")) {
+          newName = "../css/" + newName;
+        } else if (newName.includes(".js")) {
+          newName = "../Misc/" + newName;
+        } else if (newName.includes(".mp3")) {
+          newName = "../audio/" + newName;
+        }
+
+        tempLine = firstPart + activeTag + '="' + newName + '"' + lastPart;
+
+        index = tempLine.indexOf(activeTag, index) + 1;
+
+        if (!tempLine.includes(linkTag, index) && !tempLine.includes(hrefTag, index)) {
+          done = true;
+        }
+      }
+
+      tempFile = tempFile + tempLine + "\n";
+    } else {
+      tempFile = tempFile + line + "\n";
+    }
+  });
+}
+
+/**
+ *  takes the array containing absolute paths (of files regardless of type) and text  as input and creates xhtml out of it
+ * @param {Array} fileArray The array of files, that can also contain text
+ * @param {Promise} directory The directory the files will be copied to!
+ * @param {String} newDirName The name of the dir, where everything will be copied into
+ */
+function createXHTMLFiles(fileArray, path, newDirName) {
+  let rewritten = false;
+  tempFile = "";
+  EPUBFileCreator.setLanguage(language);
+  EPUBFileCreator.setMetadata(metadata);
+  //import the images needed for the settings / notice
+  fileArray = fileArray.concat(pathsToImages());
+
+  //import js and css needed for the menu
+  fileArray = fileArray.concat(pathsToMenuDependencies());
+
+  const coverImage = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\images\\cover.jpg";
+  const coverNarration = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\EMILE_-_Page_de_faux_titre_V1.mp3";
+
+  spine = [];
+  contents = [];
+  fonts = [];
+
+  //make the cover
+  FileSystemManager.makeFile(
+    path + "/" + newDirName + "/OEBPS/xhtml/",
+    "cover.xhtml",
+    EPUBFileCreator.createCover(metadata.title[language], coverImage, "Buchdeckel", coverNarration)
+  );
+  spine.push("cover.xhtml");
+
+  //make page 00
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
+  spine.push("page00.xhtml");
+
+  fileArray.push(coverImage);
+  fileArray.push(coverNarration);
+  fileArray.forEach((element) => {
+    rewritten = false;
+    let subFolder = "";
+    //handle txt.xhtml files
+    if (typeof element != "string") {
+      //
+      // Import Text file here!
+      //
+      FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", element.title + "-txt.xhtml", EPUBFileCreator.createPageText(element));
+      spine.push("..\\OEBPS\\xhtml\\" + element.title + "-txt.xhtml");
+    } else {
+      //look at where the name should be cut!
+      let i = element.lastIndexOf("\\");
+      if (element.includes("/")) {
+        i = element.lastIndexOf("/");
+      }
+
+      //handle files where path was given!
+      if (element.includes(".xhtml")) {
+        rewriteDependencies(element);
+        subFolder = "\\OEBPS\\xhtml\\";
+        rewritten = true;
+        spine.push(element.slice(i, element.length));
+        //fs.copyFileSync(element, directory + "\\" + newDirName + "\\OEBPS\\xhtml" + PathUtilities.cutOutFilename(element));
+      } else if (element.includes(".css")) {
+        subFolder = "\\OEBPS\\css\\";
+        importFonts(element, path, newDirName);
+        rewritten = true;
+        contents.push("..\\OEBPS\\xhtml\\" + element);
+      } else if (element.includes(".js")) {
+        subFolder = "\\OEBPS\\Misc\\";
+        contents.push(element);
+      } else if (element.includes(".mp3") || element.includes(".wav")) {
+        subFolder = "\\OEBPS\\audio\\";
+        contents.push(element);
+      } else if (element.includes(".jpg") || element.includes(".svg") || element.includes(".svg") || element.includes(".png")) {
+        subFolder = "\\OEBPS\\images\\";
+        if (element.includes("/notice/")) {
+          subFolder = "\\OEBPS\\images\\notice\\";
+          i = element.lastIndexOf("/");
+        }
+        contents.push(element);
+      }
+
+      let relAdress = path + "\\" + newDirName + subFolder;
+
+      if (rewritten) {
+        FileSystemManager.makeFile(relAdress, element.slice(i, element.length), tempFile);
+      } else {
+        relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length);
+        fs.copyFileSync(element, relAdress);
+      }
+
+      relativePaths.push(relAdress);
+    }
+  });
+  tempFile = "";
+
+  //make the notice_toc file
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice_toc.xhtml", EPUBFileCreator.createNoticeToc());
+  spine.push("notice_toc.xhtml");
+
+  //make the notice file
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice.xhtml", EPUBFileCreator.createNotice());
+  spine.push("notice.xhtml");
+
+  //make the credits
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "credits.xhtml", EPUBFileCreator.createCredits());
+  spine.push("credits.xhtml");
+
+  //FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "testTxt.xhtml", EPUBFileCreator.createPageText(txt));
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "toc.xhtml", EPUBFileCreator.createTocXHTML(pages));
+  spine.push("toc.xhtml");
+
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "content.opf", EPUBFileCreator.createContentFile(contents.concat(fonts), spine));
+
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "toc.ncx", EPUBFileCreator.createTOC());
+}
+
+//goes through css files line by line, looks for a font-face tag, ads fonts to array & changes location in file
+function importFonts(element, newPath, newDirName) {
+  let file = fs.readFileSync(element, "utf8");
+  let fileSplit = file.split("\n");
+
+  let open = false;
+
+  fileSplit.forEach((line) => {
+    let tLine = line;
+    if (line.includes("font-face")) {
+      open = true;
+    }
+    if (open && line.includes("src")) {
+      //inside font-face tag means it has to be a link to a font!
+      let path = PathUtilities.cutOutFilename(line, "url");
+      path = PathUtilities.getAbsolutePath(element, path);
+
+      if (!fonts.includes(path)) {
+        fonts.push(path);
+
+        //paste this into the css file;
+        let relPath = "../fonts/" + path.substring(path.lastIndexOf("\\") + 1, path.length);
+        let firstBracketIndex = line.indexOf("(");
+        let secondBracket = line.indexOf(")");
+        //+ line.substring(secondBracket, line.length)
+        tLine = line.substring(0, firstBracketIndex + 1) + '"' + relPath + '"' + line.substring(secondBracket, line.length);
+        fs.copyFileSync(path, newPath + "\\" + newDirName + "\\OEBPS\\fonts\\" + path.substring(path.lastIndexOf("\\", path.length)));
+        relativePaths.push(relPath);
+      }
+    }
+
+    if (line.includes("}")) {
+      open = false;
+    }
+
+    tempFile = tempFile + tLine + "\n";
+  });
+
+  //contents.concat(fonts);
+}
+
+function pathsToMenuDependencies() {
+  return new Array(
+    "./js/backEnd/imports/colorisation.min.js",
+    "./js/backEnd/imports/colorisation.css",
+    "./js/backEnd/templates/page00_svg.css",
+    "./js/backEnd/templates/page00.min.js",
+    "./js/backEnd/templates/radiobutton.js",
+    "./js/backEnd/templates/radiogroup.js"
+  );
+}
+
+function pathsToImages() {
+  return new Array(
+    "./js/backEnd/images/version01-coul.png",
+    "./js/backEnd/images/version01-nb.png",
+    "./js/backEnd/images/version02-coul.png",
+    "./js/backEnd/images/version02-nb.png",
+    "./js/backEnd/images/version03-coul.png",
+    "./js/backEnd/images/version03-nb.png",
+    "./js/backEnd/images/version04-coul.png",
+    "./js/backEnd/images/version04-nb.png",
+    "./js/backEnd/images/version05-coul.png",
+    "./js/backEnd/images/version05-nb.png",
+    "./js/backEnd/images/notice/image020.jpg",
+    "./js/backEnd/images/notice/image022.jpg",
+    "./js/backEnd/images/notice/image024.jpg",
+    "./js/backEnd/images/notice/image026.jpg",
+    "./js/backEnd/images/notice/image028.jpg",
+    "./js/backEnd/images/notice/image030.jpg",
+    "./js/backEnd/images/notice/image032.jpg",
+    "./js/backEnd/images/notice/image034.png",
+    "./js/backEnd/images/notice/image038.png",
+    "./js/backEnd/images/notice/image039.png",
+    "./js/backEnd/images/notice/image042.jpg",
+    "./js/backEnd/images/notice/image043.jpg",
+    "./js/backEnd/images/notice/image044.jpg",
+    "./js/backEnd/images/notice/image045.jpg",
+    "./js/backEnd/images/notice/image046.jpg",
+    "./js/backEnd/images/notice/image047.jpg",
+    "./js/backEnd/images/notice/image050.jpg",
+    "./js/backEnd/images/notice/image055.jpg",
+    "./js/backEnd/images/notice/image058.jpg",
+    "./js/backEnd/images/notice/image060.jpg",
+    "./js/backEnd/images/notice/image062.jpg",
+    "./js/backEnd/images/notice/image063.jpg",
+    "./js/backEnd/images/notice/image064.jpg",
+    "./js/backEnd/images/notice/image065.jpg",
+    "./js/backEnd/images/notice/image068.jpg",
+    "./js/backEnd/images/notice/image070.jpg",
+    "./js/backEnd/images/notice/image072.png",
+    "./js/backEnd/images/notice/image073.jpg",
+    "./js/backEnd/images/notice/home.svg",
+    "./js/backEnd/images/notice/logo_erasmusplus.svg"
+  );
+}
+
+module.exports.initialize = initialize;
+module.exports.createXHTMLFiles = createXHTMLFiles;

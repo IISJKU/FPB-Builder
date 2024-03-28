@@ -5,9 +5,13 @@ class Metadata {
     this.identifier = new Array();
 
     //optional
+    this.sourceISBN = "";
     this.creators = new Array();
+    this.authors = new Array();
     this.contributors = new Array();
     this.description = new Array();
+
+    this.copyright = "";
     this.format = "";
     this.publisher = "";
     this.relation = "";
@@ -15,6 +19,13 @@ class Metadata {
     this.source = "";
     this.subject = "";
     this.type = "";
+
+    //accessibility metadata
+    this.accessMode = new Array();
+    this.accessibilityModeSufficcient = new Array();
+    this.accessibilityFeature = new Array();
+    this.accessibilityHazard = new Array();
+    this.accessibilitySummary = new Array();
   }
 }
 

@@ -1,0 +1,120 @@
+let fs = require("fs");
+let PathUtilities = require("./utilities/pathUtilities.js");
+
+class FileImporter {
+  importedFiles = [];
+
+  constructor() {
+    this.importedFiles = new Array();
+  }
+
+  //checks if xhtml file is an image
+  checkIfImage(lineArray) {
+    let hasFigure = false;
+    let hasSVG = false;
+    lineArray.forEach((element) => {
+      if (element.includes("<figure")) {
+        hasFigure = true;
+        //console.log("This has a figure!");
+      }
+      if (element.includes("<svg")) {
+        hasSVG = true;
+      }
+    });
+
+    if (hasFigure == true && hasSVG == true) return true;
+    return false;
+  }
+
+  //looks through the line-array of the file, and finds the absolute path of the dependencies
+  importDependencies(lineArray, src) {
+    lineArray.forEach((element) => {
+      let done = false;
+      let index = 0;
+      let round = 0;
+      let filename = "";
+      //this while loop allows us to look for multiple imports per line!
+      while (!done) {
+        filename = "";
+
+        //check if line has tag after index
+        let tline = element.substring(index, element.length);
+
+        if (tline.includes("<link", index)) {
+          filename = PathUtilities.cutOutFilename(tline, "href");
+          index = tline.indexOf("href");
+        } else if (tline.includes("<script", index)) {
+          filename = PathUtilities.cutOutFilename(tline, "src");
+          index = tline.indexOf("src");
+        } else if (tline.includes("<source", index)) {
+          filename = PathUtilities.cutOutFilename(tline, "src");
+          index = tline.indexOf("src");
+        }
+        index = index + 1;
+
+        if (filename != "") {
+          let t = PathUtilities.getAbsolutePath(src, filename);
+          //check if the file was already imported!
+          if (round == 1) {
+            console.log(t);
+          }
+
+          if (this.importedFiles.includes(t)) {
+            //
+            // TODO: Inform user that the file was included in a previous try
+            //
+            //console.log("file already contained " + t);
+          } else {
+            //if it exists, add it to imported files, if not:
+            //let the user manually select it.
+            //
+            // TODO: prompt the user to select it!!
+            //
+
+            if (fs.existsSync(t)) {
+              this.importedFiles.push(t);
+            } else {
+              console.log("Success: False");
+              //prompt user to select it here!
+            }
+          }
+        } else {
+          done = true;
+        }
+        round = round + 1;
+        filename = "";
+      }
+    });
+  }
+
+  /**
+   * Loads all the files into an array, after they are checked!
+   * @param {Page[]} pages - the raw page data
+   * @param {Language} lang - The Language the files are in
+   * @returns An array containing the imported files
+   */
+  import(pages, lang) {
+    this.importedFiles = [];
+    pages.forEach((page) => {
+      if (fs.existsSync(page.image)) {
+        let data = fs.readFileSync(page.image, "utf8");
+        //split file at linebreaks to parse it line by line
+        let dataSplit = data.split("\n");
+        if (this.checkIfImage(dataSplit)) {
+          //this is responsible for adding every file to the list of imported files
+          this.importDependencies(dataSplit, page.image);
+          this.importedFiles.push(page);
+          this.importedFiles.push(page.image);
+          this.importedFiles.push(page.audio[lang]);
+          //console.log(importedFiles);
+        } else {
+          //please select an image file!!
+          console.log("Please Select an xhtml containing an image!");
+        }
+      }
+    });
+    return this.importedFiles;
+  }
+}
+
+module.exports = FileImporter;

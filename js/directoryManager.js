@@ -19,4 +19,7 @@ $(document).ready(function () {
   $(".generateEpub").on("click", () => {
     BRIDGE.generateEpub();
   });
+  $(".selectFigureXHTML").on("click", () => {
+    BRIDGE.generateEpub();
+  });
 });

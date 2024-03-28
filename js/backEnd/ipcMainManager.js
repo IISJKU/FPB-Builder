@@ -2,47 +2,18 @@ const { dialog, ipcMain } = require("electron");
 
 const EPUBMaker = require("./EPUBMaker.js");
 const EPUBMaker2 = require("./EPUBMaker2.js");
-const PathUtilities = require("./utilities/pathUtilities.js");
+
 let fs = require("fs");
 
 const importedFiles = [];
-const MetadataManager = require("./metadataManager.js");
-const PageManager = require("./pageManager.js");
-
-/////////////////////
-//
-// TODO: REMOVE THESE CLASS DEFINITIONS
-//
-//
-
-//make an object that holds everything of the double page
-function Page(Image, Text) {
-  this.Image = Image;
-  this.Text = Text;
-}
-
-function Image(src, altText) {
-  this.src = src;
-  this.altText = altText;
-}
-
-function Text(title, lang, text, audio) {
-  this.title = title;
-  this.lang = lang;
-  this.text = text; //test with multi line inputs
-  this.audio = audio;
-}
-
-/////////////////////
 
 class ipcMainManager {
   window;
-  constructor(window) {
-    this.window = window;
+  constructor() {
     ipcMain.on("selectDirectory", () => {
       EPUBMaker.setDirectory(
         dialog.showOpenDialog({
-          properties: ["openDirectory"],
+          properties: ["file"],
         })
       );
     });
@@ -58,31 +29,12 @@ class ipcMainManager {
     });
 
     ipcMain.on("generateEpubs", () => {
-      //get list of selected Languages from session, now I'm going to add test language data
-      let languages = [];
-      languages.push(Language.English);
-      languages.push(Language.Italian);
-
-      MetadataManager.setLanguages(languages);
-      MetadataManager.fetchMetadataFromFrontend();
-
-      PageManager.fetchPageDataFromFrontend();
-
-      if (MetadataManager.validate()) {
-        languages.forEach((lang) => {
-          EPUBMaker2.make(MetadataManager.getMetadata(), PageManager.getPages(), lang);
-        });
-      }
-
-      //console.log("ye");
-
-      //EPUBMaker.createFileStructure();
-
-      //EPUBMaker.setPages(pages);
-      //EPUBMaker.importSelectedFiles(importedFiles);
-      //EPUBMaker.makeEPUB();
+      EPUBMaker2.make();
     });
 
+    //
+    //  TODO : Delete this :O
+    //
     //Here, the Files will be generated, this is still under construction!
     ipcMain.on("generateTestFiles", () => {
       EPUBMaker.createFileStructure();
@@ -242,85 +194,6 @@ class ipcMainManager {
       //paths contained in js and css will be replaced with old ones.
       EPUBMaker.importSelectedFiles(importedFiles);
     });
-  }
-
-  //looks through the line-array of the file, and finds the absolute path of the dependencies
-  importDependencies(lineArray, src) {
-    lineArray.forEach((element) => {
-      let done = false;
-      let index = 0;
-      let round = 0;
-      let filename = "";
-      //this while loop allows us to look for multiple imports per line!
-      while (!done) {
-        filename = "";
-
-        //check if line has tag after index
-        let tline = element.substring(index, element.length);
-
-        if (tline.includes("<link", index)) {
-          filename = PathUtilities.cutOutFilename(tline, "href");
-          index = tline.indexOf("href");
-        } else if (tline.includes("<script", index)) {
-          filename = PathUtilities.cutOutFilename(tline, "src");
-          index = tline.indexOf("src");
-        } else if (tline.includes("<source", index)) {
-          filename = PathUtilities.cutOutFilename(tline, "src");
-          index = tline.indexOf("src");
-        }
-        index = index + 1;
-
-        if (filename != "") {
-          let t = PathUtilities.getAbsolutePath(src, filename);
-          //check if the file was already imported!
-          if (round == 1) {
-            console.log(t);
-          }
-
-          if (importedFiles.includes(t)) {
-            //
-            // TODO: Inform user that the file was included in a previous try
-            //
-            //console.log("file already contained " + t);
-          } else {
-            //if it exists, add it to imported files, if not:
-            //let the user manually select it.
-            //
-            // TODO: prompt the user to select it!!
-            //
-
-            if (fs.existsSync(t)) {
-              importedFiles.push(t);
-            } else {
-              console.log("Success: False");
-              //prompt user to select it here!
-            }
-          }
-        } else {
-          done = true;
-        }
-        round = round + 1;
-        filename = "";
-      }
-    });
-  }
-
-  //checks if xhtml file is an image
-  checkIfImage(lineArray) {
-    let hasFigure = false;
-    let hasSVG = false;
-    lineArray.forEach((element) => {
-      if (element.includes("<figure")) {
-        hasFigure = true;
-        console.log("This has a figure!");
-      }
-      if (element.includes("<svg")) {
-        hasSVG = true;
-      }
-    });
-
-    if (hasFigure == true && hasSVG == true) return true;
-    return false;
   }
 }
 

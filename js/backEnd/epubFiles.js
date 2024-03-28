@@ -2,34 +2,39 @@ const path = require("path");
 
 let fs = require("fs");
 
-const Language = {
-  German: "de",
-  English: "en",
-  French: "fr",
-  Lithuanian: "lit",
-  Italian: "it",
-};
+let language;
 
-const languagePath = "";
+function setLanguage(lang) {
+  language = lang;
+}
 
 //THIS IS FAKE-DATA FOR TESTING PURPOSES
 //later this info will come from the frontend
 //add posibility for multiple authors / contributors
 let title = "Ben will eine Fledermaus.";
-let language = Language.German;
-let pubISBN = "978-2-36593-153-3";
-let originalISBN = "978-2-07064-424-7";
-let author1 = "Les doigts qui rêvent";
-let publisher = "LDQR";
-let copyright = "2022 LDQR";
+
+let pubISBN = "";
+let originalISBN = "CHANGETHIS";
+let authors = [];
+let publisher = "";
+let copyright = "";
+let description = "";
+let contributors = [];
+
 let date = new Date().toISOString();
 let dateText = date.substring(0, date.indexOf(".")) + "Z";
-let description = "This is the description adsdfgdfhgfhgfhf";
-let contributorFirstname1 = "Pax";
-let contributorLastname1 = "Munz";
-let contributor1ID = "contributor1";
-
 let coverImage = "images/cover.jpg";
+
+function setMetadata(metadata) {
+  pubISBN = metadata.identifier[language];
+  authors = metadata.authors;
+  publisher = metadata.publisher;
+  copyright = metadata.copyright;
+  date = new Date().toISOString();
+  dateText = date.substring(0, date.indexOf(".")) + "Z";
+  description = metadata.description[language];
+  contributors = metadata.contributors;
+}
 
 //this is a string of the container file used in the epub, it is usually saved under /META-INF
 const containerFileXML =
@@ -53,20 +58,6 @@ function MenuItem(name, src) {
   this.src = src;
 }
 
-/*
-let menuItems = [
-  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/page00.xhtml#toc-epubtools-22"),
-  new MenuItem('Anleitung zu "' + bookTitle + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
-  new MenuItem("Inhaltsverzeichnis", "xhtml/notice_toc.xhtml#toc-epubtools-16"),
-  new MenuItem("Menü", "xhtml/notice.xhtml#toc-epubtools-5"),
-  new MenuItem("Textmenü", "xhtml/notice.xhtml#toc-epubtools-6"),
-  new MenuItem("Menü Abbildungen", "xhtml/notice.xhtml#toc-epubtools-7"),
-  new MenuItem("Audio-Menü", "xhtml/notice.xhtml#toc-epubtools-8"),
-  new MenuItem("Während des Lesens", "xhtml/notice.xhtml#toc-epubtools-9"),
-  new MenuItem("IMPRESSUM<", "xhtml/credits.xhtml#toc-epubtools-1"),
-  new MenuItem("Inhaltsverzeichnis", "xhtml/toc.xhtml#toc-epubtools-26"),
-]; */
-
 let menuItems = [
   new MenuItem("Einstellungen", "xhtml/page00.xhtml#toc-epubtools-22"),
   new MenuItem('Anleitung zu "' + title + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
@@ -80,17 +71,13 @@ let menuItems = [
   new MenuItem("Inhaltsverzeichnis", "xhtml/toc.xhtml#toc-epubtools-26"),
 ];
 
-function setLanguage(lang) {
-  language = lang;
-}
-
 //prettier-ignore
 function createTOC() {
   let fileContents =
     "<?xml version='1.0' encoding='utf-8'?>\n" +
     '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">\n' +
     "  <head>\n" +
-    '    <meta name="dtb:uid" content="urn:isbn:978-2-36593-153-3"/>\n' +
+    '    <meta name="dtb:uid" content="urn:isbn:' + pubISBN + '"/>\n' +
     '    <meta name="dtb:depth" content="1"/>\n' +
     '    <meta name="dtb:totalPageCount" content="0"/>\n' +
     '    <meta name="dtb:maxPageNumber" content="0"/>\n' +
@@ -121,43 +108,96 @@ function createTOC() {
   return fileContents;
 }
 
-// prettier-ignore
 function createContentFile(files, spineFiles) {
-  let header = "<?xml version='1.0' encoding='utf-8'?>\n" + '<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="pub-id" xml:lang="' + language + '">\n';
-  let startMetadataTag = '  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ibooks="http://apple.com/ibooks/html-extensions">\n\n';
-  let endPackageTag ="</package>";
+  let header =
+    "<?xml version='1.0' encoding='utf-8'?>\n" +
+    '<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="pub-id" xml:lang="' +
+    language +
+    '">\n';
+  let startMetadataTag =
+    '  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ibooks="http://apple.com/ibooks/html-extensions">\n\n';
+  let endPackageTag = "</package>";
 
- 
   let metaDataContents =
-    '   <dc:language id="pub-langage">' + language + "</dc:language>\n" +
-    '   <dc:identifier id="pub-id">urn:isbn:' + pubISBN + "</dc:identifier>\n" +
-    '   <dc:source id="src-id">urn:isbn:' + originalISBN + "</dc:source>\n" +
+    '   <dc:language id="pub-langage">' +
+    language +
+    "</dc:language>\n" +
+    '   <dc:identifier id="pub-id">urn:isbn:' +
+    pubISBN +
+    "</dc:identifier>\n" +
+    '   <dc:source id="src-id">urn:isbn:' +
+    originalISBN +
+    "</dc:source>\n" +
     "\n" +
-    '   <dc:title id="titre">'+ title + '</dc:title>\n' + //Here, id-tags are used: look into, whether or not we should replace them dynamically
+    '   <dc:title id="titre">' +
+    title +
+    "</dc:title>\n" + //Here, id-tags are used: look into, whether or not we should replace them dynamically
     '   <meta refines="#titre" property="title-type">main</meta>\n' +
-    "\n" +
-    '   <dc:creator id="auteur1">' + author1 + '</dc:creator>\n' +
-    '   <meta property="role" refines="#auteur1" scheme="marc:relators">aut</meta>\n' +
-    '   <meta property="file-as" refines="#auteur1">' + author1 + '</meta>\n' +
-    "\n" +
+    "\n";
+
+  authors.forEach((author) => {
+    metaDataContents =
+      metaDataContents +
+      '   <dc:creator id="' +
+      author.replaceAll(" ", "-") +
+      '">' +
+      author +
+      "</dc:creator>\n" +
+      '   <meta property="role" refines="#' +
+      author.replaceAll(" ", "-") +
+      '" scheme="marc:relators">aut</meta>\n' +
+      '   <meta property="file-as" refines="#' +
+      author.replaceAll(" ", "-") +
+      '">' +
+      author +
+      "</meta>\n" +
+      "\n";
+  });
+
+  metaDataContents =
+    metaDataContents +
     '   <meta property="rendition:flow">scrolled-doc</meta>\n' +
     '   <meta property="rendition:layout">reflowable</meta>\n' +
     '   <meta property="rendition:orientation">portrait</meta>\n' +
     '   <meta property="rendition:spread">none</meta>\n' +
     "\n" +
+    "\n";
+
+  if (publisher != undefined && publisher.length > 0) metaDataContents = metaDataContents + "   <dc:publisher>" + publisher + "</dc:publisher>\n";
+
+  if (copyright != undefined && copyright.length > 0) metaDataContents = metaDataContents + "   <dc:rights>Copyright ©" + copyright + "</dc:rights>\n";
+
+  metaDataContents = metaDataContents + "   <dc:date>" + dateText + "</dc:date>\n" + '   <meta property="dcterms:modified">' + dateText + "</meta>\n";
+  if (description != undefined && description.length > 0)
+    ' metaDataContents = metaDataContents +    <dc:description id="description">' + description + "</dc:description>\n";
+
+  contributors.forEach((contributor) => {
+    metaDataContents =
+      metaDataContents +
+      '   <dc:contributor id="' +
+      contributor.replaceAll(" ", "-") +
+      '">' +
+      contributor +
+      '"</dc:contributor>\n' +
+      '   <meta scheme="marc:relators" property="role" refines="#' +
+      contributor.replaceAll(" ", "-") +
+      '">mrk</meta>\n' +
+      '   <meta scheme="marc:relators" property="role" refines="#' +
+      contributor.replaceAll(" ", "-") +
+      '">prg</meta>\n' +
+      '   <meta refines="#' +
+      contributor.replaceAll(" ", "-") +
+      '" property="file-as">' +
+      contributor +
+      "</meta>\n";
+  });
+
+  metaDataContents =
+    metaDataContents +
     "\n" +
-    "   <dc:publisher>" + publisher + "</dc:publisher>\n" +
-    "   <dc:rights>Copyright ©" + copyright +"</dc:rights>\n" +
-    "\n" +
-    "   <dc:date>" + dateText + "</dc:date>\n" +
-    '   <meta property="dcterms:modified">'+ dateText +'</meta>\n' +
-    '   <dc:description id="description">' + description + '</dc:description>\n' +
-    '   <dc:contributor id="'+contributor1ID + '">' + contributorLastname1 + ", " + contributorFirstname1 + '"</dc:contributor>\n' +
-    '   <meta scheme="marc:relators" property="role" refines="#'+ contributor1ID + '">mrk</meta>\n' +
-    '   <meta scheme="marc:relators" property="role" refines="#'+ contributor1ID + '">prg</meta>\n' +
-    '   <meta refines="#'+contributor1ID + '" property="file-as">' + contributorFirstname1  + ", " + contributorLastname1 + '</meta>\n' +
-    "\n" +  
-    '   <meta name="cover" content="' + coverImage + '"/>\n' +
+    '   <meta name="cover" content="' +
+    coverImage +
+    '"/>\n' +
     '   <meta property="ibooks:specified-fonts">true</meta>\n' +
     "\n" +
     '   <meta property="schema:accessMode">textual</meta>\n' +
@@ -170,66 +210,72 @@ function createContentFile(files, spineFiles) {
     '   <meta property="schema:accessibilityFeature">printPageNumbers</meta>\n' +
     '   <meta property="schema:accessibilityHazard">sound</meta>\n' +
     '   <meta property="schema:accessibilityAPI">ARIA</meta>\n' +
-    '   <meta property="schema:accessibilitySummary">Les illustrations sont décrites.</meta>\n';// translate this
-    
+    '   <meta property="schema:accessibilitySummary">Les illustrations sont décrites.</meta>\n'; // translate this
+
   let closeMetadata = "  </metadata>\n\n";
   let metaData = startMetadataTag + metaDataContents + closeMetadata;
-    
-  
+
   //here, stuff from the "files"-array will be written to the file
   let startManifestTag = "  <manifest>\n";
   let importedItems = "";
-  let spineContents = ''
+  let spineContents = "";
 
-  files.forEach(filename => {
+  files.forEach((filename) => {
     let line = "";
-    let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
-    if(filename.includes("/")){
-      name = filename.substring(filename.lastIndexOf('/') + 1, filename.length);
+    let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+    if (filename.includes("/")) {
+      name = filename.substring(filename.lastIndexOf("/") + 1, filename.length);
     }
 
-    if(filename.includes(".css")){
+    if (filename.includes(".css")) {
       line = '   <item id="' + name + '" href="css/' + name + '" media-type="text/css" />';
-    }else if(filename.includes(".js")){
+    } else if (filename.includes(".js")) {
       line = '   <item id="' + name + '" href="Misc/' + name + '" media-type="application/javascript" />';
-    }else if(filename.includes(".otf") || filename.includes(".ttf") ){
+    } else if (filename.includes(".otf") || filename.includes(".ttf")) {
       line = '   <item id="' + name + '" href="fonts/' + name + '" media-type="application/vnd.ms-opentype" />';
-    } else if(filename.includes(".mp3")){
+    } else if (filename.includes(".mp3")) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
-    } else if(filename.includes(".jpg")){
-      if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/jpeg" />';
-      else if(filename.includes("cover.jpg"))line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/jpeg" properties="cover-image" />';
-      else line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/jpeg" />'
-    }else if(filename.includes(".png")){
-      if(filename.includes("/notice")) line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/png" />';
-      else line = '   <item id="'+ name + '" href="images/'+ name + '" media-type="image/png" />';
-    }else if(filename.includes(".svg")){
-      line = '   <item id="'+ name + '" href="images/notice/'+ name + '" media-type="image/svg+xml" />'
+    } else if (filename.includes(".jpg")) {
+      if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
+      else if (filename.includes("cover.jpg"))
+        line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
+      else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
+    } else if (filename.includes(".png")) {
+      if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
+      else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/png" />';
+    } else if (filename.includes(".svg")) {
+      line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/svg+xml" />';
     }
 
     importedItems = importedItems + line + "\n";
   });
 
-  spineFiles.forEach(filename => {
+  spineFiles.forEach((filename) => {
     let line = "";
-    let name = filename.substring(filename.lastIndexOf('\\') + 1, filename.length);
+    let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
     let properties = "scripted svg";
-    if(filename == "toc.xhtml") properties = "nav"; 
-    if(filename == "cover.xhtml" || filename == "notice_toc.xhtml") properties = "scripted"; 
-    line = '   <item id="' + name.substring(0, name.indexOf("\.")) + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="' + properties + '" />';
-    spineContents = spineContents + '   <itemref idref="'+ name.substring(0, name.indexOf("\.")) +'"/>' + "\n";
+    if (filename == "toc.xhtml") properties = "nav";
+    if (filename == "cover.xhtml" || filename == "notice_toc.xhtml") properties = "scripted";
+    line =
+      '   <item id="' +
+      name.substring(0, name.indexOf(".")) +
+      '" href="xhtml/' +
+      name +
+      '" media-type="application/xhtml+xml" properties="' +
+      properties +
+      '" />';
+    spineContents = spineContents + '   <itemref idref="' + name.substring(0, name.indexOf(".")) + '"/>' + "\n";
     importedItems = importedItems + line + "\n";
   });
 
-  let additionalImports = 
-  '   <item id="toc.ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />\n'; //those are the kind of files that will be in every epub
+  let additionalImports = '   <item id="toc.ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />\n'; //those are the kind of files that will be in every epub
 
   let endManifestTag = "  </manifest>\n\n";
   let manifest = startManifestTag + additionalImports + importedItems + endManifestTag;
-  
+
   let startSpineTag = '  <spine toc="toc.ncx">\n';
-  
-  let endSpineTag = '  </spine>\n\n'
+
+  let endSpineTag = "  </spine>\n\n";
   let spine = startSpineTag + spineContents + endSpineTag;
 
   return header + metaData + manifest + spine + endPackageTag;
@@ -254,7 +300,7 @@ function createNotice() {
   let str = "";
 
   str = fs.readFileSync("./js/backEnd/templates/" + language + "/notice.xhtml", "utf-8");
-  str = str.replace("{title}", title);
+  str = str.replaceAll("{title}", title);
 
   return str;
 }
@@ -269,11 +315,11 @@ function createTocXHTML(pages) {
   pagesText = "";
 
   pages.forEach((page) => {
-    pagesText = pagesText + '<li><a href="' + page.Text.title + "-txt.xhtml#" + page.Text.title + '">' + page.Text.title + "</a></li>\n";
+    pagesText = pagesText + '<li><a href="' + page.title + "-txt.xhtml#" + page.title + '">' + page.title + "</a></li>\n";
   });
 
   str = str.replaceAll("{pages}", pagesText);
-  str = str.replaceAll("{firstpage}", pages[0].Text.title + "-txt.xhtml");
+  str = str.replaceAll("{firstpage}", pages[0].title + "-txt.xhtml");
 
   return str;
 }
@@ -334,8 +380,11 @@ function createNoticeToc() {
 //prettier-ignore
 function createPageText(obj){
   let str = "";
-  
-  let text = obj.text; //test with multi line inputs
+
+  let text = obj.text[language];
+  let audio = obj.audio[language];
+  let title = obj.title;
+
 
   //parses text, and automatically adds propper html tags
   let processedText = "<p>";
@@ -358,10 +407,10 @@ function createPageText(obj){
 
   //generate the text for the pages!
   str = '<?xml version="1.0" encoding="utf-8" standalone="no"?>\n' + 
-  '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" xml:lang="' + obj.lang + '" lang="' + obj.lang + '">\n' +
+  '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" xml:lang="' + language + '" lang="' + language + '">\n' +
   '\n' +
   '  <head>\n' +
-  '    <title>'+ obj.title + '</title>\n' +
+  '    <title>'+ title + '</title>\n' +
   '    <link rel="preload" href="../Misc/localforage.min.js" as="script" type="text/javascript" />\n' +
   '    <link rel="preload" href="../Misc/ldqr.min.js" as="script" type="text/javascript" />\n' +
   '    <link id="mainCss" href="../css/ldqr_main.min.css" rel="stylesheet" type="text/css" />\n' +
@@ -395,10 +444,10 @@ function createPageText(obj){
   '      </g>\n' +
   '    </svg>\n' +
   '    <audio preload="auto" id="monTexteAudio">\n' +
-  '      <source src="../audio/' + obj.audio.substring(obj.audio.lastIndexOf("\\")+1, obj.audio.length) + '" type="audio/mpeg" />\n' +
+  '      <source src="../audio/' + audio.substring(audio.lastIndexOf("\\")+1, audio.length) + '" type="audio/mpeg" />\n' +
   '    </audio>\n' +
   '      <section id="monTexte" class="section-texte ldqr-font-luciole ldqr-font-bold">\n' +
-  '       <span epub:type="pagebreak" id="'+ obj.title + '" aria-label="' + obj.title + '" role="doc-pagebreak"></span>\n' +
+  '       <span epub:type="pagebreak" id="'+ title + '" aria-label="' + title + '" role="doc-pagebreak"></span>\n' +
   '       <div class="texte">'+ processedText + '</div>\n' +
   '         <button id="playTexteSr" aria-labelledby="label" class="screen-reader bouton-surprise">\n' +
   '          <span id="label" class="tslt_ecouter_texte">anhören</span>\n' +
@@ -459,3 +508,4 @@ exports.createContentFile = createContentFile;
 exports.createNotice = createNotice;
 exports.createTOC = createTOC;
 exports.createTocXHTML = createTocXHTML;
+exports.setMetadata = setMetadata;

@@ -16,7 +16,7 @@ const createWindow = () => {
 
   //this registers all of the icpMain Messages, that can be accessed through preload
   //pass it the window, so it has access to the session storage!
-  let icpMainManager = new IpcMainManager(win);
+  let icpMainManager = new IpcMainManager();
 };
 
 app.whenReady().then(() => {

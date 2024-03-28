@@ -1,4 +1,3 @@
-const Language = require("./classes/Languages.js");
 const Page = require("./classes/Page.js");
 
 let pages = [];
@@ -6,10 +5,10 @@ let pages = [];
 function fetchPageDataFromFrontend() {
   //data from frontend, normally saved in session storage:
   // but now im making it up!"
-  let pages = [];
+  pages = [];
 
   let page1 = {
-    name: "page1",
+    title: "page1",
     text: {
       EN: "Hello this is the Content of the first page.",
       IT: "Ciao, questo è il contenuto della prima pagina.",
@@ -26,7 +25,7 @@ function fetchPageDataFromFrontend() {
   };
 
   let page2 = {
-    name: "page2",
+    title: "page2",
     text: {
       EN: "What might happen on the second page? I cant imagine...",
       IT: "Cosa potrebbe succedere nella seconda pagina? Non posso immaginare...",
@@ -43,7 +42,7 @@ function fetchPageDataFromFrontend() {
   };
 
   let page3 = {
-    name: "page3",
+    title: "page3",
     text: {
       EN: "The story comes to a surprising end, on the third page!",
       IT: "La storia giunge a una conclusione sorprendente, alla terza pagina!",
