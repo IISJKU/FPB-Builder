@@ -98,7 +98,7 @@ function createTable(tableTitle, elemID){
     if (!reqMeta.includes(tableTitle)){
       createIcon(td, 'bi bi-trash3-fill','delete entry')
     }
-    createIcon(td, 'bi bi-pencil-square','#editMetaModal','edit entry')
+    createIcon(td, 'bi bi-pencil-square','edit entry','#editMetaModal')
     tr.appendChild(td)
     tbdy.appendChild(tr);
   }
@@ -118,7 +118,7 @@ function tableHeader(tbl, tableTitle){
   thdthText= document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
   if (!reqMeta.includes(tableTitle)){
-    createIcon(thdth, 'bi bi-plus-square-fill', '#addMetaModal','Add new entry')
+    createIcon(thdth, 'bi bi-plus-square-fill','Add new entry', '#addMetaModal')
   }
   thdtr.appendChild(thdth);
   thd.appendChild(thdtr);
@@ -136,7 +136,7 @@ function aElement(tbl, tableTitle, elemID){
   events();
 }
 
-function createIcon(appendElem, iconClass, modalID, alt){
+function createIcon(appendElem, iconClass, alt, modalID){
   var icon = document.createElement('i');
   icon.setAttribute('class',iconClass);
   icon.setAttribute('alt',alt);
