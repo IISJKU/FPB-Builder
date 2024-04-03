@@ -3,18 +3,11 @@ const path = require("path");
 let fs = require("fs");
 
 function makeFolder(location, name) {
-  fs.mkdir(path.join(location, name), (err) => {
-    if (err) {
-      return console.error(err);
-    }
-    //console.log("Folder created at " + location + "\\" + name);
-  });
+  fs.mkdirSync(path.join(location, name));
 }
 
 function makeFile(location, name, content) {
-  fs.writeFile(location + name, content, function (err) {
-    if (err) throw err;
-  });
+  fs.writeFileSync(location + name, content);
 }
 
 exports.makeFile = makeFile;

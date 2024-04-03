@@ -120,7 +120,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   EPUBFileCreator.setLanguage(language);
   EPUBFileCreator.setMetadata(metadata);
   //import the images needed for the settings / notice
-  fileArray = fileArray.concat(pathsToImages());
+  fileArray = fileArray.concat(pathsToImages(language));
 
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
@@ -147,6 +147,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fileArray.push(coverImage);
   fileArray.push(coverNarration);
   fileArray.forEach((element) => {
+    tempFile = "";
     rewritten = false;
     let subFolder = "";
     //handle txt.xhtml files
@@ -229,6 +230,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 function importFonts(element, newPath, newDirName) {
   let file = fs.readFileSync(element, "utf8");
   let fileSplit = file.split("\n");
+  tempfile = "";
 
   let open = false;
 
@@ -277,49 +279,59 @@ function pathsToMenuDependencies() {
   );
 }
 
-function pathsToImages() {
-  return new Array(
-    "./js/backEnd/images/version01-coul.png",
-    "./js/backEnd/images/version01-nb.png",
-    "./js/backEnd/images/version02-coul.png",
-    "./js/backEnd/images/version02-nb.png",
-    "./js/backEnd/images/version03-coul.png",
-    "./js/backEnd/images/version03-nb.png",
-    "./js/backEnd/images/version04-coul.png",
-    "./js/backEnd/images/version04-nb.png",
-    "./js/backEnd/images/version05-coul.png",
-    "./js/backEnd/images/version05-nb.png",
-    "./js/backEnd/images/notice/image020.jpg",
-    "./js/backEnd/images/notice/image022.jpg",
-    "./js/backEnd/images/notice/image024.jpg",
-    "./js/backEnd/images/notice/image026.jpg",
-    "./js/backEnd/images/notice/image028.jpg",
-    "./js/backEnd/images/notice/image030.jpg",
-    "./js/backEnd/images/notice/image032.jpg",
-    "./js/backEnd/images/notice/image034.png",
-    "./js/backEnd/images/notice/image038.png",
-    "./js/backEnd/images/notice/image039.png",
-    "./js/backEnd/images/notice/image042.jpg",
-    "./js/backEnd/images/notice/image043.jpg",
-    "./js/backEnd/images/notice/image044.jpg",
-    "./js/backEnd/images/notice/image045.jpg",
-    "./js/backEnd/images/notice/image046.jpg",
-    "./js/backEnd/images/notice/image047.jpg",
-    "./js/backEnd/images/notice/image050.jpg",
-    "./js/backEnd/images/notice/image055.jpg",
-    "./js/backEnd/images/notice/image058.jpg",
-    "./js/backEnd/images/notice/image060.jpg",
-    "./js/backEnd/images/notice/image062.jpg",
-    "./js/backEnd/images/notice/image063.jpg",
-    "./js/backEnd/images/notice/image064.jpg",
-    "./js/backEnd/images/notice/image065.jpg",
-    "./js/backEnd/images/notice/image068.jpg",
-    "./js/backEnd/images/notice/image070.jpg",
-    "./js/backEnd/images/notice/image072.png",
-    "./js/backEnd/images/notice/image073.jpg",
-    "./js/backEnd/images/notice/home.svg",
-    "./js/backEnd/images/notice/logo_erasmusplus.svg"
+function pathsToImages(language) {
+  let a = new Array(
+    "/images/afnic.jpg",
+    "/images/aveugles.png",
+    "/images/edu-up.jpg",
+    "/images/Ftelecom.png",
+    "/images/RBFC.jpg",
+    "/images/version01-coul.png",
+    "/images/version01-nb.png",
+    "/images/version02-coul.png",
+    "/images/version02-nb.png",
+    "/images/version03-coul.png",
+    "/images/version03-nb.png",
+    "/images/version04-coul.png",
+    "/images/version04-nb.png",
+    "/images/version05-coul.png",
+    "/images/version05-nb.png",
+    "/images/notice/image020.jpg",
+    "/images/notice/image022.jpg",
+    "/images/notice/image024.jpg",
+    "/images/notice/image026.jpg",
+    "/images/notice/image028.jpg",
+    "/images/notice/image030.jpg",
+    "/images/notice/image032.jpg",
+    "/images/notice/image034.png",
+    "/images/notice/image038.png",
+    "/images/notice/image039.png",
+    "/images/notice/image042.jpg",
+    "/images/notice/image043.jpg",
+    "/images/notice/image044.jpg",
+    "/images/notice/image045.jpg",
+    "/images/notice/image046.jpg",
+    "/images/notice/image047.jpg",
+    "/images/notice/image050.jpg",
+    "/images/notice/image055.jpg",
+    "/images/notice/image058.jpg",
+    "/images/notice/image060.jpg",
+    "/images/notice/image062.jpg",
+    "/images/notice/image063.jpg",
+    "/images/notice/image064.jpg",
+    "/images/notice/image065.jpg",
+    "/images/notice/image068.jpg",
+    "/images/notice/image070.jpg",
+    "/images/notice/image072.png",
+    "/images/notice/image073.jpg",
+    "/images/notice/home.svg",
+    "/images/notice/logo_erasmusplus.svg"
   );
+
+  for (let i = 0; i < a.length; i++) {
+    a[i] = "./js/backEnd/templates/" + language + a[i];
+  }
+  return a;
 }
 
 module.exports.initialize = initialize;

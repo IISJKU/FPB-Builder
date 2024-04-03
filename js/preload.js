@@ -21,4 +21,10 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   selectNewPage() {
     ipcRenderer.send("generateEpubs");
   },
+  importImage() {
+    ipcRenderer.send("importImage");
+  },
+  importDependency() {
+    ipcRenderer.send("importDependency");
+  },
 });

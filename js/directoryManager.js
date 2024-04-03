@@ -22,4 +22,10 @@ $(document).ready(function () {
   $(".selectFigureXHTML").on("click", () => {
     BRIDGE.generateEpub();
   });
+  $(".importImage").on("click", () => {
+    BRIDGE.importImage();
+  });
+  $(".importDependency").on("click", () => {
+    BRIDGE.importDependency();
+  });
 });
