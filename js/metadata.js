@@ -1,5 +1,6 @@
-
+//accessibility metadata options
 const accessMeta = ['Mode','Feature','Hazard','Summary','Mode Sufficient','Conforms to','Certified by'];
+//required metadata
 const reqMeta = ['Title','Identifier'];
 var bookDetails={
   'Title': {
@@ -18,6 +19,7 @@ var bookDetails={
   },
 };
 var infoText ='More';
+//info panel content object
 var infoObj={
   'title': "Represents an instance of a name for the EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
   'identifier': "Contains an identifier such as a UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
@@ -34,10 +36,12 @@ var infoObj={
   'certifiedby': "Identifies a party responsible for the testing and certification of the accessibility of an EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-a11y-11/#certifiedBy'>" + infoText + "</a>",
 };
 
+//check if the details is already setted in the global object
 if (!sessionStorage.getItem("bookDetails")){
   sessionStorage.setItem("bookDetails", (JSON.stringify(bookDetails)));
 }
 
+//handle adding items from available metadata cloumn to added metadata column
 function addBtn(){
   var selectedOpts = $('#itemBox option:selected');
   if (selectedOpts.length == 0) {
@@ -48,6 +52,7 @@ function addBtn(){
   $(selectedOpts).remove();
 }
 
+//handle removing items from added metadata cloumn to available metadata column
 function removeBtn(){ 
   var selectedOpts = $('#selectedBox .list-group-item.active');
   if (selectedOpts.length == 0) {
@@ -71,6 +76,7 @@ function removeBtn(){
   $("#selectedBox #"+ metadataText).remove();
 }
 
+//create table for each metadata 
 function createTable(tableTitle, elemID){
   var bookDetObj = parseBookData()
   // check if the table doesn't have values
@@ -108,6 +114,7 @@ function createTable(tableTitle, elemID){
   aElement(tbl, tableTitle, elemID)
 }
 
+//create table header element
 function tableHeader(tbl, tableTitle){
   var thd = document.createElement('thead');
   var thdtr = document.createElement('tr');
@@ -128,6 +135,7 @@ function tableHeader(tbl, tableTitle){
   tbl.appendChild(thd);
 }
 
+//create anchor element to the added metadata column
 function aElement(tbl, tableTitle, elemID){
   var metadata = document.getElementById(elemID)
   var aElem = document.createElement('a');
@@ -139,6 +147,7 @@ function aElement(tbl, tableTitle, elemID){
   events();
 }
 
+// create icon element with it's attributes
 function createIcon(appendElem, iconClass, alt, modalID){
   var icon = document.createElement('i');
   icon.setAttribute('class',iconClass);
@@ -159,8 +168,9 @@ function events(){
     document.getElementById("metadataInfo").innerHTML = infoObj[$(this).attr('id').toLowerCase()]
   });
 
-  $("i.bi-trash3-fill").on("click", function(e) {
+  $("#selectedBox i.bi-trash3-fill").on("click", function(e) {
   if($(this)){
+    //delete an existing entry
     var title = $(this).closest('table').children('thead').text();
     var key = $(this).closest('tr').children()[0].innerText;
     updateBookData(title, key, 'delete')
@@ -168,8 +178,9 @@ function events(){
   }
   });
 
-  $("i.bi-pencil-square").on("click", function(e) {
+  $("#selectedBox i.bi-pencil-square").on("click", function(e) {
     if($(this)){
+      //show the modal to add the new entry
       var title = $(this).closest('table').children('thead').text();
       var key = $(this).closest('tr').children()[0].innerText;
       var val = $(this).closest('td').text();
@@ -178,21 +189,25 @@ function events(){
     }
   });
 
-  $("i.bi-plus-square-fill").on("click", function(e) {
+  $("#selectedBox i.bi-plus-square-fill").on("click", function(e) {
     if($(this)){
       var title = $(this).closest('table').children('thead').text();
       var modalID = $(this).attr('data-bs-target');
       setModalValues(modalID, title, '', '','add');
+      //check if the fade div is already exist
+      if ($("#modal-fade").length == 0){
+        // create div to appy the fading when the modal opens
+        var elemDiv = document.createElement('div');
+        elemDiv.setAttribute('class', 'modal-backdrop fade show');
+        elemDiv.setAttribute('id', 'modal-fade');
+        document.body.appendChild(elemDiv);
+      }
     }
-  });
-
-  const editModal = document.getElementById('editMetaModal')
-  editModal.addEventListener('shown.bs.modal', function () {
-
   });
 }
 
 function createNewTable(tableTitle, elemID){
+  //create new table if the metadata doesn't have any data
   var tbl = document.createElement('table');
   tbl.setAttribute('class', 'table table-sm table-bordered table-striped');
   tableHeader(tbl, tableTitle)
@@ -200,6 +215,7 @@ function createNewTable(tableTitle, elemID){
 }
 
 function setModalValues(modalID, tableTitle, header, val, mode){
+  //set the values to the modal and show it
   var body='';
   var bodyLabel='';
   if (mode == 'add'){
@@ -212,21 +228,36 @@ function setModalValues(modalID, tableTitle, header, val, mode){
   $(modalID+'Label').text(tableTitle);
   $(modalID+' #'+bodyLabel).val(header);
   $(modalID+' #'+ body).val(val);
+  $(modalID).show();
 }
 
 function updateValue(){
+  //Update values in the table
   var title = $('#editMetaModalLabel').text();
   var key = $('#editMetaBodyLabel').val();
   var val = $('#editMetaBody').val();
-  updateBookData(title, key, 'update', val)
+  updateBookData(title, key, 'update', val);
+  closeModal('editMetaModal')
   //window.location.reload();
 }
 
 function addValue(){
+  //Add the values to the table
   var title = $('#addMetaModalLabel').text();
   var key = $('#addMetaBodyLabel').val();
   var val = $('#addMetaBody').val();
-  updateBookData(title, key, 'add', val)
+  updateBookData(title, key, 'add', val);
+  closeModal('addMetaModal')
+}
+
+// hide modal
+function closeModal(modalID){
+  // check if the fade div is exist
+  var fadeDiv = document.getElementById("modal-fade");
+  if (fadeDiv != null){
+    document.body.removeChild(fadeDiv);
+  }
+  $('#'+modalID).hide();
 }
 
 function parseBookData(){

@@ -1,6 +1,4 @@
-const { ipcRenderer } = require("electron");
-const bootstrap = require('./node_modules/bootstrap/dist/js/bootstrap.bundle.js');
-window.$ = window.jquery = require("jquery");
+window.$ = window.jquery = $;
 
 document.addEventListener("DOMContentLoaded", function(e) {
 });
@@ -10,4 +8,5 @@ window.onload = function(){
   $("#metadata-tab").load("pages/metadata.html");
   $("#publish-tab").load("pages/reviewPublish.html");
   $("#about-tab").load("pages/about.html");
+  $("#spine-tab").load("pages/spine.html");
 }

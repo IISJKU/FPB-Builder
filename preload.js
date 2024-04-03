@@ -1,7 +1,8 @@
-/*const { contextBridge } = require('electron/renderer')
+const { ipcRenderer, contextBridge } = require("electron");
 
-contextBridge.exposeInMainWorld('versions', {
-    node: () => process.versions.node,
-    chrome: () => process.versions.chrome,
-    electron: () => process.versions.electron
-})*/
+//expose all of these main process functions to the renderer in namespace "BRIDGE"
+contextBridge.exposeInMainWorld("BRIDGE", {
+  desktop: true,
+  openImageXHTML() {
+    ipcRenderer.send("openImageXHTML");
+  }});

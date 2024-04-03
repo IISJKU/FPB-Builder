@@ -5,12 +5,13 @@
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">--->
     <title>Flex Picture Ebook</title>
+    <link rel="stylesheet" href="./node_modules/jquery-ui-dist/jquery-ui.min.css">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./node_modules/jquery-ui-dist/jquery-ui.min.css">
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/project.css" />
     <link rel="stylesheet" href="css/metadata.css" />
+    <link rel="stylesheet" href="css/spine.css" />
     <link rel="stylesheet" href="css/reviewPublish.css" />
 </head>
 <body>
@@ -23,12 +24,12 @@
         <div class="row" id="mainRow">
             <div class="col-md-2" id="navColumn" role="navigation">
                 <!-- list of tabs -->
-                <div class="list-group" id="listTab" role="tablist">
-                    <a class="list-group-item list-group-item-action active" id="project-list" data-bs-toggle="list" onclick="changeTitle(this)" href="#project-tab" role="tab" aria-selected="true" aria-controls="project-tab"><i class="bi bi-house-fill" alt=""></i> Project</a>
-                    <a class="list-group-item list-group-item-action" id="metadata-list" data-bs-toggle="list" onclick="changeTitle(this)" href="#metadata-tab" role="tab" aria-selected="false" aria-controls="metadata-tab"><i class="bi bi-receipt-cutoff" alt=""></i> Metadata</a>
-                    <a class="list-group-item list-group-item-action" id="spine-list" data-bs-toggle="list" onclick="changeTitle(this)" href="#spine-tab" role="tab" aria-selected="false" aria-controls="spine-tab"><i class="bi bi-hourglass-split" alt=""></i> Spine</a>
-                    <a class="list-group-item list-group-item-action" id="publish-list" data-bs-toggle="list" onclick="changeTitle(this)" href="#publish-tab" role="tab" aria-selected="false" aria-controls="publish-tab"><i class="bi bi-book-fill" alt=""></i> Review & Publish</a>
-                    <a class="list-group-item list-group-item-action" id="about-list" data-bs-toggle="list" onclick="changeTitle(this)" href="#about-tab" role="tab" aria-selected="false" aria-controls="about-tab"><i class="bi bi-question-lg" alt=""></i> About</a>
+                <div class="list-group tab" id="listTab" role="tablist">
+                    <button class="list-group-item list-group-item-action active tablinks" id="project-list" data-bs-toggle="list" onclick="changeContent(this,'project-tab')" role="tab" aria-selected="true" aria-controls="project-tab" alt="Project tab"><i class="bi bi-house-fill" alt=""></i> Project</button>
+                    <button class="list-group-item list-group-item-action tablinks" id="metadata-list" data-bs-toggle="list" onclick="changeContent(this, 'metadata-tab')" role="tab" aria-selected="false" aria-controls="metadata-tab" alt="Metadata tab"><i class="bi bi-receipt-cutoff" alt=""></i> Metadata</button>
+                    <button class="list-group-item list-group-item-action tablinks" id="spine-list" data-bs-toggle="list" onclick="changeContent(this, 'spine-tab')" role="tab" aria-selected="false" aria-controls="spine-tab" alt="Spine tab"><i class="bi bi-hourglass-split" alt=""></i> Spine</button>
+                    <button class="list-group-item list-group-item-action tablinks" id="publish-list" data-bs-toggle="list" onclick="changeContent(this, 'publish-tab')" role="tab" aria-selected="false" aria-controls="publish-tab" alt="Review & Publish tab"><i class="bi bi-book-fill" alt=""></i> Review & Publish</button>
+                    <button class="list-group-item list-group-item-action tablinks" id="about-list" data-bs-toggle="list" onclick="changeContent(this, 'about-tab')" role="tab" aria-selected="false" aria-controls="about-tab" alt="About tab"><i class="bi bi-question-lg" alt=""></i> About</button>
                 </div>
             </div>
                 <div class="form-group logoGroup">
@@ -41,22 +42,23 @@
                 </div>
             <div class="col-md-10" id="tabColumn">
                 <!-- tab content -->
-                <div class="tab-content" id="tabContent">
-                    <div class="tab-pane fade show active" id="project-tab" role="tabpanel" aria-labelledby="project-list"></div>
-                    <div class="tab-pane fade" id="metadata-tab" role="tabpanel" aria-labelledby="metadata-list"></div>
-                    <div class="tab-pane fade" id="spine-tab" role="tabpanel" aria-labelledby="spine-list"></div>
-                    <div class="tab-pane fade" id="publish-tab" role="tabpanel" aria-labelledby="publish-list"></div>
-                    <div class="tab-pane fade" id="about-tab" role="tabpanel" aria-labelledby="about-list"></div>
+                <div class="tab-content" id="divContent">
+                    <div class="tab-pane fade show active tabcontent" id="project-tab" role="tabpanel" aria-labelledby="project-list"></div>
+                    <div class="tab-pane fade tabcontent" id="metadata-tab" role="tabpanel" aria-labelledby="metadata-list"></div>
+                    <div class="tab-pane fade tabcontent" id="spine-tab" role="tabpanel" aria-labelledby="spine-list"></div>
+                    <div class="tab-pane fade tabcontent" id="publish-tab" role="tabpanel" aria-labelledby="publish-list"></div>
+                    <div class="tab-pane fade tabcontent" id="about-tab" role="tabpanel" aria-labelledby="about-list"></div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script> 
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script href="./node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
     <script href="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./renderer.js"></script>
-    <script src="./js/metadata.js"></script>
     <script src="./js/view.js"></script>
+    <script src="./js/metadata.js"></script>
+    <script src="./js/spine.js"></script>
     <script src="./js/reviewPublish.js"></script>
   <!-- Edit metadata modal -->
   <div class="modal fade" id="editMetaModal" tabindex="-1" aria-labelledby="editMetaModalLabel" aria-hidden="true">
@@ -84,29 +86,29 @@
     </div>
   </div>
     <!-- Add metadata values modal -->
-    <div class="modal fade" id="addMetaModal" tabindex="-1" aria-labelledby="addMetaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addMetaModalLabel">Add Metadata</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal fade show" id="addMetaModal" tabindex="-1" aria-labelledby="addMetaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMetaModalLabel">Add Metadata</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="addMetaBodyLabel" class="form-label">Key</label>
+                <input type="text" class="form-control" id="addMetaBodyLabel" aria-label="Metadata key">
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="addMetaBodyLabel" class="form-label">Key</label>
-                    <input type="text" class="form-control" id="addMetaBodyLabel" aria-label="Metadata key">
-                </div>
-                <div class="mb-3">
-                    <label for="addMetaBody" class="form-label">Value</label>
-                    <input type="text" class="form-control" id="addMetaBody" aria-label="Metadata value">
-                </div>
+            <div class="mb-3">
+                <label for="addMetaBody" class="form-label">Value</label>
+                <input type="text" class="form-control" id="addMetaBody" aria-label="Metadata value">
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="addValue()">Save changes</button>
-            </div>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal('addMetaModal')">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="addValue()">Save changes</button>
         </div>
       </div>
+    </div>
+  </div>
 </body>
 </html>
