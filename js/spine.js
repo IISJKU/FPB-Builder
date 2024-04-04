@@ -81,7 +81,12 @@ $(document).on('click', '.bi-arrow-up', function(e) {
 $(document).on('click', '#deletePage', function(e) {
   if($(this)){
     elem = $("#pageList .list-group-item.active").attr('id');
+    //activate the previous page and get all it's details
+    $("#pageList .list-group-item.active").prev('a').addClass("active");
+    //delete the page element
     $('#pageList #'+elem).remove();
+    //update the page details for the activated page
+    fillData()
   }
 });
 
