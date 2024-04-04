@@ -15,3 +15,16 @@ function changeContent(event, controlledTab){
     document.getElementById(controlledTab).style.display = "contents";
     $(event).addClass("active");
 }
+
+// create icon element with it's attributes
+function createIcon(appendElem, iconClass, alt, elemId, modalID){
+    var icon = document.createElement('i');
+    icon.setAttribute('class',iconClass);
+    icon.setAttribute('alt',alt);
+    icon.setAttribute('id',elemId);
+    if (modalID != null && modalID != '' && modalID != undefined && modalID != 'undefined'){
+      icon.setAttribute('data-bs-toggle','modal');
+      icon.setAttribute('data-bs-target',modalID);
+    }
+    appendElem.appendChild(icon);
+  }
