@@ -42,8 +42,13 @@
     float: right;
 }
 
-#selectedBox .bi-pencil-square, #selectedBox .bi-trash3-fill {
+#selectedBox .bi-pencil-square {
     color: blue;
+    float: right;
+}
+
+#selectedBox .bi-trash3-fill {
+    color: orangered;
     float: right;
 }
 

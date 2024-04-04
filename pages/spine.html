@@ -3,23 +3,22 @@
     <div class="col-md-3" id="">
       <label for="pageList">Pages</label>
       <div class="list-group" id="pageList">
-        <a href="#" id="1" class="list-group-item list-group-item-action">Page 1<i class="bi bi-arrow-up icons"></i><i class="bi bi-arrow-down icons"></i></a>
-        <a href="#" id="2" class="list-group-item list-group-item-action">Page 2<i class="bi bi-arrow-up icons"></i><i class="bi bi-arrow-down icons"></i></a>
-        <a href="#" id="3" class="list-group-item list-group-item-action">Page 3<i class="bi bi-arrow-up icons"></i><i class="bi bi-arrow-down icons"></i></a>
+        <a href="#" id="cover" class="list-group-item list-group-item-action active">Cover</a>
+        <a href="#" id="credit" class="list-group-item list-group-item-action">Credit</a>
         <a href="#" id="plusIcon" class="list-group-item list-group-item-action"><i class="bi bi-plus-square-fill"></i></a>
       </div>
     </div>
     <div class="col-md-9" id="pageContentColumn">
       <div class="row">
         <div class="col-md-12">
-          <label for="contentBox" id="contentBoxLabel">Page Details</label>
+          <label for="contentBox" id="contentBoxLabel">Page Details <i class="bi bi-trash3-fill icons" alt="delete page" id="deletePage"></i></label>
           <div class="list-group" id="contentBox">
             <div class="col-md-12">
               <div class="form-group mb-3" id="textTable">
                 <table class="table table-sm table-bordered table-striped" contenteditable="true">
                   <thead>
                     <tr>
-                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false">Text</th>
+                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="text">Text</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -43,17 +42,17 @@
                   <table class="table table-sm table-bordered table-striped" contenteditable="true">
                     <thead>
                       <tr>
-                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false">Narration</th>
+                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="narration">Narration</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <th scope="row" contenteditable="false">EN</th>
-                        <td>audio 1</td>
+                        <td contenteditable="false"><button type="button" class="btn btn-secondary browseBtn">Browse</button></td>
                       </tr>
                       <tr>
                         <th scope="row" contenteditable="false">IT</th>
-                        <td></td>
+                        <td contenteditable="false"><button type="button" class="btn btn-secondary browseBtn">Browse</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -64,18 +63,18 @@
                   <table class="table table-sm table-bordered table-striped" contenteditable="true">
                     <thead>
                       <tr>
-                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false">Images and Scripts</th>
+                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="imagesScripts">Images and Scripts</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <th scope="row" contenteditable="false">Image</th>
-                        <td contenteditable="false"><button class="openImageXHTML">Browse</button></td>
+                        <td contenteditable="false"><button type="button" id="openImageXHTML" class="btn btn-secondary browseBtn">Browse</button></td>
                         <!-- <td contenteditable="false"><input class="form-control openImageXHTML" type="file" id="image_uploads" name="image_uploads" accept=".xhtml"/></td> -->
                       </tr>
                       <tr>
                         <th scope="row" contenteditable="false">Style</th>
-                        <td></td>
+                        <td contenteditable="false"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -87,7 +86,7 @@
                 <table class="table table-sm table-bordered table-striped" contenteditable="true">
                   <thead>
                     <tr>
-                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false">Alt text for images</th>
+                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="alt">Alt text for images</th>
                     </tr>
                   </thead>
                   <tbody>

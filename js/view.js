@@ -6,6 +6,9 @@ function changeContent(event, controlledTab){
         createTable('Title',"selectedBox");
         createTable('Identifier',"selectedBox");
     }
+    if (tabTitle=='Spine'){
+        fillData()
+    }
     if($("#listTab .tablinks").hasClass("active")){
         var activeContentId = $("#listTab .tablinks.active").attr('aria-controls');
         document.getElementById(activeContentId).style.display = "none";
@@ -21,7 +24,9 @@ function createIcon(appendElem, iconClass, alt, elemId, modalID){
     var icon = document.createElement('i');
     icon.setAttribute('class',iconClass);
     icon.setAttribute('alt',alt);
-    icon.setAttribute('id',elemId);
+    if(elemId != '' && elemId != undefined){
+        icon.setAttribute('id',elemId);
+    }
     if (modalID != null && modalID != '' && modalID != undefined && modalID != 'undefined'){
       icon.setAttribute('data-bs-toggle','modal');
       icon.setAttribute('data-bs-target',modalID);

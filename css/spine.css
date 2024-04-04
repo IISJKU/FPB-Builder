@@ -3,7 +3,6 @@
 }
 
 #contentBox{
-  width: fit-content;
   height: 300%;
   max-height: 570px;
   border: solid 0.5px #dee2e6;
@@ -23,8 +22,13 @@
   float: right;
 }
 
+#deletePage{
+  color: orangered;
+  cursor: pointer;
+}
+
 #pageList .bi-plus-square-fill{
-  color: blue;
+  /* color: blue; */
   font-size: larger;
 }
 
@@ -62,4 +66,14 @@
 
 .txtCenter{
   text-align: center;
+}
+
+.browseBtn{
+  background-color: #e9ecef00;
+  color: black;
+  float: right;
+}
+
+#contentBoxLabel{
+  width: 100%;
 }
