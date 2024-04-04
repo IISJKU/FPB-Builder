@@ -161,6 +161,19 @@ function fillData(){
       var section = theadTxt.attr('name');
       var property = $(this).closest('tr').children()[0].innerText;
       $(this).text(pageDetails[pageId][section][property]);
+      if (section =='imagesScripts' || section =='narration'){
+        var browseBtn = document.createElement('button');
+        browseBtn.setAttribute('type', 'button');
+        browseBtn.setAttribute('class', 'btn btn-secondary browseBtn');
+        if (section =='imagesScripts'){
+          browseBtn.setAttribute('id' , 'openImageXHTML');
+        }else{
+          browseBtn.setAttribute('id' , '');
+        }
+        btnText= document.createTextNode('Browse');
+        browseBtn.appendChild(btnText);
+        $(this).append(browseBtn);
+      }
     })
   })
 }
