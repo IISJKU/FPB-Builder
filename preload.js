@@ -5,4 +5,18 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   desktop: true,
   openImageXHTML() {
     ipcRenderer.send("openImageXHTML");
-  }});
+  },
+
+  narrations() {
+    ipcRenderer.send("narrations");
+  },
+
+  coverImage() {
+    ipcRenderer.send("coverImage");
+  },
+
+  otherFiles() {
+    ipcRenderer.send("otherFiles");
+  },
+
+});

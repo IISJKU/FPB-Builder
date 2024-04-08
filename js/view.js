@@ -7,7 +7,8 @@ function changeContent(event, controlledTab){
         createTable('Identifier',"selectedBox");
     }
     if (tabTitle=='Spine'){
-        fillData()
+        $('#publicationLanguage').trigger('change');
+        fillData();
     }
     if($("#listTab .tablinks").hasClass("active")){
         var activeContentId = $("#listTab .tablinks.active").attr('aria-controls');

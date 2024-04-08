@@ -52,6 +52,8 @@
   height: 150px;
   max-height: 150px;
   overflow: scroll;
+  border-left: solid 0.5px #dee2e6;
+  border-radius: 0px;
 }
 
 #altTable{
@@ -76,4 +78,9 @@
 
 #contentBoxLabel{
   width: 100%;
+}
+
+.langHeader{
+  width: 7%;
+  min-width: 7%;
 }
