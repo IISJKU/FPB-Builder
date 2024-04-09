@@ -20,3 +20,7 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   },
 
 });
+
+ipcRenderer.on('filePath', (_event, arg) => {
+  console.log(arg);
+})

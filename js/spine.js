@@ -126,8 +126,6 @@ $(document).on('click', '.otherFiles', function(e) {
   BRIDGE.otherFiles();
 });
 
-
-
 //Add new page anchor element 
 function createPage(){
   var pageLength = 0;
@@ -148,16 +146,6 @@ function createPage(){
   return pageLength
 }
 
-//empty fields for new page
-function newPageContent(){
-  $('#contentBox table').each(function(){
-    $(this).find('tbody').each(function(){
-      //if ($(this).attr('contenteditable') != 'false'){}
-      $(this).html('');
-    })
-  })
-}
-
 //fill fields with the page details 
 function fillData(){
   var page = $("#pageList .list-group-item.active");
@@ -167,10 +155,6 @@ function fillData(){
   if (pageId !='cover' && pageId !='credit'){
     createIcon(pageLabel, 'bi bi-trash3-fill icons','delete page', 'deletePage')
   }
-   /*if (!pageDetails[pageId]){
-    newPageContent();
-    //return
-  }*/
   $('#contentBox table').each(function(){
     var table =  $(this);
     var theadTxt = $(this).children('thead').children('tr').children('th');

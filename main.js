@@ -19,6 +19,58 @@ const createWindow = () => {
     mainWindow.webContents.on('did-finish-load', function() {
         
     });
+
+    ipcMain.on("openImageXHTML", (event, arg) => {
+        dialog.showOpenDialog({
+            properties: ["openFile"],
+            filters: [{
+                name: 'xhtml Image', extensions: ['xhtml']
+            }]
+        }).then(result => {
+            event.reply('filePath', result.filePaths);
+        }).catch(err => {
+            console.log(err)
+        })
+    });
+
+    ipcMain.on("narrations", (event, arg) => {
+        dialog.showOpenDialog({
+            properties: ["openFile"],
+            filters: [{
+                name: 'Audio', extensions: ['wav', 'mp3']
+            }]
+        }).then(result => {
+            event.reply('filePath', result.filePaths);
+        }).catch(err => {
+            console.log(err)
+        })
+    });
+
+    ipcMain.on("coverImage", (event, arg) => {
+        dialog.showOpenDialog({
+            properties: ["openFile"],
+            filters: [{
+                name: 'Images', extensions: ['jpg', 'png', 'jpeg']
+            }]
+        }).then(result => {
+            event.reply('filePath', result.filePaths);
+        }).catch(err => {
+            console.log(err)
+        })
+    });
+
+    ipcMain.on("otherFiles", (event, arg) => {
+        dialog.showOpenDialog({
+            properties: ["openFile"],
+            filters: [{
+                name: 'All Files', extensions: ['*']
+            }]
+        }).then(result => {
+            event.reply('filePath', result.filePaths);
+        }).catch(err => {
+            console.log(err)
+        })
+    });
 }
 
 app.whenReady().then(() => {
@@ -29,49 +81,3 @@ app.on('window-all-closed', () => {
     // if not macOS
     if (process.platform !== 'darwin') app.quit()
 })
-
-ipcMain.on("openImageXHTML", () => {
-    dialog.showOpenDialog({
-        properties: ["openFile"],
-        filters: [{
-            name: 'xhtml Image', extensions: ['xhtml']
-          }]
-    })
-});
-
-ipcMain.on("narrations", () => {
-    dialog.showOpenDialog({
-        properties: ["openFile"],
-        filters: [{
-            name: 'Audio', extensions: ['wav', 'mp3']
-          }]
-    })
-});
-
-ipcMain.on("coverImage", () => {
-    //handleFileOpen();
-    dialog.showOpenDialog({
-        properties: ["openFile"],
-        filters: [{
-            name: 'Images', extensions: ['jpg', 'png', 'jpeg']
-          }]
-    }).then(result => {
-       // mainWindow.webContents.send('asynchronous-message', {'SAVED': 'File Saved'});
-        console.log(result.canceled)
-        console.log(report.filePaths)
-      }).catch(err => {
-        console.log(err)
-      })
-});
-
-ipcMain.on("otherFiles", () => {
-    dialog.showOpenDialog({
-        properties: ["openFile"],
-        filters: [{
-            name: 'All Files', extensions: ['*']
-          }]
-    })
-});
-
-
-
