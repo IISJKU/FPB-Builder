@@ -2,7 +2,8 @@
 const accessMeta = ['Mode','Feature','Hazard','Summary','Mode Sufficient','Conforms to','Certified by'];
 //required metadata
 const reqMeta = ['Title','Identifier'];
-var bookDetails={
+const langMetadata = ['Title','Mode','Feature','Hazard','Summary','Mode Sufficient', 'Type','Subject'];
+let bookDetails={
   'Title': {
     'EN': "Little Red Riding Hood",
     'IT': "Cappuccetto Rosso",
@@ -18,9 +19,9 @@ var bookDetails={
     4: "Agata Lia",
   },
 };
-var infoText ='More';
+let infoText ='More';
 //info panel content object
-var infoObj={
+let infoObj={
   'title': "Represents an instance of a name for the EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
   'identifier': "Contains an identifier such as a UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
   'contributor': "Represent the name of a person, organization, etc. that played a secondary role in the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" + infoText + "</a>",
@@ -43,25 +44,28 @@ if (!sessionStorage.getItem("bookDetails")){
 
 //handle adding items from available metadata cloumn to added metadata column
 function addBtn(){
-  var selectedOpts = $('#itemBox option:selected');
+  let selectedOpts = $('#itemBox option:selected');
   if (selectedOpts.length == 0) {
     alert("Nothing to move.");
     return;
   }
-  createTable(selectedOpts.text(),"selectedBox");
-  $(selectedOpts).remove();
+  for (let i = 0; i < selectedOpts.length; i++) {
+    createTable(selectedOpts[i].text,"selectedBox");
+    $(selectedOpts[i]).remove();
+  }
 }
 
 //handle removing items from added metadata cloumn to available metadata column
 function removeBtn(){ 
-  var selectedOpts = $('#selectedBox .list-group-item.active');
+  let selectedOpts = $('#selectedBox .list-group-item.active');
   if (selectedOpts.length == 0) {
       alert("Nothing to move.");
       return;
   }
-  var metadataText = $("#selectedBox .list-group-item.active>table>thead").text();
-  var optionElem = document.createElement('option');
-  optionElem.setAttribute('value', metadataText.toLowerCase().replace(/\s/g,''));
+  let metadataText = $("#selectedBox .list-group-item.active>table>thead").text();
+  let itemText= metadataText.replace(/\s/g,'');
+  let optionElem = document.createElement('option');
+  optionElem.setAttribute('value', itemText.toLowerCase());
   if (accessMeta.includes(metadataText)){
     optionElem.setAttribute('class', 'bi bi-person-wheelchair');
     optionElem.setAttribute('data-tokens', metadataText);
@@ -73,35 +77,38 @@ function removeBtn(){
   }
   optionElem.appendChild(document.createTextNode(metadataText));
   $('#itemBox').append(optionElem);
-  $("#selectedBox #"+ metadataText).remove();
+  $("#selectedBox #"+ itemText).remove();
 }
 
 //create table for each metadata 
-function createTable(tableTitle, elemID){
-  var bookDetObj = parseBookData()
+function createTable(tableTitle, elemID, langChange){
+  let bookDetObj = parseBookData()
   // check if the table doesn't have values
   if (bookDetObj[tableTitle] == undefined) {
     createNewTable(tableTitle, elemID);
     return;
   }
   // check if the table is already exisit for the table title
-  if (checkAddedList(tableTitle) == 1){
+  if (checkAddedList(tableTitle) == 1 && (langChange || langChange!= 1 )){
     return;
   }
-  var tbl = document.createElement('table');
-  //tbl.style.width = '100%';
+  let tbl = document.createElement('table');
   tbl.setAttribute('class', 'table table-sm table-bordered table-striped');
   tbl.setAttribute('contenteditable', 'true');
   tableHeader(tbl, tableTitle)
-  var tbdy = document.createElement('tbody');
-  for(var val in bookDetObj[tableTitle]) {
-    var tr = document.createElement('tr');
-    var th = document.createElement('th');
+  let tbdy = document.createElement('tbody');
+  if (langMetadata.includes(tableTitle)){
+    langMetaAttr(tbl, tbdy, tableTitle, elemID)
+    return;
+  }
+  for(let val in bookDetObj[tableTitle]) {
+    let tr = document.createElement('tr');
+    let th = document.createElement('th');
     th.appendChild(document.createTextNode(val));
     th.setAttribute('scope','row');
     th.setAttribute('contenteditable','false');
     tr.appendChild(th);
-    var td = document.createElement('td');
+    let td = document.createElement('td');
     td.appendChild(document.createTextNode(bookDetObj[tableTitle][val]));
     if (!reqMeta.includes(tableTitle)){
       createIcon(td, 'bi bi-trash3-fill','delete entry')
@@ -114,11 +121,43 @@ function createTable(tableTitle, elemID){
   aElement(tbl, tableTitle, elemID)
 }
 
+// Create selected languages rows in the tables
+function langMetaAttr(tbl, tbdy, title, elemId){
+  let bookDetObj = parseBookData()
+  let value = '';
+  let langs = JSON.parse(sessionStorage.getItem("pubLang"));
+  for (let i = 0; i < langs.length; i++) {
+    let tr = document.createElement('tr');
+    let th = document.createElement('th');
+    th.appendChild(document.createTextNode(langs[i]));
+    th.setAttribute('scope','row');
+    //th.setAttribute('class','langHeader');
+    th.setAttribute('contenteditable','false');
+    tr.appendChild(th);
+    let td = document.createElement('td');
+    if (bookDetObj[title]){
+      value = bookDetObj[title][langs[i]];
+    }
+    if (value != '' && value != undefined && value != 'undefined'){
+      td.appendChild(document.createTextNode(value));
+    }else{
+      td.appendChild(document.createTextNode(''));
+    }
+    if (!reqMeta.includes(title)){
+      createIcon(td, 'bi bi-trash3-fill','delete entry')
+    }
+    tr.appendChild(td);
+    tbdy.appendChild(tr);
+  }
+  tbl.appendChild(tbdy);
+  aElement(tbl, title, elemId)
+}
+
 //create table header element
 function tableHeader(tbl, tableTitle){
-  var thd = document.createElement('thead');
-  var thdtr = document.createElement('tr');
-  var thdth = document.createElement('th');
+  let thd = document.createElement('thead');
+  let thdtr = document.createElement('tr');
+  let thdth = document.createElement('th');
   thdth.setAttribute('scope','col');
   thdth.setAttribute('colspan','2');
   thdth.setAttribute('contenteditable','false');
@@ -137,11 +176,12 @@ function tableHeader(tbl, tableTitle){
 
 //create anchor element to the added metadata column
 function aElement(tbl, tableTitle, elemID){
-  var metadata = document.getElementById(elemID)
-  var aElem = document.createElement('a');
+  let metadata = document.getElementById(elemID)
+  let aElem = document.createElement('a');
   aElem.setAttribute('class', 'list-group-item list-group-item-action');
   aElem.setAttribute('href', '#');
-  aElem.setAttribute('id', tableTitle);
+  let elementTitle=tableTitle.replace(/\s/g,'')
+  aElem.setAttribute('id', elementTitle);
   aElem.appendChild(tbl);
   metadata.append(aElem);
   events();
@@ -159,8 +199,8 @@ function events(){
   $("#selectedBox i.bi-trash3-fill").on("click", function(e) {
   if($(this)){
     //delete an existing entry
-    var title = $(this).closest('table').children('thead').text();
-    var key = $(this).closest('tr').children()[0].innerText;
+    let title = $(this).closest('table').children('thead').text();
+    let key = $(this).closest('tr').children()[0].innerText;
     updateBookData(title, key, 'delete')
     $(this).closest('tr').html('');
   }
@@ -169,23 +209,23 @@ function events(){
   $("#selectedBox i.bi-pencil-square").on("click", function(e) {
     if($(this)){
       //show the modal to add the new entry
-      var title = $(this).closest('table').children('thead').text();
-      var key = $(this).closest('tr').children()[0].innerText;
-      var val = $(this).closest('td').text();
-      var modalID = $(this).attr('data-bs-target');
+      let title = $(this).closest('table').children('thead').text();
+      let key = $(this).closest('tr').children()[0].innerText;
+      let val = $(this).closest('td').text();
+      let modalID = $(this).attr('data-bs-target');
       setModalValues(modalID, title, key, val)
     }
   });
 
   $("#selectedBox i.bi-plus-square-fill").on("click", function(e) {
     if($(this)){
-      var title = $(this).closest('table').children('thead').text();
-      var modalID = $(this).attr('data-bs-target');
+      let title = $(this).closest('table').children('thead').text();
+      let modalID = $(this).attr('data-bs-target');
       setModalValues(modalID, title, '', '','add');
       //check if the fade div is already exist
       if ($("#modal-fade").length == 0){
         // create div to appy the fading when the modal opens
-        var elemDiv = document.createElement('div');
+        let elemDiv = document.createElement('div');
         elemDiv.setAttribute('class', 'modal-backdrop fade show');
         elemDiv.setAttribute('id', 'modal-fade');
         document.body.appendChild(elemDiv);
@@ -196,16 +236,20 @@ function events(){
 
 function createNewTable(tableTitle, elemID){
   //create new table if the metadata doesn't have any data
-  var tbl = document.createElement('table');
+  let tbl = document.createElement('table');
   tbl.setAttribute('class', 'table table-sm table-bordered table-striped');
   tableHeader(tbl, tableTitle)
   aElement(tbl, tableTitle, elemID)
+  if (langMetadata.includes(tableTitle)){
+    let tbdy = document.createElement('tbody');
+    langMetaAttr(tbl, tbdy, tableTitle, elemID)
+  }
 }
 
 function setModalValues(modalID, tableTitle, header, val, mode){
   //set the values to the modal and show it
-  var body='';
-  var bodyLabel='';
+  let body='';
+  let bodyLabel='';
   if (mode == 'add'){
     bodyLabel = 'addMetaBodyLabel';
     body = 'addMetaBody';
@@ -221,9 +265,9 @@ function setModalValues(modalID, tableTitle, header, val, mode){
 
 function updateValue(){
   //Update values in the table
-  var title = $('#editMetaModalLabel').text();
-  var key = $('#editMetaBodyLabel').val();
-  var val = $('#editMetaBody').val();
+  let title = $('#editMetaModalLabel').text();
+  let key = $('#editMetaBodyLabel').val();
+  let val = $('#editMetaBody').val();
   updateBookData(title, key, 'update', val);
   closeModal('editMetaModal')
   //window.location.reload();
@@ -231,9 +275,9 @@ function updateValue(){
 
 function addValue(){
   //Add the values to the table
-  var title = $('#addMetaModalLabel').text();
-  var key = $('#addMetaBodyLabel').val();
-  var val = $('#addMetaBody').val();
+  let title = $('#addMetaModalLabel').text();
+  let key = $('#addMetaBodyLabel').val();
+  let val = $('#addMetaBody').val();
   updateBookData(title, key, 'add', val);
   closeModal('addMetaModal')
 }
@@ -241,7 +285,7 @@ function addValue(){
 // hide modal
 function closeModal(modalID){
   // check if the fade div is exist
-  var fadeDiv = document.getElementById("modal-fade");
+  let fadeDiv = document.getElementById("modal-fade");
   if (fadeDiv != null){
     document.body.removeChild(fadeDiv);
   }
@@ -249,28 +293,33 @@ function closeModal(modalID){
 }
 
 function parseBookData(){
-  var bookDetObj = JSON.parse(sessionStorage.getItem('bookDetails'))
+  let bookDetObj = JSON.parse(sessionStorage.getItem('bookDetails'))
   return bookDetObj
 }
 
 function updateBookData(title, key, mode, val){
-  var bookDetObj = JSON.parse(sessionStorage.getItem('bookDetails'))
+  let bookDetObj = JSON.parse(sessionStorage.getItem('bookDetails'))
   if (mode == 'delete'){
     delete bookDetObj[title][key];
   } else {
     bookDetObj[title][key] = val;
   }
   sessionStorage.setItem("bookDetails", (JSON.stringify(bookDetObj)));
-  updateAddedList();
+  updateAddedList(0, 0);
 }
 
 // update the list to get the updated values
-function updateAddedList(){
+// langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
+// multipleUp is a flag indicates that the function called from metadata tab onclick so title and identifier elements are updated already 
+function updateAddedList(langChange, multipleUp){
   $("#selectedBox .table").each(function(){
     if ($(this)){
-      var currtitle = $(this).children('thead').text();
+      let currtitle = $(this).children('thead').text();
+      if (multipleUp == 1 && (currtitle== 'Title' || currtitle== 'Identifier')){
+        return;
+      }
       $('#'+currtitle).remove();
-      createTable(currtitle,"selectedBox");
+      createTable(currtitle,"selectedBox", langChange);
     }
   });
 }
@@ -282,7 +331,7 @@ function checkAddedList(title){
 
 //Update info panel value
 function updateInfo(){
-  var selectedOpts = $('#itemBox option:selected');
+  let selectedOpts = $('#itemBox option:selected');
   if (selectedOpts.length == 0) {
     return;
   }
