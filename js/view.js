@@ -1,17 +1,18 @@
 function changeContent(event, controlledTab){
-    var tabTitle = event.textContent.trim();
+    let tabTitle = event.textContent.trim();
     $('#tabTitle').text(tabTitle);
     
     if (tabTitle=='Metadata'){
         createTable('Title',"selectedBox");
         createTable('Identifier',"selectedBox");
+        updateAddedList(0, 1)
     }
     if (tabTitle=='Spine'){
         $('#publicationLanguage').trigger('change');
         fillData();
     }
     if($("#listTab .tablinks").hasClass("active")){
-        var activeContentId = $("#listTab .tablinks.active").attr('aria-controls');
+        let activeContentId = $("#listTab .tablinks.active").attr('aria-controls');
         document.getElementById(activeContentId).style.display = "none";
         $("#listTab .tablinks").removeClass("active");
         
@@ -22,7 +23,7 @@ function changeContent(event, controlledTab){
 
 // create icon element with it's attributes
 function createIcon(appendElem, iconClass, alt, elemId, modalID){
-    var icon = document.createElement('i');
+    let icon = document.createElement('i');
     icon.setAttribute('class',iconClass);
     icon.setAttribute('alt',alt);
     if(elemId != '' && elemId != undefined){

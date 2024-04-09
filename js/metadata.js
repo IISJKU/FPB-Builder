@@ -1,8 +1,8 @@
 //accessibility metadata options
-const accessMeta = ['Mode','Feature','Hazard','Summary','Mode Sufficient','Conforms to','Certified by'];
+const accessMeta = ['Mode', 'Feature', 'Hazard', 'Summary', 'Mode Sufficient', 'Conforms to', 'Certified by'];
 //required metadata
-const reqMeta = ['Title','Identifier'];
-const langMetadata = ['Title','Mode','Feature','Hazard','Summary','Mode Sufficient', 'Type','Subject'];
+const reqMeta = ['Title', 'Identifier', 'Summary', 'Mode Sufficient'];
+const langMetadata = ['Title', 'Identifier', 'Mode', 'Feature', 'Hazard', 'Summary', 'Mode Sufficient', 'Type', 'Subject'];
 let bookDetails={
   'Title': {
     'EN': "Little Red Riding Hood",
@@ -28,6 +28,8 @@ let infoObj={
   'creator': "Represents the name of a person, organization, etc. responsible for the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-creator'>" + infoText + "</a>",
   'publisher': "Refer to a publishing company or organization, or to an individual who leads a publishing company. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcmes-optional-def'>" + infoText + "</a>",
   'publishingdate': "Defines the publication date of the EPUB publication. The publication date is not the same as the last modified date. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-date'>" + infoText + "</a>",
+  'subject': "Identifies the subject of the EPUB publication. The value should be human-readable heading or label, but a code value may used if the subject taxonomy does not provide a separate descriptive label. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcsubject'>" + infoText + "</a>",
+  'type': "Used to indicate that the EPUB publication is of a specialized type (e.g., annotations or a dictionary packaged in EPUB format). <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dctype'>" + infoText + "</a>",
   'mode': "A human sensory perceptual system or cognitive faculty necessary to process or perceive the content (e.g., textual, visual, auditory, tactile). <a target='_blank' href='https://schema.org/accessMode'>" + infoText + "</a>",
   'feature': "Features and adaptations that contribute to the overall accessibility of the content (e.g., alternative text, extended descriptions, captions). <a target='_blank' href='https://schema.org/accessibilityFeature'>" + infoText + "</a>",
   'hazard': "Any potential hazards that the content presents (e.g., flashing, motion simulation, sound). <a target='_blank' href='https://schema.org/accessibilityHazard'>" + infoText + "</a>",
@@ -81,7 +83,9 @@ function removeBtn(){
 }
 
 //create table for each metadata 
+//langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
 function createTable(tableTitle, elemID, langChange){
+  let elementTitle=tableTitle.replace(/\s/g,'');
   let bookDetObj = parseBookData()
   // check if the table doesn't have values
   if (bookDetObj[tableTitle] == undefined) {
@@ -89,7 +93,7 @@ function createTable(tableTitle, elemID, langChange){
     return;
   }
   // check if the table is already exisit for the table title
-  if (checkAddedList(tableTitle) == 1 && (langChange || langChange!= 1 )){
+  if (checkAddedList(elementTitle) == 1 && (langChange || langChange!= 1 )){
     return;
   }
   let tbl = document.createElement('table');
@@ -131,7 +135,7 @@ function langMetaAttr(tbl, tbdy, title, elemId){
     let th = document.createElement('th');
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute('scope','row');
-    //th.setAttribute('class','langHeader');
+    th.setAttribute('class','langMetaHeader');
     th.setAttribute('contenteditable','false');
     tr.appendChild(th);
     let td = document.createElement('td');
@@ -142,9 +146,6 @@ function langMetaAttr(tbl, tbdy, title, elemId){
       td.appendChild(document.createTextNode(value));
     }else{
       td.appendChild(document.createTextNode(''));
-    }
-    if (!reqMeta.includes(title)){
-      createIcon(td, 'bi bi-trash3-fill','delete entry')
     }
     tr.appendChild(td);
     tbdy.appendChild(tr);
@@ -180,7 +181,7 @@ function aElement(tbl, tableTitle, elemID){
   let aElem = document.createElement('a');
   aElem.setAttribute('class', 'list-group-item list-group-item-action');
   aElem.setAttribute('href', '#');
-  let elementTitle=tableTitle.replace(/\s/g,'')
+  let elementTitle=tableTitle.replace(/\s/g,'');
   aElem.setAttribute('id', elementTitle);
   aElem.appendChild(tbl);
   metadata.append(aElem);
@@ -220,6 +221,11 @@ function events(){
   $("#selectedBox i.bi-plus-square-fill").on("click", function(e) {
     if($(this)){
       let title = $(this).closest('table').children('thead').text();
+      if (title =='Publishing date' && $("#selectedBox #Publishingdate").length ==1){
+        alert('publications date MUST NOT contain more than one entry');
+        $(this).removeClass("active");
+        return;
+      }
       let modalID = $(this).attr('data-bs-target');
       setModalValues(modalID, title, '', '','add');
       //check if the fade div is already exist
@@ -238,12 +244,14 @@ function createNewTable(tableTitle, elemID){
   //create new table if the metadata doesn't have any data
   let tbl = document.createElement('table');
   tbl.setAttribute('class', 'table table-sm table-bordered table-striped');
+  tbl.setAttribute('contenteditable', 'true');
   tableHeader(tbl, tableTitle)
-  aElement(tbl, tableTitle, elemID)
   if (langMetadata.includes(tableTitle)){
     let tbdy = document.createElement('tbody');
-    langMetaAttr(tbl, tbdy, tableTitle, elemID)
+    langMetaAttr(tbl, tbdy, tableTitle, elemID);
+    return;
   }
+  aElement(tbl, tableTitle, elemID)
 }
 
 function setModalValues(modalID, tableTitle, header, val, mode){
@@ -302,6 +310,9 @@ function updateBookData(title, key, mode, val){
   if (mode == 'delete'){
     delete bookDetObj[title][key];
   } else {
+    if (bookDetObj[title] == undefined) {
+      bookDetObj[title] = {}
+    }
     bookDetObj[title][key] = val;
   }
   sessionStorage.setItem("bookDetails", (JSON.stringify(bookDetObj)));
@@ -318,7 +329,8 @@ function updateAddedList(langChange, multipleUp){
       if (multipleUp == 1 && (currtitle== 'Title' || currtitle== 'Identifier')){
         return;
       }
-      $('#'+currtitle).remove();
+      let elementTitle=currtitle.replace(/\s/g,'');
+      $('#'+elementTitle).remove();
       createTable(currtitle,"selectedBox", langChange);
     }
   });

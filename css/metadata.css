@@ -56,3 +56,8 @@ th.required::after{
     content:' *';
     color:red;
 }
+
+.langMetaHeader{
+    width: 10%;
+    min-width: 10%;
+}
