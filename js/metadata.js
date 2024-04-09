@@ -2,6 +2,7 @@
 const accessMeta = ['Mode', 'Feature', 'Hazard', 'Summary', 'Mode Sufficient', 'Conforms to', 'Certified by'];
 //required metadata
 const reqMeta = ['Title', 'Identifier', 'Summary', 'Mode Sufficient'];
+//Metdata that related to the selected languages in the project screen
 const langMetadata = ['Title', 'Identifier', 'Mode', 'Feature', 'Hazard', 'Summary', 'Mode Sufficient', 'Type', 'Subject'];
 let bookDetails={
   'Title': {
