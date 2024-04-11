@@ -181,7 +181,7 @@ function aElement(tbl, tableTitle, elemID){
   let metadata = document.getElementById(elemID)
   let aElem = document.createElement('a');
   aElem.setAttribute('class', 'list-group-item list-group-item-action');
-  aElem.setAttribute('href', '#');
+  //aElem.setAttribute('href', '#');
   let elementTitle=tableTitle.replace(/\s/g,'');
   aElem.setAttribute('id', elementTitle);
   aElem.appendChild(tbl);

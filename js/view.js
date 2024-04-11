@@ -3,11 +3,12 @@ function changeContent(event, controlledTab){
     $('#tabTitle').text(tabTitle);
     
     if (tabTitle=='Metadata'){
+        $('#publicationLanguage').trigger('change');
         createTable('Title',"selectedBox");
         createTable('Identifier',"selectedBox");
-        updateAddedList(0, 1)
+        updateAddedList(0, 1);
     }
-    if (tabTitle=='Spine'){
+    if (tabTitle=='Spine' ){
         $('#publicationLanguage').trigger('change');
         fillData();
     }
