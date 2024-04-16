@@ -19,8 +19,9 @@ function setLanguages(lang) {
 
 function fetchMetadataFromFrontend(window) {}
 
-function setMetadata(meta) {
-  details = meta;
+function setData(data) {
+  details = data;
+  validate();
 }
 
 /**
@@ -137,6 +138,7 @@ function getMetadata() {
 }
 
 module.exports.getMetadata = getMetadata;
+module.exports.setData = setData;
 module.exports.setLanguages = setLanguages;
 module.exports.fetchMetadataFromFrontend = fetchMetadataFromFrontend;
 module.exports.validate = validate;

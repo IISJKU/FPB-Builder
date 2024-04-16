@@ -32,8 +32,11 @@ let bookDetails = {
   AccessibilitySummary: {},
   CertifiedBy: [],
   ConformsTo: [],
-  PublishingDate:[],
+  PublishingDate: [],
 };
+
+sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
+
 let infoText = "More";
 //info panel content object
 let infoObj = {
@@ -158,7 +161,7 @@ function metadataInitialized() {
 
 function initializeMetadata() {
   sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
-  createTable("Title", "selectedBox","Title");
+  createTable("Title", "selectedBox", "Title");
   createTable("Identifier", "selectedBox", "Identifier");
   updateAddedList(0, 1);
   initialized = true;
@@ -186,7 +189,7 @@ function removeBtn() {
     return;
   }
   let metadataText = $("#selectedBox .list-group-item.active>table>thead").text();
-  let itemIntVal = $("#selectedBox .list-group-item.active").attr('id');
+  let itemIntVal = $("#selectedBox .list-group-item.active").attr("id");
   let optionElem = document.createElement("option");
   optionElem.setAttribute("value", itemIntVal);
   if (accessMeta.includes(itemIntVal)) {
@@ -205,7 +208,7 @@ function removeBtn() {
 
 //create table for each metadata
 //langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
-function createTable(tableTitle, elemID, itemVal,langChange) {
+function createTable(tableTitle, elemID, itemVal, langChange) {
   let elementTitle = tableTitle.replace(/\s/g, "");
   let bookDetObj = parseBookData();
   // check if the table doesn't have values
@@ -341,8 +344,8 @@ function events() {
         $(this).closest(".list-group-item").removeClass("active");
         alert("publications date MUST NOT contain more than one entry");
         return;
-      }else{
-       addNewRow(title) 
+      } else {
+        addNewRow(title);
       }
     }
   });
@@ -363,22 +366,22 @@ function createNewTable(tableTitle, elemID, intVal) {
   aElement(tbl, intVal, elemID);
 }
 
-function addNewRow(tableTitle){
+function addNewRow(tableTitle) {
   let elementTitle = tableTitle.replace(/\s/g, "");
-  var relTable = $("#selectedBox #"+elementTitle+" table");
+  var relTable = $("#selectedBox #" + elementTitle + " table");
   let count = 0;
-  let tbdy = document.createElement('tbody');
-  if (!langMetadata.includes(tableTitle)){
-    count = $("#selectedBox #"+elementTitle+" tbody tr").length +1;
+  let tbdy = document.createElement("tbody");
+  if (!langMetadata.includes(tableTitle)) {
+    count = $("#selectedBox #" + elementTitle + " tbody tr").length + 1;
   }
-  let tr = document.createElement('tr');
-  let th = document.createElement('th');
+  let tr = document.createElement("tr");
+  let th = document.createElement("th");
   th.appendChild(document.createTextNode(count));
-  th.setAttribute('scope','row');
+  th.setAttribute("scope", "row");
   th.setAttribute("class", "metaHeader");
-  th.setAttribute('contenteditable','false');
+  th.setAttribute("contenteditable", "false");
   tr.appendChild(th);
-  let td = document.createElement('td');
+  let td = document.createElement("td");
   tr.appendChild(td);
   tbdy.appendChild(tr);
   relTable.append(tbdy);
@@ -415,7 +418,7 @@ function updateAddedList(langChange, multipleUp) {
       }
       let elementTitle = currtitle.replace(/\s/g, "");
       $("#" + elementTitle).remove();
-      iIntVal = $("#selectedBox .list-group-item.active").attr('id');
+      iIntVal = $("#selectedBox .list-group-item.active").attr("id");
       createTable(currtitle, "selectedBox", iIntVal, langChange);
     }
   });

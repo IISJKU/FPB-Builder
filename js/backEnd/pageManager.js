@@ -2,6 +2,21 @@ const Page = require("./classes/Page.js");
 
 let pages = [];
 
+function setData(p) {
+  //itterate over keys
+  pages = [];
+
+  if (typeof p != undefined && p != null) {
+    Object.keys(p).forEach((key) => {
+      const value = p[key];
+      if (key != "cover" && key != "credit") {
+        p[key]["title"] = "page" + key;
+        pages.push(p[key]);
+      }
+    });
+  }
+}
+
 function fetchPageDataFromFrontend() {
   //data from frontend, normally saved in session storage:
   // but now im making it up!"
@@ -96,4 +111,5 @@ function getPages() {
 }
 
 module.exports.getPages = getPages;
+module.exports.setData = setData;
 module.exports.fetchPageDataFromFrontend = fetchPageDataFromFrontend;

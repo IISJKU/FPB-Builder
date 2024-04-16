@@ -60,7 +60,11 @@ function createFileStructure(name, path) {
   FileSystemManager.makeFolder(tempDir, "xhtml");
 }
 
-function fetchFromFrontend(window, callback) {}
+function fetchFromFrontend(window, callback) {
+  window.webContents.executeJavaScript('sessionStorage.getItem("frontendData")', true).then((result) => {
+    callback(result);
+  });
+}
 
 function make() {
   //get list of selected Languages from session, now I'm going to add test language data
@@ -133,6 +137,7 @@ function manuallySelectDependency(path) {
 
 function setMetadata() {}
 
+exports.fetchFromFrontend = fetchFromFrontend;
 exports.importImage = importImage;
 exports.manuallySelectDependency = manuallySelectDependency;
 exports.setDirectory = setDirectory;

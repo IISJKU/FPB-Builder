@@ -2,6 +2,7 @@ const { dialog, ipcMain } = require("electron");
 const storage = require("electron-json-storage");
 const EPUBMaker = require("./EPUBMaker.js");
 const MetadataManager = require("./metadataManager.js");
+const PageManager = require("./pageManager.js");
 
 let fs = require("fs");
 
@@ -92,7 +93,10 @@ class ipcMainManager {
     });
 
     function dataLoaded(data) {
-      //EPUBMaker.make(data);
+      data = JSON.parse(data);
+
+      MetadataManager.setData(data.bookDetails);
+      PageManager.setData(data.pages);
     }
 
     ipcMain.on("generateEpubs", () => {
