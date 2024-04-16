@@ -30,16 +30,12 @@ function changeContent(event, controlledTab) {
 }
 
 // create icon element with it's attributes
-function createIcon(appendElem, iconClass, alt, elemId, modalID) {
+function createIcon(appendElem, iconClass, alt, elemId) {
   let icon = document.createElement("i");
   icon.setAttribute("class", iconClass);
   icon.setAttribute("alt", alt);
   if (elemId != "" && elemId != undefined) {
     icon.setAttribute("id", elemId);
-  }
-  if (modalID != null && modalID != "" && modalID != undefined && modalID != "undefined") {
-    icon.setAttribute("data-bs-toggle", "modal");
-    icon.setAttribute("data-bs-target", modalID);
   }
   appendElem.appendChild(icon);
 }

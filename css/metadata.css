@@ -57,7 +57,7 @@ th.required::after{
     color:red;
 }
 
-.langMetaHeader{
+.metaHeader{
     width: 10%;
     min-width: 10%;
 }
