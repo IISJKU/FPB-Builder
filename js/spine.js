@@ -147,6 +147,17 @@ $(document).on("click", ".otherFiles", function (e) {
 
 window.BRIDGE.onImageLoaded((value) => {
   console.log(value);
+  let pageID = $("#pageList .list-group-item.active").attr("id");
+
+  if (typeof pageDetails[pageID] != undefined && pageDetails[pageID] != undefined)
+    pageDetails[pageID]["imagesScripts"] = {
+      Image: "C://user/image.xhtml",
+      Script: "asdfsf",
+      Style: "asfsaf",
+      Style: "asfassssss",
+      Style: "ffffffffff",
+      Style: "hhhhhhhhhhhhhhhhhh",
+    };
 });
 
 //Add new page anchor element
@@ -194,8 +205,10 @@ function createTableBody(tbl, pageId, section) {
     createLangRows(tbl, tbdy, pageId, section);
     return;
   }
-  console.log(pageDetails[pageId]);
+
   if (!pageDetails[pageId] || !pageDetails[pageId][section]) {
+    pageDetails[pageId] = emptyPage;
+    console.log(pageDetails[pageId]);
     newImagesScripts(tbl, tbdy);
     return;
   }
@@ -272,24 +285,22 @@ function createLangRows(tbl, tbdy, pageId, section) {
 
 //create images and scripts panel for new pages
 function newImagesScripts(tbl, tbdy) {
-  for (let i = 0; i < 4; i++) {
-    let tr = document.createElement("tr");
-    let th = document.createElement("th");
-    th.appendChild(document.createTextNode("Image" + i));
-    th.setAttribute("scope", "row");
-    th.setAttribute("contenteditable", "false");
-    tr.appendChild(th);
-    let td = document.createElement("td");
-    let browseBtn = document.createElement("button");
-    browseBtn.setAttribute("type", "button");
-    browseBtn.setAttribute("alt", "Browse images and scripts button");
-    browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
-    browseBtn.setAttribute("id", "importImage");
-    btnText = document.createTextNode("Browse");
-    browseBtn.appendChild(btnText);
-    td.append(browseBtn);
-    tr.appendChild(td);
-    tbdy.appendChild(tr);
-    tbl.append(tbdy);
-  }
+  let tr = document.createElement("tr");
+  let th = document.createElement("th");
+  th.appendChild(document.createTextNode("Image"));
+  th.setAttribute("scope", "row");
+  th.setAttribute("contenteditable", "false");
+  tr.appendChild(th);
+  let td = document.createElement("td");
+  let browseBtn = document.createElement("button");
+  browseBtn.setAttribute("type", "button");
+  browseBtn.setAttribute("alt", "Browse images and scripts button");
+  browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
+  browseBtn.setAttribute("id", "importImage");
+  btnText = document.createTextNode("Browse");
+  browseBtn.appendChild(btnText);
+  td.append(browseBtn);
+  tr.appendChild(td);
+  tbdy.appendChild(tr);
+  tbl.append(tbdy);
 }
