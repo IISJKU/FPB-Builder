@@ -117,55 +117,5 @@
     <script src="./js/spine.js"></script>
     <script src="./js/project.js"></script>
     <script src="./js/reviewPublish.js"></script>
-    <!-- Edit metadata modal -->
-    <div class="modal fade" id="editMetaModal" tabindex="-1" aria-labelledby="editMetaModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editMetaModalLabel">Edit Metadata</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="editMetaBodyLabel" class="form-label">Key</label>
-              <input type="text" class="form-control" id="editMetaBodyLabel" disabled aria-label="Metadata key" />
-            </div>
-            <div class="mb-3">
-              <label for="editMetaBody" class="form-label">Value</label>
-              <input type="text" class="form-control" id="editMetaBody" aria-label="Metadata value" />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="updateValue()">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Add metadata values modal -->
-    <div class="modal fade show" id="addMetaModal" tabindex="-1" aria-labelledby="addMetaModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addMetaModalLabel">Add Metadata</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="addMetaBodyLabel" class="form-label">Key</label>
-              <input type="text" class="form-control" id="addMetaBodyLabel" aria-label="Metadata key" />
-            </div>
-            <div class="mb-3">
-              <label for="addMetaBody" class="form-label">Value</label>
-              <input type="text" class="form-control" id="addMetaBody" aria-label="Metadata value" />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal('addMetaModal')">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="addValue()">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </body>
 </html>
