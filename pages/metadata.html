@@ -1,0 +1,40 @@
+<form>
+  <div class="row">
+    <div class="col-md-6" id="metadataColumn">
+      <div class="row">
+        <div class="col-md-8">
+          <label for="itemBox">Available metadata</label>
+          <select onchange="updateInfo()" id="itemBox" multiple="multiple" class="form-control" size="13">
+            <option value="contributor" data-tokens="contributor">Contributor</option>
+            <option value="creator" data-tokens="Creator">Creator</option>
+            <option value="publisher" data-tokens="Publisher">Publisher</option>
+            <option value="publishingdate" data-tokens="Publishing date">Publishing date</option>
+            <!-- <option value="subject" data-tokens="Subject">Subject</option>
+                    <option value="type" data-tokens="Type">Type</option> -->
+            <option class="bi bi-person-wheelchair" value="mode" data-tokens="Mode">Mode</option>
+            <option class="bi bi-person-wheelchair" value="feature" data-tokens="Feature">Feature</option>
+            <option class="bi bi-person-wheelchair" value="hazard" data-tokens="Hazard">Hazard</option>
+            <option class="bi bi-person-wheelchair" value="summary" data-tokens="Summary">Summary</option>
+            <option class="bi bi-person-wheelchair" value="modesufficient" data-tokens="Mode Sufficient">Mode Sufficient</option>
+            <option class="bi bi-person-wheelchair" value="conformsto" data-tokens="Conforms to">Conforms to</option>
+            <option class="bi bi-person-wheelchair" value="certifiedby" data-tokens="Certified by">Certified by</option>
+          </select>
+        </div>
+        <div class="col-md-4 btnColumn">
+          <a id="addBtn" onclick="addBtn()" class="btn btn-block btn-primary" alt="Add button">Add >> </a>
+          <a id="removeBtn" onclick="removeBtn()" class="btn btn-block btn-primary" alt="Remove button"><< Remove</a>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group mb-3">
+            <label for="metadataInfo">Info</label>
+            <div class="form-control" id="metadataInfo" rows="3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6" id="selectedBoxColumn">
+      <label for="selectedBox">Added metadata</label>
+      <div class="list-group" id="selectedBox"></div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,69 @@
+<form>
+  <div class="row" >
+    <div class="col-md-3" id="">
+      <label for="pageList">Pages</label>
+      <div class="list-group" id="pageList">
+        <a href="#" id="cover" class="list-group-item list-group-item-action active">Cover</a>
+        <a href="#" id="credit" class="list-group-item list-group-item-action">Credit</a>
+        <a href="#" id="plusIcon" class="list-group-item list-group-item-action"><i class="bi bi-plus-square-fill"></i></a>
+      </div>
+    </div>
+    <div class="col-md-9" id="pageContentColumn">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="contentBox" id="contentBoxLabel">Page Details <i class="bi bi-trash3-fill icons" alt="delete page" id="deletePage"></i></label>
+          <div class="list-group" id="contentBox">
+            <div class="col-md-12">
+              <div class="form-group mb-3" id="textTable">
+                <table class="table table-sm table-bordered table-striped" contenteditable="true">
+                  <thead>
+                    <tr>
+                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="text">Text</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3" id="narrationTable">
+                  <table class="table table-sm table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="narration">Narration</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3" id="imagesScripts">
+                  <table class="table table-sm table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="imagesScripts">Images and Scripts</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group mb-3" id="altTable">
+                <table class="table table-sm table-bordered table-striped" contenteditable="true">
+                  <thead>
+                    <tr>
+                      <th class="txtCenter" scope="col" colspan="2" contenteditable="false" name="alt">Alt text for images</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

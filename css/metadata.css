@@ -1,0 +1,63 @@
+.btnColumn{
+    align-self: center;
+    padding-left: 25px;
+    text-align: center;
+}
+
+#addBtn{
+    margin-bottom: 15px;
+}
+
+#selectedBoxColumn{
+    padding-right: 20px;
+}
+
+#selectedBox{
+    height: 91%;
+    max-height: 425px;
+    border: solid 0.5px #dee2e6;
+    border-radius: 0px;
+    overflow: scroll;
+}
+
+#metadataInfo{
+    width: 100%;
+    height: 104px;
+    margin: 0 auto;
+    overflow: auto;
+    border: 1px solid #dee2e6;
+    padding: 2px;
+    text-align: justify;
+    background: transparent;
+    margin-left: 0px;
+}
+
+.bi-person-wheelchair::before {
+    color: blue;
+}
+
+#selectedBox .bi-plus-square-fill {
+    color: blue;
+    font-size: larger;
+    float: right;
+}
+
+#selectedBox .bi-pencil-square {
+    color: blue;
+    float: right;
+}
+
+#selectedBox .bi-trash3-fill {
+    color: orangered;
+    float: right;
+}
+
+th.required::after{
+    content:' *';
+    color:red;
+}
+
+.langMetaHeader{
+    width: 10%;
+    min-width: 10%;
+}

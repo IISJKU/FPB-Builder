@@ -1,0 +1,86 @@
+#pageContentColumn{
+  padding-right: 20px;
+}
+
+#contentBox{
+  height: 300%;
+  max-height: 570px;
+  border: solid 0.5px #dee2e6;
+  border-radius: 0px;
+  margin-bottom: 10px;
+}
+
+#pageList{
+  height: 260%;
+  max-height: 570px;
+  border: solid 0.5px #dee2e6;
+  border-radius: 0px;
+  overflow: scroll;
+}
+
+.icons{
+  float: right;
+}
+
+#deletePage{
+  color: orangered;
+  cursor: pointer;
+}
+
+#pageList .bi-plus-square-fill{
+  /* color: blue; */
+  font-size: larger;
+}
+
+#pageList #plusIcon{
+  text-align: center;
+}
+
+#textTable{
+  height: 250px;
+  max-height: 300px;
+  overflow: scroll;
+}
+
+#narrationTable{
+  height: 150px;
+  max-height: 150px;
+  overflow: scroll;
+}
+
+#imagesScripts{
+  height: 150px;
+  max-height: 150px;
+  overflow: scroll;
+  border-left: solid 0.5px #dee2e6;
+  border-radius: 0px;
+}
+
+#altTable{
+  height: 120px;
+  max-height: 125px;
+  overflow: scroll;
+}
+
+#image_uploads {
+  padding-right: 0px;
+}
+
+.txtCenter{
+  text-align: center;
+}
+
+.browseBtn{
+  background-color: #e9ecef00;
+  color: black;
+  float: right;
+}
+
+#contentBoxLabel{
+  width: 100%;
+}
+
+.langHeader{
+  width: 7%;
+  min-width: 7%;
+}

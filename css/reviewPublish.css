@@ -1,0 +1,18 @@
+.required::after{
+    content:' *';
+    color:red;
+}
+
+#pubProgressBar{
+    width: 25%;
+}
+
+#reviewBtn{
+    --bs-btn-hover-bg: #F49738;
+    --bs-btn-border-color: #F49738;
+    --bs-btn-color: #F49738;
+}
+
+#buttonGroup{
+    margin-top: 25px;
+}

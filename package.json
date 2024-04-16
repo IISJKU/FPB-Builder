@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "jquery": "^3.7.1",
+    "jquery-ui-dist": "^1.13.2"
+  },
+  "name": "fpb-builder",
+  "description": "Toolkit for publishing Flexi Picture eBooks",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "archiver": "^7.0.1",
+    "electron": "^29.1.4",
+    "electron-dialog": "^2.0.0",
+    "electron-json-storage": "^4.6.0",
+    "file-saver": "^2.0.5",
+    "filesaver": "^0.0.13",
+    "jszip": "^3.10.1"
+  }
+}
