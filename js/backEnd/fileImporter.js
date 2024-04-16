@@ -178,9 +178,9 @@ class FileImporter {
 
     let d = JSON.stringify(dependencyList);
     console.log(dependencyList);
-    storage.set("dependencies", d);
-
-    console.log(storage.getSync("dependencies"));
+    return dependencyList;
+    //storage.set("dependencies", d);
+    //console.log(storage.getSync("dependencies"));
   }
 
   /**

@@ -21,26 +21,6 @@ class ipcMainManager {
           })
       );
     });
-
-    ipcMain.on("openImageXHTML", (event, arg) => {
-      dialog
-        .showOpenDialog({
-          properties: ["openFile"],
-          filters: [
-            {
-              name: "xhtml Image",
-              extensions: ["xhtml"],
-            },
-          ],
-        })
-        .then((result) => {
-          event.reply("filePath", result.filePaths);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-
     ipcMain.on("narrations", (event, arg) => {
       dialog
         .showOpenDialog({
@@ -116,72 +96,6 @@ class ipcMainManager {
 
     //Allows you to import a file!#
     //Still testing this out, this will be the one where xhtml gets imported & the file is scanned for imports
-    ipcMain.on("importFile", () => {
-      /*
-    let asd = dialog.showOpenDialog({
-      properties: ["openFile"],
-      filters: [{ name: "xhtml Files", extensions: ["xhtml"] }],
-    });*/
-
-      //this hardcodes the location of picked file, i did this, to make it easier to work with
-      //this will be removed in actual code
-      selectedFiles = new Promise((value) => {
-        const path = {
-          canceled: false,
-          filePaths: [
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page03-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page04-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page05-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page06-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page07-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page08-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page09-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page10-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page11-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page12-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page13-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page14-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page15-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page16-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page17-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page18-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page19-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page20-fig.xhtml",
-            "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page21-fig.xhtml",
-          ],
-        };
-        value(path);
-      });
-
-      //the generation should happen somewhere else
-      EPUBMaker.createFileStructure();
-
-      selectedFiles.then((selectedFile) => {
-        selectedFile["filePaths"].forEach((file) => {
-          if (fs.existsSync(file)) {
-            let data = fs.readFileSync(file, "utf8");
-            //split file at linebreaks to parse it line by line
-            dataSplit = data.split("\n");
-            if (checkIfImage(dataSplit)) {
-              //this is responsible for adding every file to the list of imported files
-              importDependencies(dataSplit, file);
-              console.log(importedFiles);
-              importedFiles.push(file);
-            } else {
-              //please select an image file!!
-              console.log("Please Select an xhtml containing an image!");
-            }
-          }
-        });
-      });
-
-      //here, all of the entries in the array will be moved to the new folder and sorted accordingly
-      //paths contained in js and css will be replaced with old ones.
-      EPUBMaker.importSelectedFiles(importedFiles);
-    });
-
     ipcMain.on("importImage", () => {
       dialog
         .showOpenDialog({
@@ -189,7 +103,8 @@ class ipcMainManager {
           filters: ["xhtml"],
         })
         .then((value) => {
-          EPUBMaker.importImage(value["filePaths"][0]);
+          let dependencyList = EPUBMaker.importImage(value["filePaths"][0]);
+          this.window.webContents.send("imageLoaded", dependencyList);
         });
     });
 
