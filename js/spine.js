@@ -146,29 +146,24 @@ $(document).on("click", ".otherFiles", function (e) {
 });
 
 window.BRIDGE.onImageLoaded((value) => {
-  console.log(value);
   let pageID = $("#pageList .list-group-item.active").attr("id");
 
   if (typeof pageDetails[pageID] != undefined && pageDetails[pageID] != undefined) {
     pageDetails[pageID]["imagesScripts"]["Image"] = value["imageFile"];
     value["foundFiles"].forEach((element) => {
       let tag = "";
-      console.log(element);
-      switch (element) {
-        case element.includes(".xhtml"):
-          tag = "Image";
-          break;
-        case element.includes(".js"):
-          tag = "Script";
-          break;
-        case element.includes(".mp3" || ".wav"):
-          tag = "Audio";
-          break;
-        case element.includes(".css"):
-          tag = "Style";
-          break;
+      console.log(element.toLowerCase().includes(".js"));
+
+      if (element.includes(".js")) tag = "Script";
+      else if (element.includes(".mp3" || ".wav")) tag = "Audio";
+      else if (element.includes(".css")) tag = "Style";
+
+      let x = 1;
+      while (pageDetails[pageID]["imagesScripts"][tag + " " + x] != undefined) {
+        x = x + 1;
       }
-      pageDetails[pageID]["imagesScripts"][tag] = element;
+
+      pageDetails[pageID]["imagesScripts"][tag + " " + x] = element;
     });
   }
 
