@@ -1,4 +1,5 @@
 class DependencyList {
+  imageFile = "";
   foundFiles = new Array();
   missingFiles = new Array();
   isImage = false;

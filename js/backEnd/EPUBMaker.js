@@ -127,7 +127,7 @@ function makeEPUB(n) {
 }
 
 function importImage(path) {
-  fileImporter.importImage(path);
+  return fileImporter.importImage(path);
 }
 
 function manuallySelectDependency(path) {

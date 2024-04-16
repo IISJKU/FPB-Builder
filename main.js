@@ -21,6 +21,7 @@ const createWindow = () => {
   //calling the constructor automatically regesters all of the icpMain events
   let icpMainManager = new IpcMainManager(mainWindow);
 
+  /*
   //comment this out, if it annoys you!
   mainWindow.on("close", function (e) {
     const choice = require("electron").dialog.showMessageBoxSync(this, {
@@ -41,7 +42,7 @@ const createWindow = () => {
       fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
       console.log(app.getPath("userData"));
     }
-  });
+  });*/
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();

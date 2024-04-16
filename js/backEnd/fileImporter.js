@@ -112,6 +112,7 @@ class FileImporter {
    */
   importImage(src) {
     let dependencyList = new DependencyList();
+
     let data = fs.readFileSync(src, "utf8");
     //split file at linebreaks to parse it line by line
     let lineArray = data.split("\n");
@@ -176,11 +177,12 @@ class FileImporter {
       dependencyList.isImage = false;
     }
 
+    dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
     let d = JSON.stringify(dependencyList);
     console.log(dependencyList);
-    storage.set("dependencies", d);
-
-    console.log(storage.getSync("dependencies"));
+    return dependencyList;
+    //storage.set("dependencies", d);
+    //console.log(storage.getSync("dependencies"));
   }
 
   /**
