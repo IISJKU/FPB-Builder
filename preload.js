@@ -40,6 +40,8 @@ contextBridge.exposeInMainWorld("BRIDGE", {
     ipcRenderer.send("importDependency");
   },
   onDirectorySet: (callback) => ipcRenderer.on("directorySet", (_event, value) => callback(value)),
+  //openFile: () => ipcRenderer.invoke("dialog:openFile"),
+  onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),
 });
 
 ipcRenderer.on("filePath", (_event, arg) => {
