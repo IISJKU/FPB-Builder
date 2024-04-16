@@ -93,6 +93,7 @@ class FrontendDataManager {
 
         break;
       case "Spine":
+        sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
         break;
       case "Review & Publish":
         break;

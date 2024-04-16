@@ -5,6 +5,7 @@ let pages = [];
 function fetchPageDataFromFrontend() {
   //data from frontend, normally saved in session storage:
   // but now im making it up!"
+
   pages = [];
 
   let page1 = {

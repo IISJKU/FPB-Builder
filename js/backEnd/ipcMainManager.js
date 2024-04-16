@@ -1,6 +1,7 @@
 const { dialog, ipcMain } = require("electron");
 const storage = require("electron-json-storage");
 const EPUBMaker = require("./EPUBMaker.js");
+const MetadataManager = require("./metadataManager.js");
 
 let fs = require("fs");
 
@@ -90,8 +91,18 @@ class ipcMainManager {
       }
     });
 
+    function dataLoaded(data) {
+      //EPUBMaker.make(data);
+    }
+
     ipcMain.on("generateEpubs", () => {
-      EPUBMaker.make();
+      EPUBMaker.fetchFromFrontend(this.window, dataLoaded);
+
+      //MetadataManager.setLanguages(languages);
+
+      //PageManager.fetchPageDataFromFrontend();
+
+      //EPUBMaker.make();
     });
 
     //Allows you to import a file!#

@@ -17,50 +17,7 @@ function setLanguages(lang) {
  * At the moment, all data used is dummy data.
  */
 
-function fetchMetadataFromFrontend() {
-  //get object bookDetails from session storage, but im defining it here, for testing puroses
-  let bookDetails = {
-    Title: {
-      EN: "Little Red Riding Hood",
-      IT: "Cappuccetto Rosso",
-      DE: "Rotkäppchen",
-      FR: "Le petit Chaperon rouge",
-      LIT: "Raudonkepuraitė",
-    },
-    Identifier: {
-      EN: "978-0-5490-2195-4",
-      IT: "978-0-5490-2196-4",
-      DE: "978-0-5490-2196-4",
-      FR: "978-0-5490-2196-4",
-      LIT: "978-0-5490-2196-4",
-    },
-    SourceISBN: "978-3-4461-4916-8",
-    Description: {
-      EN: "This is the description This is the description This is the description ",
-      IT: "Questa è la descrizione Questa è la descrizione Questa è la descrizione",
-      DE: "Das ist die Beschreibung Das ist die Beschreibung Das ist die Beschreibung",
-      FR: "C'est la description, c'est la description, c'est la description",
-      LIT: "Tai yra aprašymas Tai yra aprašymas Tai yra aprašymas",
-    },
-    Author: ["Les doigts qui rêvent"],
-    Contributor: ["Viviano Pierpaolo", "Maëlie Celestine", "Vincentas Élisabeth", "Agata Lia"],
-    Publisher: "LDQR",
-    Copyright: "2022 LDQR",
-    AccessMode: ["textual"],
-    AccessModeSufficient: ["auditory", "visual"],
-    AccessibilityFeature: ["alternativeAudio", "alternativeText"],
-    AccessibilityHazard: ["sound"],
-    AccessibilitySummary: {
-      EN: "This is the english accessability summary",
-      IT: "Questo è il riepilogo italiano dell'accessibilità",
-      DE: "Dies ist die italienische Zusammenfassung der Barrierefreiheit",
-      FR: "Ceci est le résumé italien de l'accessibilité",
-      LIT: "Tai itališka prieinamumo santrauka",
-    },
-  };
-
-  details = bookDetails;
-}
+function fetchMetadataFromFrontend(window) {}
 
 function setMetadata(meta) {
   details = meta;
@@ -176,7 +133,7 @@ function validate() {
 }
 
 function getMetadata() {
-  return metadata;
+  return details;
 }
 
 module.exports.getMetadata = getMetadata;

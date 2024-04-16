@@ -60,17 +60,16 @@ function createFileStructure(name, path) {
   FileSystemManager.makeFolder(tempDir, "xhtml");
 }
 
+function fetchFromFrontend(window, callback) {}
+
 function make() {
   //get list of selected Languages from session, now I'm going to add test language data
   let languages = [];
-  languages.push(Language.English);
-  languages.push(Language.Italian);
-  languages.push(Language.German);
-  languages.push(Language.French);
-  languages.push(Language.Lithuanian);
-
-  MetadataManager.setLanguages(languages);
+  /*
   MetadataManager.fetchMetadataFromFrontend();
+  
+  //MetadataManager.setLanguages(languages);
+  
 
   PageManager.fetchPageDataFromFrontend();
   console.log("I do something!");
@@ -81,9 +80,6 @@ function make() {
       languages.forEach((language) => {
         //this picks the name of the epub, according to how many files are in the folder,
 
-        /*let numFiles = fs.readdirSync(value["filePaths"][0]).filter((n) => {
-          !n.includes(".epub");
-        }).length;*/
         let numFiles =
           fs.readdirSync(value["filePaths"][0]).filter((na) => {
             return na.includes(".epub");
@@ -100,6 +96,7 @@ function make() {
       });
     });
   }
+  */
 }
 
 /**
