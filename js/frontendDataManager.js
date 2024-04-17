@@ -106,5 +106,5 @@ class FrontendDataManager {
 }
 
 function isLanguageDependent(field) {
-  return ["Title", "Identifier", "Description", "AccessibilitySummary"].includes(field);
+  return langMetadata.includes(field);
 }

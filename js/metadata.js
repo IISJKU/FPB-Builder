@@ -2,9 +2,9 @@
 //const accessMeta = ["Mode", "Feature", "Hazard", "Summary", "Mode Sufficient", "Conforms to", "Certified by"];
 const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "ConformsTo", "CertifiedBy"];
 //required metadata
-const reqMeta = ["Title", "Identifier", "Summary", "Mode Sufficient"];
+const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
 //Metdata that related to the selected languages in the project screen
-const langMetadata = ["Title", "Identifier", "Mode", "Feature", "Hazard", "Summary", "Mode Sufficient", "Type", "Subject"];
+const langMetadata = ["Title", "Identifier", "AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "Type", "Subject"];
 let bookDetails = {
   Title: {
     EN: "Little Red Riding Hood",
@@ -104,40 +104,11 @@ function loadInMetadata() {
   let test = JSON.parse(sessionStorage.getItem("bookDetails"));
 
   // get all of the elements in the container, and get to where the data is stored!
-  let t = $("#selectedBox");
+  /*let t = $("#selectedBox");
   t.children().each((val, element) => {
     if (typeof element != undefined) {
       let container = element.children[0].children[1];
-      let fieldName = element.children[0].children[0].children[0].textContent;
-
-      //move to different function
-      switch (fieldName) {
-        case "Creator":
-          fieldName = "Author";
-          break;
-        case "Mode":
-          fieldName = "AccessMode";
-          break;
-        case "Mode Sufficient":
-          fieldName = "AccessModeSufficient";
-          break;
-        case "Summary":
-          fieldName = "AccessibilitySummary";
-          break;
-        case "Hazard":
-          fieldName = "AccessibilityHazard";
-          break;
-        case "Feature":
-          fieldName = "AccessibilityFeature";
-          break;
-        case "Certified by":
-          fieldName = "CertifiedBy";
-          break;
-        case "Conforms to":
-          fieldName = "ConformsTo";
-          break;
-      }
-
+      let fieldName = element.children[0].children[0].children[0].val();
       for (let i = 0; i < container.children.length; i++) {
         if (typeof container != undefined && typeof container.children[i] != undefined) {
           let lang = container.children[i].children[0].innerText;
@@ -152,7 +123,22 @@ function loadInMetadata() {
         }
       }
     }
-  });
+  });*/
+  $("#selectedBox a").each(function () {
+    let fieldName = $(this).attr('id');
+    let rows = $(this).children("table").children("tbody").children("tr");
+    for (let i = 0; i < rows.length; i++) {
+      let lang = rows[i].children[0].textContent;
+      let value = rows[i].children[1].textContent;
+      if (typeof test[fieldName] != undefined && typeof test[fieldName][lang] != undefined) {
+        if (value == "" || value.length == 0 || typeof value == undefined) {
+          if (isLanguageDependent(fieldName)) rows[i].innerText = test[fieldName][lang];
+          else rows[i].innerText = test[fieldName][0];
+        }
+      }
+    }
+  })
+
 }
 
 function metadataInitialized() {
@@ -196,7 +182,7 @@ function removeBtn() {
     optionElem.setAttribute("class", "bi bi-person-wheelchair");
     optionElem.setAttribute("data-tokens", metadataText);
   }
-  if (reqMeta.includes(metadataText)) {
+  if (reqMeta.includes(itemIntVal)) {
     alert("Required Metadata.");
     $("#selectedBox #" + metadataText).removeClass("active");
     return;
@@ -223,9 +209,9 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
   let tbl = document.createElement("table");
   tbl.setAttribute("class", "table table-sm table-bordered table-striped");
   tbl.setAttribute("contenteditable", "true");
-  tableHeader(tbl, tableTitle);
+  tableHeader(tbl, tableTitle, itemVal);
   let tbdy = document.createElement("tbody");
-  if (langMetadata.includes(tableTitle)) {
+  if (langMetadata.includes(itemVal)) {
     langMetaAttr(tbl, tbdy, itemVal, elemID);
     return;
   }
@@ -239,7 +225,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     tr.appendChild(th);
     let td = document.createElement("td");
     td.appendChild(document.createTextNode(bookDetObj[tableTitle][val]));
-    if (!reqMeta.includes(tableTitle)) {
+    if (!reqMeta.includes(itemVal)) {
       createIcon(td, "bi bi-trash3-fill", "delete entry");
     }
     tr.appendChild(td);
@@ -284,19 +270,19 @@ function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
 }
 
 //create table header element
-function tableHeader(tbl, tableTitle) {
+function tableHeader(tbl, tableTitle, aElemVal) {
   let thd = document.createElement("thead");
   let thdtr = document.createElement("tr");
   let thdth = document.createElement("th");
   thdth.setAttribute("scope", "col");
   thdth.setAttribute("colspan", "2");
   thdth.setAttribute("contenteditable", "false");
-  if (reqMeta.includes(tableTitle)) {
+  if (reqMeta.includes(aElemVal)) {
     thdth.setAttribute("class", "required");
   }
   thdthText = document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
-  if (!reqMeta.includes(tableTitle) && !langMetadata.includes(tableTitle)) {
+  if (!reqMeta.includes(aElemVal) && !langMetadata.includes(aElemVal)) {
     createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
   }
   thdtr.appendChild(thdth);
@@ -356,8 +342,8 @@ function createNewTable(tableTitle, elemID, intVal) {
   let tbl = document.createElement("table");
   tbl.setAttribute("class", "table table-sm table-bordered table-striped");
   tbl.setAttribute("contenteditable", "true");
-  tableHeader(tbl, tableTitle);
-  if (langMetadata.includes(tableTitle)) {
+  tableHeader(tbl, tableTitle, intVal);
+  if (langMetadata.includes(intVal)) {
     let tbdy = document.createElement("tbody");
     langMetaAttr(tbl, tbdy, intVal, elemID);
 
@@ -371,7 +357,7 @@ function addNewRow(tableTitle) {
   var relTable = $("#selectedBox #" + elementTitle + " table");
   let count = 0;
   let tbdy = document.createElement("tbody");
-  if (!langMetadata.includes(tableTitle)) {
+  if (!langMetadata.includes(elementTitle)) {
     count = $("#selectedBox #" + elementTitle + " tbody tr").length + 1;
   }
   let tr = document.createElement("tr");
@@ -416,10 +402,10 @@ function updateAddedList(langChange, multipleUp) {
       if (multipleUp == 1 && (currtitle == "Title" || currtitle == "Identifier")) {
         return;
       }
-      let elementTitle = currtitle.replace(/\s/g, "");
-      $("#" + elementTitle).remove();
-      iIntVal = $("#selectedBox .list-group-item.active").attr("id");
-      createTable(currtitle, "selectedBox", iIntVal, langChange);
+      let elementId = $(this).closest('a').attr('id');
+      $("#" + elementId).remove();
+      //iIntVal = $("#selectedBox .list-group-item.active").attr("id");
+      createTable(currtitle, "selectedBox", elementId, langChange);
     }
   });
 }
