@@ -12,6 +12,10 @@ class FileImporter {
     this.importedFiles = new Array();
   }
 
+  printImportedFiles() {
+    console.log(this.importedFiles);
+  }
+
   //checks if xhtml file is an image
   checkIfImage(lineArray) {
     let hasFigure = false;

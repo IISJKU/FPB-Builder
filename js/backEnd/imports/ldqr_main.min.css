@@ -1,0 +1,609 @@
+@charset "UTF-8";
+@namespace h "http://www.w3.org/1999/xhtml/";
+@namespace epub "http://www.idpf.org/2007/ops";
+@namespace svg "http://www.w3.org/2000/svg";
+/* Luciole */
+@font-face {
+  font-family: "Luciole";
+  font-weight: bold;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/Luciole-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Luciole";
+  font-weight: normal;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/Luciole-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Luciole";
+  font-weight: normal;
+  font-style: italic;
+  font-variant-numeric: normal;
+  src: url("../fonts/Luciole-Regular-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Luciole";
+  font-weight: bold;
+  font-style: italic;
+  font-variant-numeric: normal;
+  src: url("../fonts/Luciole-Bold-Italic.ttf") format("truetype");
+}
+/* Verdana */
+@font-face {
+  font-family: "Verdana";
+  font-weight: normal;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/verdana.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Verdana";
+  font-weight: bold;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/verdanab.ttf") format("truetype");
+}
+/* Arial */
+@font-face {
+  font-family: "Arial";
+  font-weight: normal;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/arial.ttf") format("truetype");
+}
+/* Arial Black */
+@font-face {
+  font-family: "Arial Black";
+  font-weight: normal;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/ariablk.ttf") format("truetype");
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  font-weight: normal;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/OpenDyslexic-Regular.otf") format("truetype");
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  font-weight: bold;
+  font-style: normal;
+  font-variant-numeric: normal;
+  src: url("../fonts/OpenDyslexic-Bold.otf") format("truetype");
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  font-weight: normal;
+  font-style: italic;
+  font-variant-numeric: normal;
+  src: url("../fonts/OpenDyslexic-Italic.otf") format("truetype");
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  font-weight: bold;
+  font-style: italic;
+  font-variant-numeric: normal;
+  src: url("../fonts/OpenDyslexic-BoldItalic.otf") format("truetype");
+}
+/*!
+  Blitz — CSS framework for reflowable eBooks
+  Version 1.5.2 by Jiminy Panoz
+  Codename: Cool Under Heat
+  License: MIT (https://opensource.org/licenses/MIT)
+*/
+html {
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  -o-hyphens: none;
+  hyphens: none;
+  font-family: "Arial Black";
+  line-height: 1.7em;
+  font-size: 1.4em;
+  color: #000;
+}
+html body,
+html {
+  margin: 0;
+  padding: 0;
+  font-variant-numeric: normal !important;
+}
+address,
+article,
+aside,
+blockquote,
+canvas,
+dd,
+details,
+div,
+dl,
+dt,
+figcaption,
+figure,
+footer,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hr,
+li,
+main,
+nav,
+ol,
+p,
+pre,
+section,
+summary,
+ul {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  padding: 0;
+  line-height: inherit;
+  text-indent: 0;
+  font-style: normal;
+}
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+main,
+nav,
+section {
+  display: block;
+}
+[hidden] {
+  display: none;
+}
+dt,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre {
+  text-align: left;
+}
+nav[epub|type~="toc"] ol {
+  list-style: none !important;
+}
+@media amzn-kf8, amzn-mobi {
+  nav ol {
+    list-style-type: none !important;
+  }
+}
+nav[epub|type~="landmarks"],
+nav[epub|type~="page-list"] {
+  display: none;
+}
+a,
+abbr,
+b,
+bdi,
+bdo,
+cite,
+code,
+data,
+del,
+dfn,
+em,
+i,
+ins,
+kbd,
+mark,
+q,
+rp,
+rt,
+rtc,
+ruby,
+s,
+samp,
+small,
+span,
+strong,
+sub,
+sup,
+time,
+var {
+  font-size: inherit;
+  vertical-align: baseline;
+  font-style: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+q {
+  quotes: none;
+}
+body > :last-child,
+body > section > :last-child {
+  margin-bottom: 0;
+}
+/*
+
+##### ###### #    # ##### ######
+  #   #       #  #    #   #
+  #   #####    ##     #   #####
+  #   #        ##     #   #
+  #   #       #  #    #   #
+  #   ###### #    #   #   ######
+*/
+/* Styles pour la mise en page du texte */
+
+h3 img,
+h4 img {
+  position: relative;
+  top: 0.2rem;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.credits p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.isbn {
+  display: block;
+  font-size: 0.7em !important;
+}
+.ldqr-font-luciole {
+  font-family: "Luciole", "sans-serif" !important;
+}
+.ldqr-font-arial-black {
+  font-family: "Arial Black", "sans-serif" !important;
+}
+.ldqr-font-arial {
+  font-family: "Arial", "sans-serif" !important;
+}
+.ldqr-font-verdana {
+  font-family: "Verdana", "sans-serif" !important;
+}
+.ldqr-font-dys {
+  font-family: "OpenDyslexic", "sans-serif" !important;
+}
+.ldqr-font-bold {
+  font-weight: 700 !important;
+}
+.notDisplay {
+  display: none !important;
+}
+.displayInLine {
+  display: inherit !important;
+}
+.texte {
+  text-align: left;
+  text-indent: 0px;
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-bottom: 0;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  /* word-spacing: 0.1rem; */
+  -webkit-hyphens: none;
+  -epub-hyphens: none;
+  word-break: break-word;
+}
+.texte-config {
+  max-height: 250px !important;
+}
+.titre1 {
+  border-bottom-style: solid;
+  border-bottom-width: 0.1em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1.2em;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.titre2 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+.titre3 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+.titre4 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: 1.1em;
+}
+p {
+  display: block;
+  margin: 0;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+}
+.notBreak {
+  break-inside: avoid;
+}
+.zoomEltSvg {
+  width: 99%;
+  height: 98vh;
+  position: relative;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  /* display: none; */
+  overflow: hidden;
+  border: solid #000000;
+  background-color: #ffffff;
+}
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.svg-container {
+  display: inline-block;
+  position: relative;
+  height: 98vh;
+  width: 100%;
+  /* padding-bottom: 100%; */
+  vertical-align: bottom;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+.svg-bouton {
+  cursor: pointer;
+  font-family: "Luciole";
+  font-size: 24pt !important;
+  font-weight: normal !important;
+}
+.titre-menu {
+  /* float: left; */
+  display: block;
+  font-family: "Luciole";
+  margin-right: 1em;
+}
+.bouton-fond {
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 50px;
+  /* font-family: "Luciole"; */
+  /* display: table; */
+  /* width: 96%; */
+  /* height: 100%; */
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  text-align: center;
+}
+/* Boutons */
+.close-bouton {
+  cursor: pointer;
+}
+.close-bouton rect {
+  fill: #ffffff;
+  stroke: none;
+}
+.texte-svg rect {
+  fill: #ffffff;
+  stroke: #000000;
+  stroke-width: 4;
+}
+.closeButtonSvg {
+  position: absolute;
+  z-index: 20000;
+  top: 20px;
+  right: 20px;
+  width: 45px;
+  height: 44px;
+  /* display: none; */
+  overflow: hidden;
+}
+#bouton_toggle_texte {
+  position: fixed;
+  top: 850px;
+  left: 550px;
+}
+/* Couleur dégradé */
+.bouton-couleur {
+  fill: url("#MyGradientColor");
+  stroke: black;
+  stroke-width: 1;
+}
+.bouton-BW {
+  fill: url("#MyGradientBW");
+  stroke: black;
+  stroke-width: 1;
+}
+.checked .fond-bouton-version,
+g.checked rect {
+  fill: #d1ffd7 !important;
+  stroke-width: 4px !important;
+}
+.checked,
+.checked div {
+  background-color: #d1ffd7 !important;
+  border-width: 3px !important;
+}
+.opacity02 {
+  opacity: 0.2;
+}
+.opacity1 {
+  opacity: 1;
+}
+.fond-bouton-version {
+  fill: white;
+  stroke-width: 1;
+  stroke: black;
+}
+#menuBas {
+  transition: transform 330ms;
+}
+#menuBas.bas {
+  transform: translate(0, 0);
+}
+#menuBas.haut {
+  transform: translate(0, -100px) !important;
+}
+.bouton-menu rect {
+  fill: #ffffff;
+}
+#monAudioPlay {
+  position: relative;
+  top: 0;
+}
+line {
+  stroke: #000000;
+  stroke-width: 2;
+}
+.ldqr-couleur-fond-gris {
+  background-color: #bdbdbd !important;
+  color: inherit !important;
+}
+.ldqr-couleur-fond-gris .masque,
+.ldqr-couleur-fond-gris .st-bulle {
+  fill: #bdbdbd !important;
+}
+g.ldqr-couleur-fond-gris path,
+g.ldqr-couleur-fond-gris rect {
+  fill: #bdbdbd !important;
+}
+.ldqr-couleur-fond-blanc {
+  background-color: #ffffff !important;
+  color: inherit !important;
+}
+.ldqr-couleur-fond-blanc .masque,
+.ldqr-couleur-fond-blanc .st-bulle {
+  fill: #ffffff !important;
+}
+g.ldqr-couleur-fond-blanc path,
+g.ldqr-couleur-fond-blanc rect {
+  fill: #ffffff !important;
+}
+.ldqr-couleur-fond-neg {
+  background-color: #000000 !important;
+  color: #fff !important;
+}
+.ldqr-couleur-fond-neg .masque,
+.ldqr-couleur-fond-neg .st-bulle {
+  fill: #000000 !important;
+}
+g.ldqr-couleur-fond-neg path,
+g.ldqr-couleur-fond-neg rect {
+  fill: #000000 !important;
+}
+.ldqr-couleur-fond-jaune {
+  background-color: #fff482 !important;
+  color: inherit !important;
+}
+.ldqr-couleur-fond-jaune .masque,
+.ldqr-couleur-fond-jaune .st-bulle {
+  fill: #fff482 !important;
+}
+g.ldqr-couleur-fond-jaune path,
+g.ldqr-couleur-fond-jaune rect {
+  fill: #fff482 !important;
+}
+.ldqr-couleur-fond-beige {
+  background-color: #fff7d1 !important;
+  color: inherit !important;
+}
+.ldqr-couleur-fond-beige .masque,
+.ldqr-couleur-fond-beige .st-bulle {
+  fill: #fff7d1 !important;
+}
+g.ldqr-couleur-fond-beige path,
+g.ldqr-couleur-fond-beige rect {
+  fill: #fff7d1 !important;
+}
+g.ldqr-couleur-fond-neg text {
+  fill: #ffffff !important;
+}
+.ldqr-couleur-fond-neg {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+.bouton-surprise,
+.ldqr-actif {
+  cursor: pointer;
+}
+text {
+  fill: #000000;
+}
+figure {
+  page-break-inside: avoid;
+  /* text-align: center; */
+}
+section.page img {
+  max-height: 80vh !important;
+}
+.logos img {
+  width: 2em;
+  display: inline-block;
+  margin-right: 1em;
+}
+.logos .horizontal {
+  width: 6em;
+}
+.logos .vertical {
+  width: 4em;
+}
+.uneImage img {
+  max-width: 90% !important;
+}
+.deuxImages img {
+  max-width: 48% !important;
+}
+.troisImages img {
+  max-width: 30% !important;
+}
+p img {
+  width: 1.5em;
+  vertical-align: middle;
+}
+/* line 1, Sass/sass/partials/_listes.scss */
+#toc ol {
+  /*padding-bottom: 1em;*/
+  position: relative;
+  left: 2em;
+  width: calc(100% - 2em);
+}
+/* line 6, Sass/sass/partials/_listes.scss */
+.ol-toc > li {
+  padding-top: 1em;
+}
+/* line 10, Sass/sass/partials/_listes.scss */
+#toc a {
+  border: 0;
+}
+.screen-reader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+}

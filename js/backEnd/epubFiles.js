@@ -218,9 +218,12 @@ function createContentFile(files, spineFiles) {
   let importedItems = "";
   let spineContents = "";
 
+  let handledFiles = [];
+
   files.forEach((filename) => {
     let line = "";
     let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+
     if (filename.includes("/")) {
       name = filename.substring(filename.lastIndexOf("/") + 1, filename.length);
     }
@@ -245,7 +248,9 @@ function createContentFile(files, spineFiles) {
       line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/svg+xml" />';
     }
 
-    importedItems = importedItems + line + "\n";
+    if (!importedItems.includes(line)) {
+      importedItems = importedItems + line + "\n";
+    }
   });
 
   spineFiles.forEach((filename) => {

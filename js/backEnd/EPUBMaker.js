@@ -10,6 +10,7 @@ const Language = require("./classes/Languages.js");
 
 let fs = require("fs");
 const { fileURLToPath } = require("url");
+const Metadata = require("./classes/Metadata.js");
 
 //set this to null to let the user pick for themselves
 //let directory = null;
@@ -31,76 +32,37 @@ function setDirectory(d) {
   directory = d;
 }
 
-function createFileStructure(name, path) {
-  //create overall folder
-  FileSystemManager.makeFolder(path, name);
-
-  //Everything is put into this folder
-  tempDir = path + "\\" + name + "\\";
-
-  //create top layer in folder structure
-
-  //the mimetype will be added when zipping!
-  //FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
-  FileSystemManager.makeFolder(tempDir, "META-INF");
-  FileSystemManager.makeFile(tempDir + "\\META-INF\\", "container.xml", EPUBFileCreator.containerFile);
-  FileSystemManager.makeFile(tempDir + "\\META-INF\\", "com.apple.ibooks.display-options.xml", EPUBFileCreator.iBooksOptions);
-
-  //Create OEBPS AND ALL THE FOLDERS and FILES INSIDE
-  FileSystemManager.makeFolder(tempDir, "OEBPS");
-  //set the tempDir one layer below
-  tempDir = tempDir + "\\OEBPS\\";
-  //create all of the folders inside this one
-  FileSystemManager.makeFolder(tempDir, "audio");
-  FileSystemManager.makeFolder(tempDir, "css");
-  FileSystemManager.makeFolder(tempDir, "fonts");
-  FileSystemManager.makeFolder(tempDir, "images");
-  FileSystemManager.makeFolder(tempDir + "\\images\\", "notice");
-  FileSystemManager.makeFolder(tempDir, "Misc");
-  FileSystemManager.makeFolder(tempDir, "xhtml");
-}
-
 function fetchFromFrontend(window, callback) {
   window.webContents.executeJavaScript('sessionStorage.getItem("frontendData")', true).then((result) => {
     callback(result);
   });
 }
 
-function make() {
-  //get list of selected Languages from session, now I'm going to add test language data
-  let languages = [];
-  /*
-  MetadataManager.fetchMetadataFromFrontend();
-  
-  //MetadataManager.setLanguages(languages);
-  
+function make(metadata, pages, data) {
+  directory.then((value) => {
+    data.languages.forEach((language) => {
+      //this picks the name of the epub, according to how many files are in the folder,
+      let dirName = "TestEpub" + "_" + language;
+      let count = 1;
 
-  PageManager.fetchPageDataFromFrontend();
-  console.log("I do something!");
-  if (MetadataManager.validate()) {
-    metadata = MetadataManager.getMetadata();
+      //if folder with that name exists, add (*) at the end.
+      if (fs.existsSync(value["filePaths"][0] + "\\" + dirName)) {
+        while (fs.existsSync(value["filePaths"][0] + "\\" + dirName + "(" + count + ")")) {
+          count = count + 1;
+        }
+        dirName = dirName + "(" + count + ")";
+      }
 
-    directory.then((value) => {
-      languages.forEach((language) => {
-        //this picks the name of the epub, according to how many files are in the folder,
-
-        let numFiles =
-          fs.readdirSync(value["filePaths"][0]).filter((na) => {
-            return na.includes(".epub");
-          }).length + 1;
-        dirName = "TestEpub" + "_" + numFiles + "_" + language;
-        createFileStructure(dirName, value["filePaths"][0]);
-        //import all of the required files!
-        let pages = PageManager.getPages();
-        let files = fileImporter.import(pages, language);
-        //writes the xhtml files into that new file structure
-        XHTMLMaker.initialize(MetadataManager.getMetadata(), language, pages);
-        XHTMLMaker.createXHTMLFiles(files, value["filePaths"][0], dirName);
-        makeEPUB(dirName);
-      });
+      FileSystemManager.createFileStructure(dirName, value["filePaths"][0]);
+      //import all of the required files!
+      let files = fileImporter.import(pages, language);
+      fileImporter.printImportedFiles();
+      //writes the xhtml files into that new file structure
+      XHTMLMaker.initialize(metadata, language, pages);
+      XHTMLMaker.createXHTMLFiles(files, value["filePaths"][0], dirName);
+      makeEPUB(dirName);
     });
-  }
-  */
+  });
 }
 
 /**

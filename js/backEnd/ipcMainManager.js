@@ -92,11 +92,19 @@ class ipcMainManager {
       }
     });
 
-    function dataLoaded(data) {
-      data = JSON.parse(data);
+    function dataLoaded(rawData) {
+      rawData = JSON.parse(rawData);
 
-      MetadataManager.setData(data.bookDetails);
-      PageManager.setData(data.pages);
+      MetadataManager.setLanguages(rawData.languages);
+      PageManager.setLanguages(rawData.languages);
+
+      MetadataManager.setData(rawData.bookDetails);
+      PageManager.setData(rawData.pages);
+
+      //check if stuff is valid!
+      //if(MetadataManager.validates() && PageManager.validates()){}
+
+      EPUBMaker.make(MetadataManager.getMetadata(), PageManager.getPages(), rawData);
     }
 
     ipcMain.on("generateEpubs", () => {
