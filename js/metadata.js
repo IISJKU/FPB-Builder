@@ -132,8 +132,8 @@ function loadInMetadata() {
       let value = rows[i].children[1].textContent;
       if (typeof test[fieldName] != undefined && typeof test[fieldName][lang] != undefined) {
         if (value == "" || value.length == 0 || typeof value == undefined) {
-          if (isLanguageDependent(fieldName)) rows[i].innerText = test[fieldName][lang];
-          else rows[i].innerText = test[fieldName][0];
+          if (isLanguageDependent(fieldName)) rows[i].children[1].innerText = test[fieldName][lang];
+          else rows[i].children[0].innerText = test[fieldName][0];
         }
       }
     }

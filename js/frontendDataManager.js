@@ -75,14 +75,15 @@ class FrontendDataManager {
                 fieldName = "ConformsTo";
                 break;
             }
-
-            for (let i = 0; i < container.children.length; i++) {
-              if (typeof container != undefined && typeof container.children[i] != undefined) {
-                let lang = container.children[i].children[0].innerText;
-                let value = container.children[i].children[1].innerText;
-                //set the field accordingly
-                if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
-                else if (!meta[fieldName].includes(value)) meta[fieldName].push(value);
+            if (container != undefined){
+              for (let i = 0; i < container.children.length; i++) {
+                if (typeof container != undefined && typeof container.children[i] != undefined) {
+                  let lang = container.children[i].children[0].innerText;
+                  let value = container.children[i].children[1].innerText;
+                  //set the field accordingly
+                  if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
+                  else if (!meta[fieldName].includes(value)) meta[fieldName].push(value);
+                }
               }
             }
           }
