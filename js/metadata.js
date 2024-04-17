@@ -4,7 +4,17 @@ const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard",
 //required metadata
 const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
 //Metdata that related to the selected languages in the project screen
-const langMetadata = ["Title", "Identifier", "AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "Type", "Subject"];
+const langMetadata = [
+  "Title",
+  "Identifier",
+  "AccessMode",
+  "AccessibilityFeature",
+  "AccessibilityHazard",
+  "AccessibilitySummary",
+  "AccessModeSufficient",
+  "Type",
+  "Subject",
+];
 let bookDetails = {
   Title: {
     EN: "Little Red Riding Hood",
@@ -102,7 +112,7 @@ let initialized = false;
 
 function loadInMetadata() {
   let test = JSON.parse(sessionStorage.getItem("bookDetails"));
-
+  console.log(test);
   // get all of the elements in the container, and get to where the data is stored!
   /*let t = $("#selectedBox");
   t.children().each((val, element) => {
@@ -125,7 +135,7 @@ function loadInMetadata() {
     }
   });*/
   $("#selectedBox a").each(function () {
-    let fieldName = $(this).attr('id');
+    let fieldName = $(this).attr("id");
     let rows = $(this).children("table").children("tbody").children("tr");
     for (let i = 0; i < rows.length; i++) {
       let lang = rows[i].children[0].textContent;
@@ -137,8 +147,7 @@ function loadInMetadata() {
         }
       }
     }
-  })
-
+  });
 }
 
 function metadataInitialized() {
@@ -402,7 +411,7 @@ function updateAddedList(langChange, multipleUp) {
       if (multipleUp == 1 && (currtitle == "Title" || currtitle == "Identifier")) {
         return;
       }
-      let elementId = $(this).closest('a').attr('id');
+      let elementId = $(this).closest("a").attr("id");
       $("#" + elementId).remove();
       //iIntVal = $("#selectedBox .list-group-item.active").attr("id");
       createTable(currtitle, "selectedBox", elementId, langChange);

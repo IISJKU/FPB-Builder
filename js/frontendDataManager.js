@@ -8,7 +8,7 @@ class FrontendDataManager {
     Contributor: [],
     Publisher: [],
     Copyright: "",
-    AccessMode: [],
+    AccessMode: {},
     AccessModeSufficient: [],
     AccessibilityFeature: [],
     AccessibilityHazard: [],
@@ -40,6 +40,7 @@ class FrontendDataManager {
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!
+        /*
         let t = $("#selectedBox");
         t.children().each((val, element) => {
           if (typeof element != undefined) {
@@ -75,7 +76,7 @@ class FrontendDataManager {
                 fieldName = "ConformsTo";
                 break;
             }
-            if (container != undefined){
+            if (container != undefined) {
               for (let i = 0; i < container.children.length; i++) {
                 if (typeof container != undefined && typeof container.children[i] != undefined) {
                   let lang = container.children[i].children[0].innerText;
@@ -85,6 +86,23 @@ class FrontendDataManager {
                   else if (!meta[fieldName].includes(value)) meta[fieldName].push(value);
                 }
               }
+            }
+          }
+        }); */
+
+        $("#selectedBox a").each(function () {
+          let fieldName = $(this).attr("id");
+          let rows = $(this).children("table").children("tbody").children("tr");
+          for (let i = 0; i < rows.length; i++) {
+            let lang = rows[i].children[0].textContent;
+            let value = rows[i].children[1].textContent;
+
+            console.log(lang + " " + value);
+            console.log(fieldName + " " + value);
+            if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
+            else if (!meta[fieldName].includes(value)) {
+              meta[fieldName].push(value);
+              console.log("ye");
             }
           }
         });
