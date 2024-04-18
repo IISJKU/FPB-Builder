@@ -34,6 +34,7 @@ function createIcon(appendElem, iconClass, alt, elemId) {
   let icon = document.createElement("i");
   icon.setAttribute("class", iconClass);
   icon.setAttribute("alt", alt);
+  icon.setAttribute("tabindex", "0");
   if (elemId != "" && elemId != undefined) {
     icon.setAttribute("id", elemId);
   }

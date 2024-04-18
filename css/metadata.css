@@ -61,3 +61,8 @@ th.required::after{
     width: 10%;
     min-width: 10%;
 }
+
+#selectedBox input{
+    width: 94%;
+    max-width: 94%;
+}
