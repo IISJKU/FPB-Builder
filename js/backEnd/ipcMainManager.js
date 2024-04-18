@@ -92,8 +92,8 @@ class ipcMainManager {
       }
     });
 
-    function dataLoaded(data) {
-      data = JSON.parse(data);
+    function dataLoaded(rawData) {
+      rawData = JSON.parse(rawData);
 
       EPUBMaker.setDirectory(rawData.options.directory);
       MetadataManager.setLanguages(rawData.languages);
