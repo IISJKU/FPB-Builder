@@ -60,7 +60,9 @@ function validate() {
     errorList.metadata.accHazardMissing.push("missing");
   }
   if (details["Author"] != undefined && details["Author"].length != 0) {
-    metadata.authors = details["Author"];
+    for(const[key, value] in Object.entries(details["Author"])){
+      metadata.authors.push(value);
+    }
   } 
   if (details["Copyright"] != undefined && details["Copyright"].length != 0) {
     metadata.copyright = details["Copyright"];
