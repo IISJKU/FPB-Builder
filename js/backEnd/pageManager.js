@@ -1,5 +1,7 @@
 let pages = [];
 let languages = [];
+let cover;
+let credit;
 
 function setLanguages(lang) {
   languages = lang;
@@ -11,10 +13,14 @@ function setData(p) {
 
   if (typeof p != undefined && p != null) {
     Object.keys(p).forEach((key) => {
-      if (key != "cover" && key != "credit") {
+      if (key == "cover") {
+        p[key]["title"] = "cover";
+      } else if (key == "credit") {
+        p[key]["title"] = "credit";
+      } else {
         p[key]["title"] = "page" + key;
-        pages.push(p[key]);
       }
+      pages.push(p[key]);
     });
   }
 

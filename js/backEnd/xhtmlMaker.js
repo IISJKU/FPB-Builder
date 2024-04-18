@@ -17,14 +17,23 @@ let metadata;
 let language;
 let pages = [];
 
+let cover;
+let credit;
+
 function initialize(metad, lang, pag) {
   spine = [];
   contents = [];
   pages = [];
   fonts = [];
   metadata = metad;
-  language = lang;
   pages = pag;
+
+  //remove cover and credit from datastructure ;o
+  cover = pages[pages.length - 2];
+  credit = pages[pages.length - 1];
+  pages.splice(pages.length - 2, 2);
+
+  language = lang;
 }
 
 /**
@@ -126,8 +135,9 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
 
-  const coverImage = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\images\\cover.jpg";
-  const coverNarration = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\EMILE_-_Page_de_faux_titre_V1.mp3";
+  const coverImage = cover.imagesScripts.Image;
+  EPUBFileCreator.setCover(coverImage);
+  const coverNarration = cover.narration[language];
 
   spine = [];
   contents = [];

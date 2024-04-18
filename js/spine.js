@@ -5,11 +5,12 @@ let pageDetails = {
       IT: "Cappuccetto Rosso",
     },
     narration: {
-      EN: "Cover narr",
-      IT: "Cover narr",
+      EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
     },
     imagesScripts: {
-      Image: "C://user/image.jpg",
+      //dasfasf
+      Image: "C:\\Users\\ak127746\\Pictures\\1513-Rafael-SistineMadonna-Cherubs.jpg",
       Style: "",
     },
     alt: {
@@ -34,14 +35,16 @@ let pageDetails = {
       FR: "Bonjour, voici le contenu de la première page.",
       LIT: "Sveiki, tai yra pirmojo puslapio turinys.",
     },
-    audio: {
+    narration: {
       EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
       IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
       DE: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
       FR: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
       LIT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
     },
-    image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml",
+    imagesScripts: {
+      Image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml",
+    },
     altText: {
       EN: "This is the alt text for figure 1",
       IT: "Questo è il testo alternativo per la figura 1",
@@ -58,14 +61,16 @@ let pageDetails = {
       FR: "Que pourrait-il se passer sur la deuxième page ? Je ne peux pas imaginer...",
       LIT: "Kas gali nutikti antrame puslapyje? Neįsivaizduoju...",
     },
-    audio: {
+    narration: {
       EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
       IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
       DE: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
       FR: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
       LIT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
     },
-    image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml",
+    imagesScripts: {
+      Image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml",
+    },
     altText: {
       EN: "This is the alt text for figure 2",
       IT: "Questo è il testo alternativo per la figura 2",

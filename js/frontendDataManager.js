@@ -37,6 +37,7 @@ class FrontendDataManager {
         if (typeof this.languages != "undefined") {
           metadataManager.setLanguages(this.languages);
         }*/
+
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!

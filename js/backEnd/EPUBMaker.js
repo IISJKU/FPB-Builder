@@ -1,5 +1,4 @@
 const FileSystemManager = require("./utilities/fileSystemUtility.js");
-const EPUBFileCreator = require("./epubFiles.js");
 const PathUtilities = require("./utilities/pathUtilities.js");
 const ZipHandler = require("./utilities/zipHandler.js");
 const FileImporter = require("./fileImporter.js");

@@ -95,6 +95,9 @@ class ipcMainManager {
     function dataLoaded(rawData) {
       rawData = JSON.parse(rawData);
 
+      console.log("raw data:::");
+      console.log(rawData);
+
       MetadataManager.setLanguages(rawData.languages);
       PageManager.setLanguages(rawData.languages);
 
@@ -133,7 +136,7 @@ class ipcMainManager {
 
     //manually import dependency
     ipcMain.on("importDependency", () => {
-      console.log(JSON.parse(storage.getSync("dependencies")));
+      //console.log(JSON.parse(storage.getSync("dependencies")));
       dialog
         .showOpenDialog({
           properties: ["openFile"],

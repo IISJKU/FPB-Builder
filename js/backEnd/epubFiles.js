@@ -20,7 +20,7 @@ let contributors = [];
 
 let date = new Date().toISOString();
 let dateText = date.substring(0, date.indexOf(".")) + "Z";
-let coverImage = "images/cover.jpg";
+let coverImage = "";
 
 function setMetadata(metadata) {
   title = metadata.title[language];
@@ -32,6 +32,10 @@ function setMetadata(metadata) {
   dateText = date.substring(0, date.indexOf(".")) + "Z";
   description = metadata.description[language];
   contributors = metadata.contributors;
+}
+
+function setCover(cover) {
+  coverImage = "images/" + cover.substring(cover.lastIndexOf("\\") + 1, cover.length);
 }
 
 //this is a string of the container file used in the epub, it is usually saved under /META-INF
@@ -238,9 +242,9 @@ function createContentFile(files, spineFiles) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if (filename.includes(".jpg")) {
       if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
-      else if (filename.includes("cover.jpg"))
+      else if (coverImage.includes(name)) {
         line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
-      else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
+      } else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
     } else if (filename.includes(".png")) {
       if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
       else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/png" />';
@@ -385,7 +389,7 @@ function createPageText(obj){
   let str = "";
 
   let text = obj.text[language];
-  let audio = obj.audio[language];
+  let audio = obj.narration[language];
   let title = obj.title;
 
 
@@ -500,6 +504,7 @@ function createCover(title, cover, altText, audio){
 }
 
 exports.setLanguage = setLanguage;
+exports.setCover = setCover;
 exports.createPage00 = createPage00;
 exports.createCredits = createCredits;
 exports.createNoticeToc = createNoticeToc;
