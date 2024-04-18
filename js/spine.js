@@ -5,11 +5,12 @@ let pageDetails = {
       IT: "Cappuccetto Rosso",
     },
     narration: {
-      EN: "Cover narr",
-      IT: "Cover narr",
+      EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
     },
     imagesScripts: {
-      Image: "C://user/image.jpg",
+      //dasfasf
+      Image: "C:\\Users\\ak127746\\Pictures\\1513-Rafael-SistineMadonna-Cherubs.jpg",
       Style: "",
     },
     alt: {
@@ -28,43 +29,73 @@ let pageDetails = {
   },
   1: {
     text: {
-      EN: "page 1 title",
-      IT: "page 1 title",
+      EN: "Hello this is the Content of the first page.",
+      IT: "Ciao, questo è il contenuto della prima pagina.",
+      DE: "Hallo, das ist der Inhalt der ersten Seite.",
+      FR: "Bonjour, voici le contenu de la première page.",
+      LIT: "Sveiki, tai yra pirmojo puslapio turinys.",
     },
     narration: {
-      EN: "page 1 narration",
-      IT: "page 1 narration",
+      EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
+      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
+      DE: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
+      FR: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
+      LIT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page01.mp3",
     },
     imagesScripts: {
-      Image: "C://user/image.xhtml",
-      Script: "asdfsf",
-      Style: "asfsaf",
-      Style: "asfassssss",
-      Style: "ffffffffff",
-      Style: "hhhhhhhhhhhhhhhhhh",
+      Image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page01-fig.xhtml",
     },
-    alt: {
-      EN: "page 1 Alt",
-      IT: "page 1 Alt",
+    altText: {
+      EN: "This is the alt text for figure 1",
+      IT: "Questo è il testo alternativo per la figura 1",
+      DE: "Dies ist der Alternativtext für Abbildung 1",
+      FR: "Ceci est le texte alternatif de la figure 1",
+      LIT: "Tai yra 1 paveikslo alternatyvus tekstas",
+    },
+  },
+  2: {
+    text: {
+      EN: "What might happen on the second page? I cant imagine...",
+      IT: "Cosa potrebbe succedere nella seconda pagina? Non posso immaginare...",
+      DE: "Was könnte auf der zweiten Seite passieren? Ich kann es mir nicht vorstellen...",
+      FR: "Que pourrait-il se passer sur la deuxième page ? Je ne peux pas imaginer...",
+      LIT: "Kas gali nutikti antrame puslapyje? Neįsivaizduoju...",
+    },
+    narration: {
+      EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      DE: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      FR: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      LIT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+    },
+    imagesScripts: {
+      Image: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page02-fig.xhtml",
+    },
+    altText: {
+      EN: "This is the alt text for figure 2",
+      IT: "Questo è il testo alternativo per la figura 2",
+      DE: "Dies ist der Alternativtext für Abbildung 2",
+      FR: "Ceci est le texte alternatif de la figure 2",
+      LIT: "Tai yra 2 paveikslo alternatyvus tekstas",
     },
   },
 };
 
 let emptyPage = {
   text: {
-    EN: "Little Red Riding Hood",
-    IT: "Cappuccetto Rosso",
+    EN: "",
+    IT: "",
   },
   narration: {
-    EN: "Cover narr",
-    IT: "Cover narr",
+    EN: "",
+    IT: "",
   },
   imagesScripts: {
     Image: "",
   },
   alt: {
-    EN: "Little Red Riding Hood Alt",
-    IT: "Cappuccetto Rosso Alt",
+    EN: "",
+    IT: "",
   },
 };
 

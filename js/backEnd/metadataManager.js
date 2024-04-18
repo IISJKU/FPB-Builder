@@ -134,7 +134,7 @@ function validate() {
 }
 
 function getMetadata() {
-  return details;
+  return metadata;
 }
 
 module.exports.getMetadata = getMetadata;

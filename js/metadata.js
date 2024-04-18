@@ -1,4 +1,5 @@
 //accessibility metadata options
+//const accessMeta = ["Mode", "Feature", "Hazard", "Summary", "Mode Sufficient", "Conforms to", "Certified by"];
 const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "ConformsTo", "CertifiedBy"];
 //required metadata
 const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
@@ -25,23 +26,23 @@ let bookDetails = {
   },
   SourceISBN: "",
   Description: {},
-  Author: {},
+  Author: [],
   Contributor: {
     1: "Viviano Pierpaolo",
     2: "Maëlie Celestine",
     3: "Vincentas Élisabeth",
     4: "Agata Lia",
   },
-  Publisher: {},
+  Publisher: [],
   Copyright: "",
-  AccessMode: {},
-  AccessModeSufficient: {},
-  AccessibilityFeature: {},
-  AccessibilityHazard: {},
+  AccessMode: [],
+  AccessModeSufficient: [],
+  AccessibilityFeature: [],
+  AccessibilityHazard: [],
   AccessibilitySummary: {},
-  CertifiedBy: {},
-  ConformsTo: {},
-  PublishingDate: {},
+  CertifiedBy: [],
+  ConformsTo: [],
+  PublishingDate: [],
 };
 
 sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
@@ -166,7 +167,7 @@ function removeBtn() {
     optionElem.setAttribute("class", "bi bi-person-wheelchair");
     optionElem.setAttribute("data-tokens", metadataText);
   }
-  // removed because it's added to the list onclick event   
+  // removed because it's added to the list onclick event
   /*if (reqMeta.includes(itemIntVal)) {
     $("#selectedBox #" + metadataText).removeClass("active");
     return;
@@ -270,13 +271,13 @@ function tableHeader(tbl, tableTitle, aElemVal) {
   }
   thdthText = document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
-  if (!reqMeta.includes(aElemVal) && !langMetadata.includes(aElemVal) ) {
-    if (aElemVal == "PublishingDate"){
+  if (!reqMeta.includes(aElemVal) && !langMetadata.includes(aElemVal)) {
+    if (aElemVal == "PublishingDate") {
       // check if the property is there
-      if (Object.keys(getBookElem('PublishingDate')).length < 1){
+      if (Object.keys(getBookElem("PublishingDate")).length < 1) {
         createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
       }
-    }else {
+    } else {
       createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
     }
   }
@@ -300,14 +301,14 @@ function divElement(tbl, tableVal, elemID) {
 $(document).on("click", "#selectedBox .list-group-item", function (e) {
   if ($("#selectedBox .list-group-item").hasClass("active")) {
     $("#selectedBox .list-group-item").removeClass("active");
-    $("#removeBtn").removeClass('disabled');
+    $("#removeBtn").removeClass("disabled");
   }
   $(e.target).addClass("active");
   divID = $(this).attr("id");
   // to avoid remove required metadata
   if (reqMeta.includes(divID)) {
     //$("#selectedBox .list-group-item").removeClass("active");
-    $("#removeBtn").addClass('disabled');
+    $("#removeBtn").addClass("disabled");
   }
   document.getElementById("metadataInfo").innerHTML = infoObj[divID];
 });
@@ -316,7 +317,7 @@ $(document).on("click", "#selectedBox .list-group-item", function (e) {
 $(document).on("click", "#selectedBox i.bi-trash3-fill", function (e) {
   if ($(this)) {
     //delete an existing entry
-    let titleId = $(this).closest('div').attr('id');
+    let titleId = $(this).closest("div").attr("id");
     let key = $(this).closest("tr").children()[0].innerText;
     updateBookData(titleId, key, "delete");
     $(this).closest("tr").html("");
@@ -334,19 +335,20 @@ $(document).on("click", "#selectedBox i.bi-plus-square-fill", function (e) {
 // save the values when the input element loses the focus
 $(document).on("focusout", "#selectedBox input", function (e) {
   if ($(this)) {
-    let internalValue = $(this).closest('div').attr('id');
-    let key = $(this).closest('tr').children('th').text();
+    let internalValue = $(this).closest("div").attr("id");
+    let key = $(this).closest("tr").children("th").text();
     let val = $(this).val();
-    updateBookData(internalValue, key, 'update', val)
+    updateBookData(internalValue, key, "update", val);
   }
 });
 
 // handel enter key press when tabbing to the div
 $(document).on("keypress", "#selectedBox div", function (e) {
-  if(e.keyCode == 13){ //for enter key
+  if (e.keyCode == 13) {
+    //for enter key
     var currentDiv = e.target;
     $(currentDiv).click();
-    return false; 
+    return false;
   }
 });
 
@@ -376,7 +378,7 @@ function addNewRow(tableTitle) {
   th.appendChild(document.createTextNode(count));
   th.setAttribute("scope", "row");
   th.setAttribute("class", "metaHeader");
-  if (elementTitle == "PublishingDate" && $("#selectedBox #PublishingDate tbody tr").length < 1){
+  if (elementTitle == "PublishingDate" && $("#selectedBox #PublishingDate tbody tr").length < 1) {
     $("#selectedBox #" + elementTitle + " thead tr th i").remove();
   }
   tr.appendChild(th);
@@ -384,7 +386,7 @@ function addNewRow(tableTitle) {
   let input = document.createElement("input");
   input.setAttribute("type", "text");
   input.setAttribute("class", "form-control");
-  input.value = '';
+  input.value = "";
   td.appendChild(input);
   tr.appendChild(td);
   tbdy.appendChild(tr);
@@ -406,7 +408,7 @@ function getBookElem(elem) {
   return bookDetObj[elem];
 }
 
-function updateBookData(tableItemVal ,key, mode, val) {
+function updateBookData(tableItemVal, key, mode, val) {
   let bookDetObj = JSON.parse(sessionStorage.getItem("bookDetails"));
   if (mode == "delete") {
     delete bookDetObj[tableItemVal][key];
@@ -429,7 +431,7 @@ function updateAddedList(langChange, multipleUp) {
       if (multipleUp == 1 && (currtitle == "Title" || currtitle == "Identifier")) {
         return;
       }
-      let elementId = $(this).closest('div').attr('id');
+      let elementId = $(this).closest("div").attr("id");
       $("#" + elementId).remove();
       createTable(currtitle, "selectedBox", elementId, langChange);
     }

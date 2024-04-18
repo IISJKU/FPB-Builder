@@ -12,6 +12,10 @@ class FileImporter {
     this.importedFiles = new Array();
   }
 
+  printImportedFiles() {
+    console.log(this.importedFiles);
+  }
+
   //checks if xhtml file is an image
   checkIfImage(lineArray) {
     let hasFigure = false;
@@ -191,21 +195,23 @@ class FileImporter {
   import(pages, lang) {
     this.importedFiles = [];
     pages.forEach((page) => {
-      if (fs.existsSync(page.image)) {
-        let data = fs.readFileSync(page.image, "utf8");
+      if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {
+        let data = fs.readFileSync(page.imagesScripts.Image, "utf8");
         //split file at linebreaks to parse it line by line
         let dataSplit = data.split("\n");
         if (this.checkIfImage(dataSplit)) {
           //this is responsible for adding every file to the list of imported files
-          this.importDependencies(dataSplit, page.image);
+          this.importDependencies(dataSplit, page.imagesScripts.Image);
           this.importedFiles.push(page);
-          this.importedFiles.push(page.image);
-          this.importedFiles.push(page.audio[lang]);
+          this.importedFiles.push(page.imagesScripts.Image);
+          this.importedFiles.push(page.narration[lang]);
           //console.log(importedFiles);
         } else {
           //please select an image file!!
           console.log("Please Select an xhtml containing an image!");
         }
+      } else {
+        console.log();
       }
     });
     return this.importedFiles;

@@ -1,5 +1,4 @@
 const FileSystemManager = require("./utilities/fileSystemUtility.js");
-const EPUBFileCreator = require("./epubFiles.js");
 const PathUtilities = require("./utilities/pathUtilities.js");
 const ZipHandler = require("./utilities/zipHandler.js");
 const FileImporter = require("./fileImporter.js");
@@ -10,6 +9,7 @@ const Language = require("./classes/Languages.js");
 
 let fs = require("fs");
 const { fileURLToPath } = require("url");
+const Metadata = require("./classes/Metadata.js");
 
 //set this to null to let the user pick for themselves
 //let directory = null;
@@ -29,35 +29,6 @@ let spine = [];
 
 function setDirectory(d) {
   directory = d;
-}
-
-function createFileStructure(name, path) {
-  //create overall folder
-  FileSystemManager.makeFolder(path, name);
-
-  //Everything is put into this folder
-  tempDir = path + "\\" + name + "\\";
-
-  //create top layer in folder structure
-
-  //the mimetype will be added when zipping!
-  //FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
-  FileSystemManager.makeFolder(tempDir, "META-INF");
-  FileSystemManager.makeFile(tempDir + "\\META-INF\\", "container.xml", EPUBFileCreator.containerFile);
-  FileSystemManager.makeFile(tempDir + "\\META-INF\\", "com.apple.ibooks.display-options.xml", EPUBFileCreator.iBooksOptions);
-
-  //Create OEBPS AND ALL THE FOLDERS and FILES INSIDE
-  FileSystemManager.makeFolder(tempDir, "OEBPS");
-  //set the tempDir one layer below
-  tempDir = tempDir + "\\OEBPS\\";
-  //create all of the folders inside this one
-  FileSystemManager.makeFolder(tempDir, "audio");
-  FileSystemManager.makeFolder(tempDir, "css");
-  FileSystemManager.makeFolder(tempDir, "fonts");
-  FileSystemManager.makeFolder(tempDir, "images");
-  FileSystemManager.makeFolder(tempDir + "\\images\\", "notice");
-  FileSystemManager.makeFolder(tempDir, "Misc");
-  FileSystemManager.makeFolder(tempDir, "xhtml");
 }
 
 function fetchFromFrontend(window, callback) {

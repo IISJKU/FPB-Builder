@@ -8,7 +8,7 @@ class FrontendDataManager {
     Contributor: [],
     Publisher: [],
     Copyright: "",
-    AccessMode: [],
+    AccessMode: {},
     AccessModeSufficient: [],
     AccessibilityFeature: [],
     AccessibilityHazard: [],
@@ -37,54 +37,24 @@ class FrontendDataManager {
         if (typeof this.languages != "undefined") {
           metadataManager.setLanguages(this.languages);
         }*/
+
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!
-        let t = $("#selectedBox");
-        t.children().each((val, element) => {
-          if (typeof element != undefined) {
-            let container = element.children[0].children[1];
-            let fieldName = element.children[0].children[0].children[0].textContent;
-            if (fieldName === "Creator") {
-              fieldName = "Author";
-            }
 
-            switch (fieldName) {
-              case "Creator":
-                fieldName = "Author";
-                break;
-              case "Mode":
-                fieldName = "AccessMode";
-                break;
-              case "Mode Sufficient":
-                fieldName = "AccessModeSufficient";
-                break;
-              case "Summary":
-                fieldName = "AccessibilitySummary";
-                break;
-              case "Hazard":
-                fieldName = "AccessibilityHazard";
-                break;
-              case "Feature":
-                fieldName = "AccessibilityFeature";
-                break;
-              case "Certified by":
-                fieldName = "CertifiedBy";
-                break;
-              case "Conforms to":
-                fieldName = "ConformsTo";
-                break;
-            }
-            if (container != undefined){
-              for (let i = 0; i < container.children.length; i++) {
-                if (typeof container != undefined && typeof container.children[i] != undefined) {
-                  let lang = container.children[i].children[0].innerText;
-                  let value = container.children[i].children[1].innerText;
-                  //set the field accordingly
-                  if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
-                  else if (!meta[fieldName].includes(value)) meta[fieldName].push(value);
-                }
-              }
+        $("#selectedBox a").each(function () {
+          let fieldName = $(this).attr("id");
+          let rows = $(this).children("table").children("tbody").children("tr");
+          for (let i = 0; i < rows.length; i++) {
+            let lang = rows[i].children[0].textContent;
+            let value = rows[i].children[1].textContent;
+
+            console.log(lang + " " + value);
+            console.log(fieldName + " " + value);
+            if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
+            else if (!meta[fieldName].includes(value)) {
+              meta[fieldName].push(value);
+              console.log("ye");
             }
           }
         });

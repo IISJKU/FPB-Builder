@@ -1,6 +1,11 @@
-const Page = require("./classes/Page.js");
-
 let pages = [];
+let languages = [];
+let cover;
+let credit;
+
+function setLanguages(lang) {
+  languages = lang;
+}
 
 function setData(p) {
   //itterate over keys
@@ -8,15 +13,33 @@ function setData(p) {
 
   if (typeof p != undefined && p != null) {
     Object.keys(p).forEach((key) => {
-      const value = p[key];
-      if (key != "cover" && key != "credit") {
+      if (key == "cover") {
+        p[key]["title"] = "cover";
+      } else if (key == "credit") {
+        p[key]["title"] = "credit";
+      } else {
         p[key]["title"] = "page" + key;
-        pages.push(p[key]);
       }
+      pages.push(p[key]);
     });
   }
+
+  removeUnusedLanguageKeys();
 }
 
+function removeUnusedLanguageKeys() {
+  pages.forEach((page) => {
+    ["text", "narration", "alt"].forEach((field) => {
+      for (let key in page[field]) {
+        if (!languages.includes(key)) {
+          delete page[field][key];
+        }
+      }
+    });
+  });
+}
+
+//this is a temp function, that was used in development to debugM
 function fetchPageDataFromFrontend() {
   //data from frontend, normally saved in session storage:
   // but now im making it up!"
@@ -112,4 +135,5 @@ function getPages() {
 
 module.exports.getPages = getPages;
 module.exports.setData = setData;
+module.exports.setLanguages = setLanguages;
 module.exports.fetchPageDataFromFrontend = fetchPageDataFromFrontend;
