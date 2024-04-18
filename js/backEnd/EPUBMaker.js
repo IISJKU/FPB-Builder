@@ -38,29 +38,27 @@ function fetchFromFrontend(window, callback) {
 }
 
 function make(metadata, pages, data) {
-  directory.then((value) => {
-    data.languages.forEach((language) => {
-      //this picks the name of the epub, according to how many files are in the folder,
-      let dirName = "TestEpub" + "_" + language;
-      let count = 1;
+  data.languages.forEach((language) => {
+    //this picks the name of the epub, according to how many files are in the folder,
+    let dirName = data.dirName + "_" + language;
+    let count = 1;
 
-      //if folder with that name exists, add (*) at the end.
-      if (fs.existsSync(value["filePaths"][0] + "\\" + dirName)) {
-        while (fs.existsSync(value["filePaths"][0] + "\\" + dirName + "(" + count + ")")) {
-          count = count + 1;
-        }
-        dirName = dirName + "(" + count + ")";
+    //if folder with that name exists, add (*) at the end.
+    if (fs.existsSync(directory + "\\" + dirName)) {
+      while (fs.existsSync(directory + "\\" + dirName + "(" + count + ")")) {
+        count = count + 1;
       }
+      dirName = dirName + "(" + count + ")";
+    }
 
-      FileSystemManager.createFileStructure(dirName, value["filePaths"][0]);
-      //import all of the required files!
-      let files = fileImporter.import(pages, language);
-      fileImporter.printImportedFiles();
-      //writes the xhtml files into that new file structure
-      XHTMLMaker.initialize(metadata, language, pages);
-      XHTMLMaker.createXHTMLFiles(files, value["filePaths"][0], dirName);
-      makeEPUB(dirName);
-    });
+    FileSystemManager.createFileStructure(dirName, directory);
+    //import all of the required files!
+    let files = fileImporter.import(pages, language);
+    fileImporter.printImportedFiles();
+    //writes the xhtml files into that new file structure
+    XHTMLMaker.initialize(metadata, language, pages);
+    XHTMLMaker.createXHTMLFiles(files, directory, dirName);
+    makeEPUB(dirName);
   });
 }
 
@@ -70,20 +68,18 @@ function make(metadata, pages, data) {
  * @param {*} n name of the file
  */
 function makeEPUB(n) {
-  directory.then((value) => {
-    ZipHandler.makeEPUB(value["filePaths"][0] + "\\" + n + "\\").then(() => {
-      fs.rename(value["filePaths"][0] + "\\" + n + ".zip", value["filePaths"][0] + "\\" + n + ".epub", (error) => {
-        if (error) {
-          // Show the error
-          console.log("An Error occured:");
-          console.log(n);
-          console.log(error);
-        } else {
-          // List all the filenames after renaming
-          console.log("\nFile Renamed\n");
-          console.log(n);
-        }
-      });
+  ZipHandler.makeEPUB(directory + "\\" + n + "\\").then(() => {
+    fs.rename(directory + "\\" + n + ".zip", directory + "\\" + n + ".epub", (error) => {
+      if (error) {
+        // Show the error
+        console.log("An Error occured:");
+        console.log(n);
+        console.log(error);
+      } else {
+        // List all the filenames after renaming
+        console.log("\nFile Renamed\n");
+        console.log(n);
+      }
     });
   });
 }

@@ -17,7 +17,7 @@ const langMetadata = [
 ];
 let bookDetails = {
   Title: {
-    EN: "Little Red Riding Hood",
+    EN: "Hello whats up, this is my incredibly cool book :)",
     IT: "Cappuccetto Rosso",
   },
   Identifier: {

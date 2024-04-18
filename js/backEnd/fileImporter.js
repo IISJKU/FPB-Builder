@@ -23,7 +23,6 @@ class FileImporter {
     lineArray.forEach((element) => {
       if (element.includes("<figure")) {
         hasFigure = true;
-        //console.log("This has a figure!");
       }
       if (element.includes("<svg")) {
         hasSVG = true;
@@ -183,10 +182,8 @@ class FileImporter {
 
     dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
     let d = JSON.stringify(dependencyList);
-    console.log(dependencyList);
     return dependencyList;
     //storage.set("dependencies", d);
-    //console.log(storage.getSync("dependencies"));
   }
 
   /**
@@ -196,7 +193,6 @@ class FileImporter {
    * @returns An array containing the imported files
    */
   import(pages, lang) {
-    console.log(pages);
     this.importedFiles = [];
     pages.forEach((page) => {
       if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {
