@@ -92,8 +92,8 @@ class ipcMainManager {
       }
     });
 
-    function dataLoaded(rawData) {
-      rawData = JSON.parse(rawData);
+    function dataLoaded(data) {
+      data = JSON.parse(data);
 
       EPUBMaker.setDirectory(rawData.options.directory);
       MetadataManager.setLanguages(rawData.languages);
@@ -134,7 +134,7 @@ class ipcMainManager {
 
     //manually import dependency
     ipcMain.on("importDependency", () => {
-      //console.log(JSON.parse(storage.getSync("dependencies")));
+      console.log(JSON.parse(storage.getSync("dependencies")));
       dialog
         .showOpenDialog({
           properties: ["openFile"],

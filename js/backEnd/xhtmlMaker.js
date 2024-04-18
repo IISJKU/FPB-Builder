@@ -7,7 +7,6 @@ const relativePaths = new Array();
 let fonts = new Array();
 
 const fs = require("fs");
-const { forEach } = require("jszip");
 
 //this array contains every entry that is later going to be used in the "contents.opf" file
 let contents = [];
@@ -17,23 +16,14 @@ let metadata;
 let language;
 let pages = [];
 
-let cover;
-let credit;
-
 function initialize(metad, lang, pag) {
   spine = [];
   contents = [];
   pages = [];
   fonts = [];
   metadata = metad;
-  pages = pag;
-
-  //remove cover and credit from datastructure ;o
-  cover = pages[pages.length - 2];
-  credit = pages[pages.length - 1];
-  pages.splice(pages.length - 2, 2);
-
   language = lang;
+  pages = pag;
 }
 
 /**
@@ -135,9 +125,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
 
-  const coverImage = cover.imagesScripts.Image;
-  EPUBFileCreator.setCover(coverImage);
-  const coverNarration = cover.narration[language];
+  const coverImage = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\images\\cover.jpg";
+  const coverNarration = "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\EMILE_-_Page_de_faux_titre_V1.mp3";
 
   spine = [];
   contents = [];
@@ -150,13 +139,6 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     EPUBFileCreator.createCover(metadata.title[language], coverImage, "Buchdeckel", coverNarration)
   );
   spine.push("cover.xhtml");
-
-  fonts = fonts.concat(pathsToFonts());
-  fonts.forEach((p) => {
-    let symb = "\\";
-    if (!p.includes(symb)) symb = "/";
-    fs.copyFileSync(p, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
-  });
 
   //make page 00
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
@@ -262,22 +244,18 @@ function importFonts(element, newPath, newDirName) {
       let path = PathUtilities.cutOutFilename(line, "url");
       path = PathUtilities.getAbsolutePath(element, path);
 
-      //paste this into the css file;
-      let symb = "\\";
-      if (!path.includes(symb)) symb = "/";
-
-      let relPath = "../fonts/" + path.substring(path.lastIndexOf(symb) + 1, path.length);
-      let firstBracketIndex = line.indexOf("(");
-      let secondBracket = line.indexOf(")");
-      //+ line.substring(secondBracket, line.length)
-      tLine = line.substring(0, firstBracketIndex + 1) + '"' + relPath + '"' + line.substring(secondBracket, line.length);
-
-      if (newFont(path)) {
+      if (!fonts.includes(path)) {
         fonts.push(path);
-        fs.copyFileSync(path, newPath + "\\" + newDirName + "\\OEBPS\\fonts\\" + path.substring(path.lastIndexOf("\\", path.length)));
-      }
 
-      if (!relativePaths.includes(relPath)) relativePaths.push(relPath);
+        //paste this into the css file;
+        let relPath = "../fonts/" + path.substring(path.lastIndexOf("\\") + 1, path.length);
+        let firstBracketIndex = line.indexOf("(");
+        let secondBracket = line.indexOf(")");
+        //+ line.substring(secondBracket, line.length)
+        tLine = line.substring(0, firstBracketIndex + 1) + '"' + relPath + '"' + line.substring(secondBracket, line.length);
+        fs.copyFileSync(path, newPath + "\\" + newDirName + "\\OEBPS\\fonts\\" + path.substring(path.lastIndexOf("\\", path.length)));
+        relativePaths.push(relPath);
+      }
     }
 
     if (line.includes("}")) {
@@ -290,47 +268,9 @@ function importFonts(element, newPath, newDirName) {
   //contents.concat(fonts);
 }
 
-function newFont(name) {
-  let newF = true;
-
-  fonts.forEach((font) => {
-    //check if relative or absolute path
-    let = fontSymb = "\\";
-    if (!font.includes("\\")) fontSymb = "/";
-
-    let = nSymb = "\\";
-    if (!name.includes("\\")) nSymb = "/";
-
-    if (font == name || font.substring(font.lastIndexOf(fontSymb) + 1, font.length) == name.substring(name.lastIndexOf(nSymb) + 1, name.length)) {
-      newF = false;
-    }
-  });
-
-  return newF;
-}
-
-function pathsToFonts() {
-  return [
-    "./js/backEnd/imports/fonts/ariablk.ttf",
-    "./js/backEnd/imports/fonts/arial.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Bold-Italic.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Bold.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Regular-Italic.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Regular.ttf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Bold.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-BoldItalic.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Italic.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Regular.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexicMono-Regular.otf",
-    "./js/backEnd/imports/fonts/verdana.ttf",
-    "./js/backEnd/imports/fonts/verdanab.ttf",
-  ];
-}
-
 function pathsToMenuDependencies() {
   return new Array(
     "./js/backEnd/imports/colorisation.min.js",
-    "./js/backEnd/imports/ldqr_main.min.css",
     "./js/backEnd/imports/colorisation.css",
     "./js/backEnd/templates/page00_svg.css",
     "./js/backEnd/templates/page00.min.js",
