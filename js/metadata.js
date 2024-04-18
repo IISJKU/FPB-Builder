@@ -3,7 +3,17 @@ const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard",
 //required metadata
 const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
 //Metdata that related to the selected languages in the project screen
-const langMetadata = ["Title", "Identifier", "AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "Type", "Subject"];
+const langMetadata = [
+  "Title",
+  "Identifier",
+  "AccessMode",
+  "AccessibilityFeature",
+  "AccessibilityHazard",
+  "AccessibilitySummary",
+  "AccessModeSufficient",
+  "Type",
+  "Subject",
+];
 let bookDetails = {
   Title: {
     EN: "Little Red Riding Hood",
@@ -102,7 +112,7 @@ let initialized = false;
 function loadInMetadata() {
   let test = JSON.parse(sessionStorage.getItem("bookDetails"));
   $("#selectedBox a").each(function () {
-    let fieldName = $(this).attr('id');
+    let fieldName = $(this).attr("id");
     let rows = $(this).children("table").children("tbody").children("tr");
     for (let i = 0; i < rows.length; i++) {
       let lang = rows[i].children[0].textContent;
@@ -114,7 +124,7 @@ function loadInMetadata() {
         }
       }
     }
-  })
+  });
 }
 
 function metadataInitialized() {
