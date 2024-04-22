@@ -112,7 +112,38 @@ let initialized = false;
 
 function loadInMetadata() {
   let test = JSON.parse(sessionStorage.getItem("bookDetails"));
-  $("#selectedBox a").each(function () {
+
+  test = {
+    Title: {
+      EN: "Hello whats up, this is my incredibly cool book :)",
+      IT: "Cappuccetto Rosso",
+    },
+    Identifier: {
+      EN: "978-0-5490-2195-4",
+      IT: "978-0-5490-2196-4",
+    },
+    SourceISBN: "",
+    Description: {},
+    Author: {},
+    Contributor: {
+      1: "Viviano Pierpaolo",
+      2: "Maëlie Celestine",
+      3: "Vincentas Élisabeth",
+      4: "Agata Lia",
+    },
+    Publisher: {},
+    Copyright: "",
+    AccessMode: {},
+    AccessModeSufficient: {},
+    AccessibilityFeature: {},
+    AccessibilityHazard: {},
+    AccessibilitySummary: {},
+    CertifiedBy: {},
+    ConformsTo: {},
+    PublishingDate: {},
+  };
+
+  $("#selectedBox div").each(function () {
     let fieldName = $(this).attr("id");
     let rows = $(this).children("table").children("tbody").children("tr");
     for (let i = 0; i < rows.length; i++) {
@@ -120,8 +151,13 @@ function loadInMetadata() {
       let value = rows[i].children[1].textContent;
       if (typeof test[fieldName] != undefined && typeof test[fieldName][lang] != undefined) {
         if (value == "" || value.length == 0 || typeof value == undefined) {
-          if (isLanguageDependent(fieldName)) rows[i].children[1].innerText = test[fieldName][lang];
-          else rows[i].children[0].innerText = test[fieldName][0];
+          if (isLanguageDependent(fieldName)) {
+            console.log(rows[i].children[1]);
+            rows[i].children[1].innerText = test[fieldName][lang];
+          } else {
+            console.log(rows[i].children[1]);
+            rows[i].children[1].innerText = test[fieldName][0];
+          }
         }
       }
     }

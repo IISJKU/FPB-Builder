@@ -332,11 +332,14 @@ function createTocXHTML(pages) {
 }
 
 //add the file that displays the credits
-function createCredits() {
+function createCredits(creditPage) {
   let str = "";
+
+  console.log(creditPage);
 
   str = fs.readFileSync("./js/backEnd/templates/" + language + "/credits.xhtml", "utf-8");
 
+  /*
   let tempCredits = [
     'Digitaler illustrierter Band aus der Reihe <span lang="fr">Les Doigts Qui Rêvent</span> (Frankreich)',
     "Validierung: pagina EPUB-Checker version 2.0.6 und Ace by DAISY Version 1.1.5",
@@ -348,12 +351,31 @@ function createCredits() {
     'Wir danken den Autoren <span lang="fr">Vincent Cuvellier</span> und <span lang="fr">Ronan Badel</span> sowie dem Verlag <span lang="fr">Gallimard</span> für die Erlaubnis, diese Adaption vorzunehmen.',
     "Dieses Projekt wurde im Rahmen von ERASMUS PLUS (Call 2022) der Europäischen Union gefördert. Wir danken für die Unterstützung, ohne die dieses Projekt nicht möglich gewesen wäre.",
     "This is a line of debug code added by Max Punz, to see whether or not this works!",
-  ];
+  ];*/
 
+  let ourCredit = {
+    EN: "This EPUB was created with the Flexi Picture EBook Builder, which was developed at the JKU Linz by Danya Gharbieh and Maximilian Punz.",
+    DE: "Dieses EPUB wurde mit dem Flexi Picture EBook Builder erstellt, der an der JKU Linz von Danya Gharbieh und Maximilian Punz entwickelt wurde.",
+    LIT: 'Šis EPUB buvo sukurtas naudojant "Flexi Picture EBook Builder" programą, kurią JKU sukūrė Danya Gharbieh ir Maximilian Punz.',
+    FR: "Cet EPUB a été créé avec le Flexi Picture EBook Builder, développé à la JKU par Danya Gharbieh et Maximilian Punz.",
+    IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz.",
+  };
+
+  creditPage.text[language] = creditPage.text[language].trim();
+
+  if (creditPage.text[language].slice(-2) != "\n") {
+    creditPage.text[language] += "\n";
+  }
+
+  creditPage.text[language] = creditPage.text[language] + ourCredit[language];
   let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
   let count = 1;
 
-  tempCredits.forEach((credit) => {
+  if (!Array.isArray(creditPage.text[language])) {
+    creditPage.text[language] = creditPage.text[language].split("\n");
+  }
+
+  creditPage.text[language].forEach((credit) => {
     let t = "";
     if (count < 10) {
       t = "0" + count;

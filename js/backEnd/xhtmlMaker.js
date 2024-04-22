@@ -232,7 +232,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   spine.push("notice.xhtml");
 
   //make the credits
-  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "credits.xhtml", EPUBFileCreator.createCredits());
+  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "credits.xhtml", EPUBFileCreator.createCredits(credit));
   spine.push("credits.xhtml");
 
   //FileSystemManager.makeFile(value["filePaths"][0] + "/" + newDirName + "/OEBPS/xhtml/", "testTxt.xhtml", EPUBFileCreator.createPageText(txt));

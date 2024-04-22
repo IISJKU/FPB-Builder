@@ -7,7 +7,19 @@ function makeFolder(location, name) {
 }
 
 function makeFile(location, name, content) {
-  fs.writeFileSync(location + name, content);
+  //if folder with that name exists, add (*) at the end.
+
+  let dirName = location + name;
+  let count = 1;
+
+  if (fs.existsSync(location + name)) {
+    while (fs.existsSync(location + name + "(" + count + ")")) {
+      count = count + 1;
+    }
+    dirName = dirName + "(" + count + ")";
+  }
+
+  fs.writeFileSync(dirName, content);
 }
 
 function createFileStructure(name, path) {

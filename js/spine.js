@@ -20,8 +20,16 @@ let pageDetails = {
   },
   credit: {
     text: {
-      EN: "Little Red Riding Hood",
-      IT: "Cappuccetto Rosso",
+      EN:
+        'Digital illustrated volume from the series <span lang="fr">Les Doigts Qui Rêvent</span> (France)\n' +
+        "Validation: pagina EPUB-Checker version 2.0.6 and Ace by DAISY version 1.1.5\n" +
+        'Digital volume "Ben wants a bat", an ePub3 version of the children\'s book <span lang="fr">"Émile veut une chauve-souris"</span> by <span lang="fr">Vincent Cuvellier</span> and <span lang="fr">Ronan Badel</span>, published by <span lang="fr">Gallimard</span>, France, adapted in text and illustration\n' +
+        '<b class="ldqr-font-bold">Design and production of the adapted illustrations</b> by <span lang="fr">Yuvanoe</span> and <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, France)\n',
+      IT:
+        'Volume digitale illustrato della collana <span lang="fr">Les Doigts Qui Rêvent</span> (Francia)\n' +
+        "Convalida: pagina EPUB-Checker versione 2.0.6 e Ace by DAISY versione 1.1.5\n" +
+        'Volume digitale "Ben wants a bat", versione ePub3 del libro per bambini <span lang="fr">"Émile veut une chauve-souris"</span> di <span lang="fr">Vincent Cuvellier</span> e <span lang="fr">Ronan Badel</span>, pubblicato da <span lang="fr">Gallimard</span>, Francia, adattato nel testo e nelle illustrazioni "Progetto e produzione di illustrazioni adattate".\n' +
+        '<b class="ldqr-font-bold">Progettazione e realizzazione delle illustrazioni adattate</b> di <span lang="fr">Yuvanoe</span> e <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, Francia)\n',
     },
     narration: {},
     imagesScripts: {},
