@@ -41,23 +41,15 @@ class FrontendDataManager {
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!
-
-        $("#selectedBox a").each(function () {
-          let fieldName = $(this).attr("id");
-          let rows = $(this).children("table").children("tbody").children("tr");
-          for (let i = 0; i < rows.length; i++) {
-            let lang = rows[i].children[0].textContent;
-            let value = rows[i].children[1].textContent;
-
-            console.log(lang + " " + value);
-            console.log(fieldName + " " + value);
-            if (isLanguageDependent(fieldName)) meta[fieldName][lang] = value;
-            else if (!meta[fieldName].includes(value)) {
-              meta[fieldName].push(value);
-              console.log("ye");
+        let bookDataObj = parseBookData();
+        for (let fieldName in bookDataObj) {
+          for (let fieldVal in bookDataObj[fieldName]) {
+            if (isLanguageDependent(fieldName)) meta[fieldName][fieldVal] = bookDataObj[fieldName][fieldVal];
+            else if (!meta[fieldName].includes(bookDataObj[fieldName][fieldVal])) {
+              meta[fieldName].push(bookDataObj[fieldName][fieldVal]);
             }
           }
-        });
+        }
 
         //set into session, so it can be read from the "metadata" tab in frontend
         sessionStorage.setItem("bookDetails", JSON.stringify(meta));
