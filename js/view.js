@@ -10,11 +10,7 @@ function changeContent(event, controlledTab) {
 
   if (tabTitle == "Metadata") {
     $("#publicationLanguage").trigger("change");
-    if (metadataInitialized()) {
-      loadInMetadata();
-    } else {
-      initializeMetadata();
-    }
+    initializeMetadata();
   }
   if (tabTitle == "Spine") {
     $("#publicationLanguage").trigger("change");

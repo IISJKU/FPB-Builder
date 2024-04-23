@@ -1,5 +1,4 @@
 //accessibility metadata options
-//const accessMeta = ["Mode", "Feature", "Hazard", "Summary", "Mode Sufficient", "Conforms to", "Certified by"];
 const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "ConformsTo", "CertifiedBy"];
 //required metadata
 const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
@@ -41,7 +40,10 @@ let bookDetails = {
   AccessibilityHazard: {},
   AccessibilitySummary: {},
   CertifiedBy: {},
-  ConformsTo: {},
+  ConformsTo: {
+    1: "Viviano Pierpaolo",
+    2: "Maëlie Celestine",
+  },
   PublishingDate: {},
 };
 
@@ -108,72 +110,11 @@ let infoObj = {
     "</a>",
 };
 
-let initialized = false;
-
-function loadInMetadata() {
-  let test = JSON.parse(sessionStorage.getItem("bookDetails"));
-
-  test = {
-    Title: {
-      EN: "Hello whats up, this is my incredibly cool book :)",
-      IT: "Cappuccetto Rosso",
-    },
-    Identifier: {
-      EN: "978-0-5490-2195-4",
-      IT: "978-0-5490-2196-4",
-    },
-    SourceISBN: "",
-    Description: {},
-    Author: {},
-    Contributor: {
-      1: "Viviano Pierpaolo",
-      2: "Maëlie Celestine",
-      3: "Vincentas Élisabeth",
-      4: "Agata Lia",
-    },
-    Publisher: {},
-    Copyright: "",
-    AccessMode: {},
-    AccessModeSufficient: {},
-    AccessibilityFeature: {},
-    AccessibilityHazard: {},
-    AccessibilitySummary: {},
-    CertifiedBy: {},
-    ConformsTo: {},
-    PublishingDate: {},
-  };
-
-  $("#selectedBox div").each(function () {
-    let fieldName = $(this).attr("id");
-    let rows = $(this).children("table").children("tbody").children("tr");
-    for (let i = 0; i < rows.length; i++) {
-      let lang = rows[i].children[0].textContent;
-      let value = rows[i].children[1].textContent;
-      if (typeof test[fieldName] != undefined && typeof test[fieldName][lang] != undefined) {
-        if (value == "" || value.length == 0 || typeof value == undefined) {
-          if (isLanguageDependent(fieldName)) {
-            console.log(rows[i].children[1]);
-            rows[i].children[1].innerText = test[fieldName][lang];
-          } else {
-            console.log(rows[i].children[1]);
-            rows[i].children[1].innerText = test[fieldName][0];
-          }
-        }
-      }
-    }
-  });
-}
-
-function metadataInitialized() {
-  return initialized;
-}
-
 function initializeMetadata() {
   sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   createTable("Title", "selectedBox", "Title");
   createTable("Identifier", "selectedBox", "Identifier");
   updateAddedList(0, 1);
-  initialized = true;
 }
 
 //handle adding items from available metadata cloumn to added metadata column
@@ -191,40 +132,38 @@ function addBtn() {
 
 //handle removing items from added metadata cloumn to available metadata column
 function removeBtn() {
-  let selectedOpts = $("#selectedBox .list-group-item.active");
+  let selectedOpts = $("#selectedBox input:checked");
   if (selectedOpts.length == 0) {
     return;
   }
-  let metadataText = $("#selectedBox .list-group-item.active>table>thead").text();
-  let itemIntVal = $("#selectedBox .list-group-item.active").attr("id");
-  let optionElem = document.createElement("option");
-  optionElem.setAttribute("value", itemIntVal);
-  if (accessMeta.includes(itemIntVal)) {
-    optionElem.setAttribute("class", "bi bi-person-wheelchair");
-    optionElem.setAttribute("data-tokens", metadataText);
+  //loop through the checked added metadata list to remove them
+  for (let i = 0; i < selectedOpts.length; i++) {
+    let itemIntVal = selectedOpts[i].name;
+    let metadataText = $("#selectedBox #"+itemIntVal+'>table>thead').text();
+    let optionElem = document.createElement("option");
+    optionElem.setAttribute("value", itemIntVal);
+    if (accessMeta.includes(itemIntVal)) {
+     optionElem.setAttribute("class", "bi bi-person-wheelchair");
+      optionElem.setAttribute("data-tokens", metadataText);
+    }
+    optionElem.appendChild(document.createTextNode(metadataText));
+    $("#itemBox").append(optionElem);
+    $("#selectedBox #" + itemIntVal).remove();
   }
-  // removed because it's added to the list onclick event
-  /*if (reqMeta.includes(itemIntVal)) {
-    $("#selectedBox #" + metadataText).removeClass("active");
-    return;
-  }*/
-  optionElem.appendChild(document.createTextNode(metadataText));
-  $("#itemBox").append(optionElem);
-  $("#selectedBox #" + itemIntVal).remove();
+  
 }
 
 //create table for each metadata
 //langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
 function createTable(tableTitle, elemID, itemVal, langChange) {
-  let elementTitle = tableTitle.replace(/\s/g, "");
   let bookDetObj = parseBookData();
   // check if the table doesn't have values
-  if (bookDetObj[elementTitle] == undefined) {
+  if (Object.keys(bookDetObj[itemVal]).length == 0) {
     createNewTable(tableTitle, elemID, itemVal);
     return;
   }
   // check if the table is already exisit for the table title
-  if (checkAddedList(elementTitle) == 1 && (langChange || langChange != 1)) {
+  if (checkAddedList(itemVal) == 1 && (langChange || langChange != 1)) {
     return;
   }
   let tbl = document.createElement("table");
@@ -235,7 +174,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     langMetaAttr(tbl, tbdy, itemVal, elemID);
     return;
   }
-  for (let val in bookDetObj[elementTitle]) {
+  for (let val in bookDetObj[itemVal]) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
     th.appendChild(document.createTextNode(val));
@@ -246,7 +185,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     let input = document.createElement("input");
     input.setAttribute("type", "text");
     input.setAttribute("class", "form-control");
-    input.value = bookDetObj[elementTitle][val];
+    input.value = bookDetObj[itemVal][val];
     if (!reqMeta.includes(itemVal)) {
       createIcon(td, "bi bi-trash3-fill", "delete entry");
     }
@@ -255,7 +194,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     tbdy.appendChild(tr);
   }
   tbl.appendChild(tbdy);
-  divElement(tbl, itemVal, elemID);
+  liElement(tbl, itemVal, elemID);
 }
 
 // Create selected languages rows in the tables
@@ -263,11 +202,6 @@ function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
   let bookDetObj = parseBookData();
   let value = "";
   let langs = JSON.parse(sessionStorage.getItem("pubLang"));
-  // in case nothing gets selected, set english as standard
-  if (langs == undefined || langs == null) {
-    langs = [];
-    langs.push("EN");
-  }
   for (let i = 0; i < langs.length; i++) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
@@ -292,7 +226,7 @@ function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
     tbdy.appendChild(tr);
   }
   tbl.appendChild(tbdy);
-  divElement(tbl, itIntVal, elemId);
+  liElement(tbl, itIntVal, elemId);
 }
 
 //create table header element
@@ -323,29 +257,24 @@ function tableHeader(tbl, tableTitle, aElemVal) {
 }
 
 //create anchor element to the added metadata column
-function divElement(tbl, tableVal, elemID) {
+function liElement(tbl, tableVal, elemID) {
   let metadata = document.getElementById(elemID);
-  let divElement = document.createElement("div");
-  divElement.setAttribute("class", "list-group-item list-group-item-action");
-  divElement.setAttribute("id", tableVal);
-  divElement.setAttribute("tabindex", "0");
-  divElement.appendChild(tbl);
-  metadata.append(divElement);
+  let liElement = document.createElement("li");
+  liElement.setAttribute("class", "list-group-item list-group-item-action");
+  liElement.setAttribute("id", tableVal);
+  if (!reqMeta.includes(tableVal)) {
+    let liInput = document.createElement("input");
+    liInput.setAttribute("type", "checkbox");
+    liInput.setAttribute("name", tableVal);
+    liInput.setAttribute("aria-label", "select "+ tbl.children[0].textContent +' item');
+    liElement.appendChild(liInput);
+  }
+  liElement.appendChild(tbl);
+  metadata.append(liElement);
 }
 
 // handle on click for the added metadata list elements
 $(document).on("click", "#selectedBox .list-group-item", function (e) {
-  if ($("#selectedBox .list-group-item").hasClass("active")) {
-    $("#selectedBox .list-group-item").removeClass("active");
-    $("#removeBtn").removeClass("disabled");
-  }
-  $(e.target).addClass("active");
-  divID = $(this).attr("id");
-  // to avoid remove required metadata
-  if (reqMeta.includes(divID)) {
-    //$("#selectedBox .list-group-item").removeClass("active");
-    $("#removeBtn").addClass("disabled");
-  }
   document.getElementById("metadataInfo").innerHTML = infoObj[divID];
 });
 
@@ -353,7 +282,7 @@ $(document).on("click", "#selectedBox .list-group-item", function (e) {
 $(document).on("click", "#selectedBox i.bi-trash3-fill", function (e) {
   if ($(this)) {
     //delete an existing entry
-    let titleId = $(this).closest("div").attr("id");
+    let titleId = $(this).closest("li").attr("id");
     let key = $(this).closest("tr").children()[0].innerText;
     updateBookData(titleId, key, "delete");
     $(this).closest("tr").html("");
@@ -363,28 +292,26 @@ $(document).on("click", "#selectedBox i.bi-trash3-fill", function (e) {
 // Add new row to the table for the new elements
 $(document).on("click", "#selectedBox i.bi-plus-square-fill", function (e) {
   if ($(this)) {
-    let title = $(this).closest("div").attr("id");
+    let title = $(this).closest("li").attr("id");
     addNewRow(title);
   }
 });
 
 // save the values when the input element loses the focus
-$(document).on("focusout", "#selectedBox input", function (e) {
+$(document).on("focusout", "#selectedBox input[type='text']", function (e) {
   if ($(this)) {
-    let internalValue = $(this).closest("div").attr("id");
+    let internalValue = $(this).closest("li").attr("id");
     let key = $(this).closest("tr").children("th").text();
     let val = $(this).val();
     updateBookData(internalValue, key, "update", val);
   }
 });
 
-// handel enter key press when tabbing to the div
-$(document).on("keypress", "#selectedBox div", function (e) {
-  if (e.keyCode == 13) {
+// handel enter key press when tabbing to the checkbox input
+$(document).on("keypress", "#selectedBox li input[type='checkbox']", function (e) {
+  if (e.which === 13) {
     //for enter key
-    var currentDiv = e.target;
-    $(currentDiv).click();
-    return false;
+    this.checked = !this.checked;
   }
 });
 
@@ -398,7 +325,7 @@ function createNewTable(tableTitle, elemID, intVal) {
     langMetaAttr(tbl, tbdy, intVal, elemID);
     return;
   }
-  divElement(tbl, intVal, elemID);
+  liElement(tbl, intVal, elemID);
 }
 
 function addNewRow(tableTitle) {
@@ -438,7 +365,7 @@ function parseBookData() {
 // return JSON parsed specific element data in book details session storage item if the element is not exisit it returns 0
 function getBookElem(elem) {
   let bookDetObj = JSON.parse(sessionStorage.getItem("bookDetails"));
-  if (bookDetObj[elem] == undefined) {
+  if (Object.keys(bookDetObj[elem]).length == 0) {
     return 0;
   }
   return bookDetObj[elem];
@@ -449,7 +376,7 @@ function updateBookData(tableItemVal, key, mode, val) {
   if (mode == "delete") {
     delete bookDetObj[tableItemVal][key];
   } else {
-    if (bookDetObj[tableItemVal] == undefined) {
+    if (Object.keys(bookDetObj[tableItemVal]).length == 0) {
       bookDetObj[tableItemVal] = {};
     }
     bookDetObj[tableItemVal][key] = val;
@@ -467,7 +394,7 @@ function updateAddedList(langChange, multipleUp) {
       if (multipleUp == 1 && (currtitle == "Title" || currtitle == "Identifier")) {
         return;
       }
-      let elementId = $(this).closest("div").attr("id");
+      let elementId = $(this).closest("li").attr("id");
       $("#" + elementId).remove();
       createTable(currtitle, "selectedBox", elementId, langChange);
     }

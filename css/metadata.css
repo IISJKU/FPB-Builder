@@ -62,7 +62,22 @@ th.required::after{
     min-width: 10%;
 }
 
-#selectedBox input{
-    width: 94%;
-    max-width: 94%;
+#selectedBox input[type=text]{
+    width: 95%;
+    max-width: 95%;
+}
+
+#selectedBox input[type=checkbox]{
+    position: absolute;
+    bottom: 50%;
+    left: 5px;
+}
+
+#selectedBox table{
+    margin-left: 5%;
+}
+
+#selectedBox .list-group-item{
+    padding-left: 0.5%;
+    padding-right: 5%;
 }
