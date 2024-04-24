@@ -36,7 +36,7 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
       divElement.appendChild(headerElement);
       divElement.appendChild(smallElement);
       aElement.appendChild(divElement);
-      projList.append(aElement);
+      projList.appendChild(aElement);
     });
   }
   projects = value;
