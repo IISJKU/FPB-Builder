@@ -11,6 +11,7 @@
   border-width: 1px;
 }
 
+/*
 input[type="file"]:after {
   content: "Browse";
   left: 100%;
@@ -31,19 +32,19 @@ input[type="file"]::-webkit-file-upload-button {
   display: none;
 }
 
-#directory {
-  padding-right: 0px;
-  border-right-width: 0px;
+#list-group2 small{
+  float: left;
   text-align: left;
-  color: #504f4f;
 }
+*/ 
 
 #projectColumn {
   margin-top: 15px;
 }
 
-
-#list-group2 small{
-  float: right;
-  text-align: right;
+#directory {
+  /*padding-right: 0px;*/
+  /* border-right-width: 0px; */
+  text-align: left;
+  color: #504f4f;
 }

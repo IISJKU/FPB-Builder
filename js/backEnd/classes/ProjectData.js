@@ -9,39 +9,46 @@ class ProjectData {
   pages = [];
   importedFiles = [];
 
-  async fillData(window, dir){
+  async fillData(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("bookDetails"))', true).then(async (result) => {
       this.metadata = result;
-      await this.getLanguages(window, dir);
+      await this.getLanguages(window);
     });
   }
 
-  async getLanguages(window, dir){
+  async getLanguages(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pubLang"))', true).then(async (result) => {
       this.languages = result;
-      await this.getProjectName(window, dir);
+      await this.getProjectName(window);
     });
   }
 
-  async getProjectName(window, dir){
-    await window.webContents.executeJavaScript('sessionStorage.getItem("projectName")', true).then((result) => {
+  async getProjectName(window){
+    await window.webContents.executeJavaScript('sessionStorage.getItem("projectName")', true).then(async (result) => {
       this.name = (result != null ? result : "Test" + Math.floor(Math.random() * 100));
-      this.fillProperties(dir);
-      //await this.getPages(window, dir);
+      await this.getDirectory(window);
     });
   }
 
-  async getPages(window, dir){
+  async getDirectory(window){
+    await window.webContents.executeJavaScript('document.getElementById("directory").value', true).then((result) => {
+      this.directory = result;
+      this.fillProperties();
+      //await this.getPages(window);
+    });
+  }
+
+  async getPages(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pageDetails"))', true).then((result) => {
       this.pages = result;
-      this.fillProperties(dir);
+      this.getDirectory(window);
     });
   }
 
-  fillProperties(dir) {
+  fillProperties() {
     this.name;
     this.languages;
-    this.directory = dir;
+    this.directory;
     this.pages = [
       {
         title: "page1",

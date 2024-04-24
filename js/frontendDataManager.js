@@ -28,7 +28,7 @@ class FrontendDataManager {
     switch (pageName) {
       case "Project":
         let dir = $("#directory").val();
-        if (dir != 0 && dir != undefined && dir != "Click to set directory") {
+        if (dir != 0 && dir != undefined && dir != "Browse") {
           dir = undefined;
         }
         this.languages = JSON.parse(sessionStorage.getItem("pubLang"));

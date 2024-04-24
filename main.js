@@ -34,7 +34,7 @@ const createWindow = () => {
       e.preventDefault();
       let dir = app.getPath("userData") + "\\projects\\";
       let project = new ProjectData();
-      await project.fillData(mainWindow, dir);
+      await project.fillData(mainWindow);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
