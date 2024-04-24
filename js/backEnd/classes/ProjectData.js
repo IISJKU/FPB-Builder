@@ -4,15 +4,44 @@ const Page = require("./Page.js");
 class ProjectData {
   name = "";
   directory = "";
-  metadata = new Metadata();
+  metadata = [];
   languages = [];
   pages = [];
   importedFiles = [];
 
-  fillWithTestData() {
-    this.name = "Test" + Math.floor(Math.random() * 100);
-    this.languages = ["DE", "EN"];
-    this.directory = "./adasfgdf/";
+  async fillData(window, dir){
+    await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("bookDetails"))', true).then(async (result) => {
+      this.metadata = result;
+      await this.getLanguages(window, dir);
+    });
+  }
+
+  async getLanguages(window, dir){
+    await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pubLang"))', true).then(async (result) => {
+      this.languages = result;
+      await this.getProjectName(window, dir);
+    });
+  }
+
+  async getProjectName(window, dir){
+    await window.webContents.executeJavaScript('sessionStorage.getItem("projectName")', true).then((result) => {
+      this.name = (result != null ? result : "Test" + Math.floor(Math.random() * 100));
+      this.fillProperties(dir);
+      //await this.getPages(window, dir);
+    });
+  }
+
+  async getPages(window, dir){
+    await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pageDetails"))', true).then((result) => {
+      this.pages = result;
+      this.fillProperties(dir);
+    });
+  }
+
+  fillProperties(dir) {
+    this.name;
+    this.languages;
+    this.directory = dir;
     this.pages = [
       {
         title: "page1",
@@ -99,6 +128,7 @@ class ProjectData {
       "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page05-fig.xhtml",
       "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\xhtml\\page06-fig.xhtml",
     ];
+    this.metadata;
   }
 }
 

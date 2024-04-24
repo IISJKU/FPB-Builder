@@ -41,3 +41,9 @@ input[type="file"]::-webkit-file-upload-button {
 #projectColumn {
   margin-top: 15px;
 }
+
+
+#list-group2 small{
+  float: right;
+  text-align: right;
+}

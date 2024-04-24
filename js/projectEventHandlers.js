@@ -22,9 +22,13 @@ $(document).on("change", "#bookSettings", function (e) {
   sessionStorage.setItem("options", JSON.stringify(options));
 });
 
+// save the values when the input element loses the focus
+$(document).on("focusout", "#projName", function (e) {
+  sessionStorage.setItem("projectName", this.value);
+});
+
 window.BRIDGE.onDirectorySet((value) => {
   $("#directory").val(value["filePaths"][0]);
-  console.log(value["filePaths"][0]);
   options.directory = value["filePaths"][0];
   sessionStorage.setItem("options", JSON.stringify(options));
 });
