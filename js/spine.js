@@ -89,6 +89,8 @@ let pageDetails = {
   },
 };
 
+sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
+
 let emptyPage = {
   text: {
     EN: "",
@@ -157,6 +159,7 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
     return;
   }
   if ($("#pageList .list-group-item").hasClass("active")) {
+    saveData();
     $("#pageList .list-group-item").removeClass("active");
   }
 
@@ -186,9 +189,10 @@ $(document).on("click", ".otherFiles", function (e) {
 
 window.BRIDGE.onImageLoaded((value) => {
   let pageID = $("#pageList .list-group-item.active").attr("id");
+  let pageDetailsObj = parseSessionData("pageDetails");
 
-  if (typeof pageDetails[pageID] != undefined && pageDetails[pageID] != undefined) {
-    pageDetails[pageID]["imagesScripts"]["Image"] = value["imageFile"];
+  if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
+    pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
     value["foundFiles"].forEach((element) => {
       let tag = "";
       console.log(element.toLowerCase().includes(".js"));
@@ -198,11 +202,11 @@ window.BRIDGE.onImageLoaded((value) => {
       else if (element.includes(".css")) tag = "Style";
 
       let x = 1;
-      while (pageDetails[pageID]["imagesScripts"][tag + " " + x] != undefined) {
+      while (pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] != undefined) {
         x = x + 1;
       }
 
-      pageDetails[pageID]["imagesScripts"][tag + " " + x] = element;
+      pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] = element;
     });
   }
 
@@ -254,22 +258,21 @@ function createTableBody(tbl, pageId, section) {
     createLangRows(tbl, tbdy, pageId, section);
     return;
   }
-
-  if (!pageDetails[pageId] || !pageDetails[pageId][section]) {
-    pageDetails[pageId] = emptyPage;
-    console.log(pageDetails[pageId]);
+  let pageDetObj = parseSessionData("pageDetails");
+  if (!pageDetObj[pageId] || !pageDetObj[pageId][section]) {
+    pageDetObj[pageId] = emptyPage;
+    console.log(pageDetObj[pageId]);
     newImagesScripts(tbl, tbdy);
     return;
   }
-  for (let val in pageDetails[pageId][section]) {
+  for (let val in pageDetObj[pageId][section]) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
     th.appendChild(document.createTextNode(val));
     th.setAttribute("scope", "row");
-    th.setAttribute("contenteditable", "false");
     tr.appendChild(th);
     let td = document.createElement("td");
-    td.appendChild(document.createTextNode(pageDetails[pageId][section][val]));
+    td.appendChild(document.createTextNode(pageDetObj[pageId][section][val]));
     if (section == "imagesScripts") {
       let browseBtn = document.createElement("button");
       browseBtn.setAttribute("type", "button");
@@ -299,6 +302,8 @@ function createLangRows(tbl, tbdy, pageId, section) {
     return;
   }
   let value = "";
+  let colVal = "";
+  let textElem = "";
   let langs = JSON.parse(sessionStorage.getItem("pubLang"));
   for (let i = 0; i < langs.length; i++) {
     let tr = document.createElement("tr");
@@ -306,18 +311,23 @@ function createLangRows(tbl, tbdy, pageId, section) {
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "langHeader");
-    th.setAttribute("contenteditable", "false");
     tr.appendChild(th);
     let td = document.createElement("td");
-    if (pageDetails[pageId] && pageDetails[pageId][section]) {
-      value = pageDetails[pageId][section][langs[i]];
+    let pageDetObj = parseSessionData("pageDetails");
+    if (pageDetObj[pageId] && pageDetObj[pageId][section]) {
+      value = pageDetObj[pageId][section][langs[i]];
     }
     if (value != "" && value != undefined && value != "undefined") {
-      td.appendChild(document.createTextNode(value));
-    } else {
-      td.appendChild(document.createTextNode(""));
+      colVal = value;
     }
-    if (section == "narration") {
+    if (section == "alt") {
+      textElem = document.createElement("input");
+      textElem.setAttribute("type", "text");
+      textElem.setAttribute("class", "form-control");
+      textElem.value = colVal
+      td.appendChild(textElem);
+    }else if (section == "narration") {
+      td.appendChild(document.createTextNode(colVal));
       let browseBtn = document.createElement("button");
       browseBtn.setAttribute("type", "button");
       browseBtn.setAttribute("alt", "Browse narration button");
@@ -325,6 +335,11 @@ function createLangRows(tbl, tbdy, pageId, section) {
       btnText = document.createTextNode("Browse");
       browseBtn.appendChild(btnText);
       td.append(browseBtn);
+    }else{
+      textElem = document.createElement("textarea");
+      textElem.setAttribute("class", "form-control");
+      textElem.value = colVal
+      td.appendChild(textElem);
     }
     tr.appendChild(td);
     tbdy.appendChild(tr);
@@ -338,7 +353,6 @@ function newImagesScripts(tbl, tbdy) {
   let th = document.createElement("th");
   th.appendChild(document.createTextNode("Image"));
   th.setAttribute("scope", "row");
-  th.setAttribute("contenteditable", "false");
   tr.appendChild(th);
   let td = document.createElement("td");
   let browseBtn = document.createElement("button");
@@ -353,3 +367,28 @@ function newImagesScripts(tbl, tbdy) {
   tbdy.appendChild(tr);
   tbl.append(tbdy);
 }
+
+function saveData(){
+  let pageId = $("#pageList .list-group-item.active").attr("id");
+  let pageDetObj = parseSessionData("pageDetails");
+  $("#contentBox tbody tr").each(function () {
+    let theadTxt = $(this).closest("table").children("thead").children("tr").children("th");
+    let section = theadTxt.attr("name");
+    let attr = $(this).children("th").text();
+    if (pageDetObj[pageId] == undefined) {
+      pageDetObj[pageId] = {};
+    }
+    if (pageDetObj[pageId][section] == undefined) {
+      pageDetObj[pageId][section] = {};
+    }
+    pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+  });
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetObj));
+}
+
+// save the values when the input element loses the focus
+$(document).on("focusout", "#contentBox input[type='text'],#contentBox textarea", function (e) {
+  if ($(this)) {
+    saveData();
+  }
+});
