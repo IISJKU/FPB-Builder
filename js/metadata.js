@@ -156,7 +156,7 @@ function removeBtn() {
 //create table for each metadata
 //langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
 function createTable(tableTitle, elemID, itemVal, langChange) {
-  let bookDetObj = parseBookData();
+  let bookDetObj = parseSessionData("bookDetails");
   // check if the table doesn't have values
   if (Object.keys(bookDetObj[itemVal]).length == 0) {
     createNewTable(tableTitle, elemID, itemVal);
@@ -199,7 +199,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
 
 // Create selected languages rows in the tables
 function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
-  let bookDetObj = parseBookData();
+  let bookDetObj = parseSessionData("bookDetails");
   let value = "";
   let langs = JSON.parse(sessionStorage.getItem("pubLang"));
   for (let i = 0; i < langs.length; i++) {
@@ -244,7 +244,7 @@ function tableHeader(tbl, tableTitle, aElemVal) {
   if (!reqMeta.includes(aElemVal) && !langMetadata.includes(aElemVal)) {
     if (aElemVal == "PublishingDate") {
       // check if the property is there
-      if (Object.keys(getBookElem("PublishingDate")).length < 1) {
+      if (Object.keys(getSessionElem("bookDetails","PublishingDate")).length < 1) {
         createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
       }
     } else {
@@ -355,24 +355,8 @@ function addNewRow(tableTitle) {
   tbdy.appendChild(tr);
   relTable.append(tbdy);
 }
-
-// return JSON parsed book details session storage object
-function parseBookData() {
-  let bookDetObj = JSON.parse(sessionStorage.getItem("bookDetails"));
-  return bookDetObj;
-}
-
-// return JSON parsed specific element data in book details session storage item if the element is not exisit it returns 0
-function getBookElem(elem) {
-  let bookDetObj = JSON.parse(sessionStorage.getItem("bookDetails"));
-  if (Object.keys(bookDetObj[elem]).length == 0) {
-    return 0;
-  }
-  return bookDetObj[elem];
-}
-
 function updateBookData(tableItemVal, key, mode, val) {
-  let bookDetObj = JSON.parse(sessionStorage.getItem("bookDetails"));
+  let bookDetObj = parseSessionData("bookDetails");
   if (mode == "delete") {
     delete bookDetObj[tableItemVal][key];
   } else {

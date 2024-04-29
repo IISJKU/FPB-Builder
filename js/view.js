@@ -36,3 +36,18 @@ function createIcon(appendElem, iconClass, alt, elemId) {
   }
   appendElem.appendChild(icon);
 }
+
+// return item JSON parsed details session storage object
+function parseSessionData(item) {
+  let sessionObj = JSON.parse(sessionStorage.getItem(item));
+  return sessionObj;
+}
+
+// return JSON parsed specific element data in item parameter session storage and if the element is not exisit it returns 0
+function getSessionElem(item, elem) {
+  let SessionDetObj = JSON.parse(sessionStorage.getItem(item));
+  if (Object.keys(SessionDetObj[elem]).length == 0) {
+    return 0;
+  }
+  return SessionDetObj[elem];
+}
