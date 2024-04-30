@@ -41,7 +41,7 @@ class FrontendDataManager {
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!
-        let bookDataObj = parseBookData();
+        let bookDataObj = parseSessionData("bookDetails");
         for (let fieldName in bookDataObj) {
           for (let fieldVal in bookDataObj[fieldName]) {
             if (isLanguageDependent(fieldName)) meta[fieldName][fieldVal] = bookDataObj[fieldName][fieldVal];
