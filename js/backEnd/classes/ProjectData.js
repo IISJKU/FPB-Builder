@@ -7,7 +7,7 @@ class ProjectData {
   metadata = [];
   languages = [];
   pages = [];
-  importedFiles = [];
+  settings = [];
 
   async fillData(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("bookDetails"))', true).then(async (result) => {
@@ -33,23 +33,31 @@ class ProjectData {
   async getDirectory(window){
     await window.webContents.executeJavaScript('document.getElementById("directory").value', true).then(async (result) => {
       this.directory = result;
+      await this.getSettings(window);
+    });
+  }
+
+  async getSettings(window){
+    await window.webContents.executeJavaScript('getOthSettings()', true).then(async (result) => {
+      this.settings = result;
       await this.getPages(window);
     });
   }
 
   async getPages(window){
-    await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pageDetails"))', true).then((result) => {
+    await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("pageDetails"))', true).then(async (result) => {
       this.pages = result;
-      this.fillProperties();
+      await this.fillProperties();
     });
   }
 
   fillProperties() {
     this.name;
-    this.languages;
     this.directory;
-    this.pages;
+    this.languages;
+    this.settings;
     this.metadata;
+    this.pages;
   }
 }
 

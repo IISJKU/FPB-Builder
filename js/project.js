@@ -41,3 +41,12 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
   }
   projects = value;
 });
+
+
+function getOthSettings(){
+  var selectedSettings = [];
+  $('#otherSettings input:checked').each(function() {
+    selectedSettings.push($(this).attr('value'));
+  });
+  return selectedSettings
+}
