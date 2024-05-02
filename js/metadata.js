@@ -201,7 +201,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
 function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
   let bookDetObj = parseSessionData("bookDetails");
   let value = "";
-  let langs = JSON.parse(sessionStorage.getItem("pubLang"));
+  let langs = parseSessionData("pubLang");
   for (let i = 0; i < langs.length; i++) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
