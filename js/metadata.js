@@ -14,23 +14,36 @@ const langMetadata = [
   "Type",
   "Subject",
 ];
+
+const fieldIntMap = {
+  Author: 'Creator',
+  AccessMode: 'Mode',
+  AccessModeSufficient: 'Mode Sufficient',
+  AccessibilityFeature: 'Feature',
+  AccessibilityHazard: 'Hazard',
+  AccessibilitySummary: 'Summary',
+};
+
 let bookDetails = {
-  Title: {
+  Title: {/*
     EN: "Hello whats up, this is my incredibly cool book :)",
-    IT: "Cappuccetto Rosso",
+    IT: "Cappuccetto Rosso",*/
   },
-  Identifier: {
+  Identifier: {/*
     EN: "978-0-5490-2195-4",
-    IT: "978-0-5490-2196-4",
+    IT: "978-0-5490-2196-4",*/
   },
   SourceISBN: "",
   Description: {},
-  Author: {},
-  Contributor: {
+  Author: {/*
+    1: "Vincentas Élisabeth",
+    2: "Agata Lia",*/
+  },
+  Contributor: {/*
     1: "Viviano Pierpaolo",
     2: "Maëlie Celestine",
     3: "Vincentas Élisabeth",
-    4: "Agata Lia",
+    4: "Agata Lia",*/
   },
   Publisher: {},
   Copyright: "",
@@ -40,14 +53,12 @@ let bookDetails = {
   AccessibilityHazard: {},
   AccessibilitySummary: {},
   CertifiedBy: {},
-  ConformsTo: {
+  ConformsTo: {/*
     1: "Viviano Pierpaolo",
-    2: "Maëlie Celestine",
+    2: "Maëlie Celestine",*/
   },
   PublishingDate: {},
 };
-
-sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
 
 let infoText = "More";
 //info panel content object
@@ -114,7 +125,24 @@ function initializeMetadata() {
   sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   createTable("Title", "selectedBox", "Title");
   createTable("Identifier", "selectedBox", "Identifier");
+  displayMetadataContent()
   updateAddedList(0, 1);
+}
+
+function displayMetadataContent(){
+  let bookDetObj = parseSessionData("bookDetails");
+  for (let val in bookDetObj) {
+    if (Object.keys(bookDetObj[val]).length == 0 || checkAddedList(val) > 0) {
+      continue;
+    }
+    let DispValue = val;
+    if (fieldIntMap.hasOwnProperty(val)) DispValue= fieldIntMap[DispValue];
+    if (!bookDetObj.hasOwnProperty(val)){
+      bookDetObj[val]={}
+    }
+    createTable(DispValue, "selectedBox", val);
+    $("#itemBox option[value='"+val+"'").remove();
+  }
 }
 
 //handle adding items from available metadata cloumn to added metadata column
@@ -157,8 +185,8 @@ function removeBtn() {
 //langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
 function createTable(tableTitle, elemID, itemVal, langChange) {
   let bookDetObj = parseSessionData("bookDetails");
-  // check if the table doesn't have values
-  if (Object.keys(bookDetObj[itemVal]).length == 0) {
+  // check if the table is not exist and doesn't have values
+  if (checkAddedList(itemVal) != 1 && Object.keys(bookDetObj[itemVal]).length == 0) {
     createNewTable(tableTitle, elemID, itemVal);
     return;
   }
@@ -275,7 +303,7 @@ function liElement(tbl, tableVal, elemID) {
 
 // handle on click for the added metadata list elements
 $(document).on("click", "#selectedBox .list-group-item", function (e) {
-  document.getElementById("metadataInfo").innerHTML = infoObj[divID];
+  document.getElementById("metadataInfo").innerHTML = infoObj[e.currentTarget.id];
 });
 
 // handle on click for the trash icon

@@ -1,4 +1,4 @@
-const { dialog, ipcMain } = require("electron");
+const { app, dialog, ipcMain } = require("electron");
 const storage = require("electron-json-storage");
 const EPUBMaker = require("./EPUBMaker.js");
 const MetadataManager = require("./metadataManager.js");
@@ -78,6 +78,16 @@ class ipcMainManager {
         .catch((err) => {
           console.log(err);
         });
+    });
+
+    ipcMain.on("loadJSON", (event, name) => {
+      fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8", (err, jsonString) => {
+        if (err) {
+          console.log("File read failed:", err);
+          return;
+        }
+        event.reply("projectData", jsonString);
+      });
     });
 
     ///////////////////////////////////////////////////////////////

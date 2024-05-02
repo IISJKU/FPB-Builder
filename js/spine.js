@@ -1,26 +1,26 @@
 let pageDetails = {
   cover: {
-    text: {
+    text: {/*
       EN: "Little Red Riding Hood",
-      IT: "Cappuccetto Rosso",
+      IT: "Cappuccetto Rosso",*/
     },
-    narration: {
+    narration: {/*
       EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
-      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
+      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",*/
     },
     imagesScripts: {
-      //dasfasf
+      /*
       Image: "C:\\Users\\ak127746\\Pictures\\1513-Rafael-SistineMadonna-Cherubs.jpg",
-      Style: "",
+      Style: "",*/
     },
-    alt: {
+    alt: {/*
       EN: "Little Red Riding Hood Alt",
-      IT: "Cappuccetto Rosso Alt",
+      IT: "Cappuccetto Rosso Alt",*/
     },
   },
   credit: {
     text: {
-      EN:
+      /*EN:
         'Digital illustrated volume from the series <span lang="fr">Les Doigts Qui Rêvent</span> (France)\n' +
         "Validation: pagina EPUB-Checker version 2.0.6 and Ace by DAISY version 1.1.5\n" +
         'Digital volume "Ben wants a bat", an ePub3 version of the children\'s book <span lang="fr">"Émile veut une chauve-souris"</span> by <span lang="fr">Vincent Cuvellier</span> and <span lang="fr">Ronan Badel</span>, published by <span lang="fr">Gallimard</span>, France, adapted in text and illustration\n' +
@@ -30,12 +30,13 @@ let pageDetails = {
         "Convalida: pagina EPUB-Checker versione 2.0.6 e Ace by DAISY versione 1.1.5\n" +
         'Volume digitale "Ben wants a bat", versione ePub3 del libro per bambini <span lang="fr">"Émile veut une chauve-souris"</span> di <span lang="fr">Vincent Cuvellier</span> e <span lang="fr">Ronan Badel</span>, pubblicato da <span lang="fr">Gallimard</span>, Francia, adattato nel testo e nelle illustrazioni "Progetto e produzione di illustrazioni adattate".\n' +
         '<b class="ldqr-font-bold">Progettazione e realizzazione delle illustrazioni adattate</b> di <span lang="fr">Yuvanoe</span> e <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, Francia)\n',
+        */
     },
     narration: {},
     imagesScripts: {},
     alt: {},
   },
-  1: {
+  /*1: {
     text: {
       EN: "Hello this is the Content of the first page.",
       IT: "Ciao, questo è il contenuto della prima pagina.",
@@ -86,7 +87,7 @@ let pageDetails = {
       FR: "Ceci est le texte alternatif de la figure 2",
       LIT: "Tai yra 2 paveikslo alternatyvus tekstas",
     },
-  },
+  },*/
 };
 
 sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
@@ -213,13 +214,26 @@ window.BRIDGE.onImageLoaded((value) => {
   console.log(value);
 });
 
+
+function initializeSpine(){
+  let pageDetObj = parseSessionData("pageDetails");
+  for (let val in pageDetObj) {
+    if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit") {
+      continue;
+    }
+    createPage(val);
+  }
+  fillData();
+}
+
 //Add new page anchor element
-function createPage() {
+function createPage(id) {
   let pageLength = 0;
   let pages = document.getElementById("pageList");
   let creditPage = document.getElementById("credit");
   let aElem = document.createElement("a");
-  pageLength = $("#pageList a").length - 2;
+  pageLength = id;
+  if (pageLength == '' || pageLength == undefined) pageLength = $("#pageList a").length - 2;
   aElem.setAttribute("href", "#");
   aElem.setAttribute("id", pageLength);
   aElem.setAttribute("class", "list-group-item list-group-item-action");
@@ -277,7 +291,7 @@ function createTableBody(tbl, pageId, section) {
       let browseBtn = document.createElement("button");
       browseBtn.setAttribute("type", "button");
       browseBtn.setAttribute("alt", "Browse images and scripts button");
-      if (pageId == "cover" && val == "Image") {
+      if (pageId == "cover" && val == "Image" ) {
         browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
         browseBtn.setAttribute("id", "coverImage");
       } else if (val == "Image") {
@@ -314,7 +328,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     tr.appendChild(th);
     let td = document.createElement("td");
     let pageDetObj = parseSessionData("pageDetails");
-    if (pageDetObj[pageId] && pageDetObj[pageId][section]) {
+    if (Object.keys(pageDetObj[pageId]).length > 0 && pageDetObj[pageId] && pageDetObj[pageId][section]) {
       value = pageDetObj[pageId][section][langs[i]];
     }
     if (value != "" && value != undefined && value != "undefined") {
