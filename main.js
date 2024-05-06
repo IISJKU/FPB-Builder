@@ -31,6 +31,7 @@ const createWindow = () => {
           jsonString = "";
         }
         mainWindow.webContents.executeJavaScript("compareData("+jsonString+")", true).then( async (equalCheck) => {
+          // all objects are equal (no change detected)
           if (equalCheck == 1 ){
             app.exit();
             return;
