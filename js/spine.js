@@ -90,7 +90,9 @@ let pageDetails = {
   },*/
 };
 
-sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
+if (sessionStorage.getItem("pageDetails") == null ){
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
+}
 
 let emptyPage = {
   text: {

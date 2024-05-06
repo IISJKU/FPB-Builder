@@ -92,6 +92,7 @@ window.BRIDGE.onProjectData((value) => {
   let projData = JSON.parse(value);
   document.getElementById('directory').value =  projData['directory'];
   document.getElementById('projName').value =  projData['name'];
+  sessionStorage.setItem("projectName", projData['name']);
   sessionStorage.setItem("bookDetails", JSON.stringify(projData['metadata']));
   sessionStorage.setItem("pubLang", JSON.stringify(projData['languages']));
   langOpt = document.getElementById('publicationLanguage');

@@ -24,8 +24,9 @@ class ProjectData {
   }
 
   async getProjectName(window){
-    await window.webContents.executeJavaScript('sessionStorage.getItem("projectName")', true).then(async (result) => {
-      this.name = (result != null ? result : "Test" + Math.floor(Math.random() * 100));
+    await window.webContents.executeJavaScript('document.getElementById("projName").value', true).then(async (result) => {
+      //this.name = (result != null ? result : "Test" + Math.floor(Math.random() * 100));
+      this.name = result;
       await this.getDirectory(window);
     });
   }

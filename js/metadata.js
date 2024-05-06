@@ -17,6 +17,7 @@ const langMetadata = [
 
 const fieldIntMap = {
   Author: 'Creator',
+  PublishingDate: 'Publishing Date',
   AccessMode: 'Mode',
   AccessModeSufficient: 'Mode Sufficient',
   AccessibilityFeature: 'Feature',
@@ -122,7 +123,9 @@ let infoObj = {
 };
 
 function initializeMetadata() {
-  sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
+  if (sessionStorage.getItem("bookDetails") == null ){
+    sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
+  }
   createTable("Title", "selectedBox", "Title");
   createTable("Identifier", "selectedBox", "Identifier");
   displayMetadataContent()
@@ -151,9 +154,8 @@ function addBtn() {
   if (selectedOpts.length == 0) {
     return;
   }
-  let itemValue = $("#itemBox option:selected").val();
   for (let i = 0; i < selectedOpts.length; i++) {
-    createTable(selectedOpts[i].text, "selectedBox", itemValue);
+    createTable(selectedOpts[i].text, "selectedBox", selectedOpts[i].value);
     $(selectedOpts[i]).remove();
   }
 }
@@ -203,9 +205,13 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     return;
   }
   for (let val in bookDetObj[itemVal]) {
+    num = val
     let tr = document.createElement("tr");
     let th = document.createElement("th");
-    th.appendChild(document.createTextNode(val));
+    if (!isNaN(num)){
+      num = Number(num) + 1 
+    }
+    th.appendChild(document.createTextNode(num));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "metaHeader");
     tr.appendChild(th);

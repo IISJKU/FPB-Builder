@@ -18,29 +18,45 @@ const createWindow = () => {
 
   mainWindow.loadFile("index.html");
 
-  //calling the constructor automatically regesters all of the icpMain events
+  //calling the constructor automatically registers all of the icpMain events
   let icpMainManager = new IpcMainManager(mainWindow);
 
   
   //comment this out, if it annoys you!
-  mainWindow.on("close", async function (e) {
-    const choice = require("electron").dialog.showMessageBoxSync(this, {
-      type: "warning",
-      buttons: ["Yes", "No"],
-      title: "Confirm",
-      message: "You have unsaved changes. Save before quitting?",
+  mainWindow.on("close", async function (event) {
+    event.preventDefault();
+    mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
+      fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8",  (err, jsonString) => {
+        if (err) {
+          jsonString = "";
+        }
+        mainWindow.webContents.executeJavaScript("compareData("+jsonString+")", true).then( async (equalCheck) => {
+          if (equalCheck == 1 ){
+            app.exit();
+            return;
+          }
+          const choice = require("electron").dialog.showMessageBoxSync(this, {
+            type: "warning",
+            buttons: ["Yes", "No"],
+            title: "Confirm",
+            message: "You have unsaved changes. Save before quitting?",
+          });
+          if (choice === 0) {
+            event.preventDefault();
+            let dir = app.getPath("userData") + "\\projects\\";
+            let project = new ProjectData();
+            await project.fillData(mainWindow);
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir);
+            }
+            fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
+            app.exit();
+          }else{
+            app.exit();
+          }
+        });  
+      });
     });
-    if (choice === 0) {
-      e.preventDefault();
-      let dir = app.getPath("userData") + "\\projects\\";
-      let project = new ProjectData();
-      await project.fillData(mainWindow);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
-      fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
-      app.exit();
-    }
   });
 
   // Open the DevTools.

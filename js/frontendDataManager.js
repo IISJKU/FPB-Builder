@@ -7,6 +7,7 @@ class FrontendDataManager {
     Author: [],
     Contributor: [],
     Publisher: [],
+    PublishingDate: [],
     Copyright: "",
     AccessMode: {},
     AccessModeSufficient: [],
@@ -56,7 +57,6 @@ class FrontendDataManager {
 
         break;
       case "Spine":
-        sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
         break;
       case "Review & Publish":
         break;
