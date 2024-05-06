@@ -328,7 +328,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     tr.appendChild(th);
     let td = document.createElement("td");
     let pageDetObj = parseSessionData("pageDetails");
-    if (Object.keys(pageDetObj[pageId]).length > 0 && pageDetObj[pageId] && pageDetObj[pageId][section]) {
+    if (pageDetObj.hasOwnProperty(pageId) && Object.keys(pageDetObj[pageId]).length > 0 && pageDetObj[pageId] && pageDetObj[pageId][section]) {
       value = pageDetObj[pageId][section][langs[i]];
     }
     if (value != "" && value != undefined && value != "undefined") {
