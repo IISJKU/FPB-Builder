@@ -28,8 +28,12 @@ const createWindow = () => {
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
       fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8",  (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
-        if (err) {
+        if (err.code == 'ENOENT' && name != '') {
           jsonString = "";
+        }
+        if (jsonString == undefined || jsonString == 'undefined'){
+          app.exit();
+          return;
         }
         mainWindow.webContents.executeJavaScript("compareData("+jsonString+")", true).then( async (equalCheck) => {
           // all objects are equal (no change detected)
@@ -45,13 +49,7 @@ const createWindow = () => {
           });
           if (choice === 0) {
             event.preventDefault();
-            let dir = app.getPath("userData") + "\\projects\\";
-            let project = new ProjectData();
-            await project.fillData(mainWindow);
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir);
-            }
-            fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
+            await writeData(mainWindow);
             app.exit();
           }else{
             app.exit();
@@ -89,4 +87,14 @@ function loadRecentProjects() {
 
   //projects.toString()
   return loadedProjects;
+}
+
+async function writeData(window){
+  let dir = app.getPath("userData") + "\\projects\\";
+  let project = new ProjectData();
+  await project.fillData(window);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
 }
