@@ -90,10 +90,6 @@ let pageDetails = {
   },*/
 };
 
-if (sessionStorage.getItem("pageDetails") == null ){
-  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
-}
-
 let emptyPage = {
   text: {
     EN: "",
@@ -208,7 +204,6 @@ window.BRIDGE.onImageLoaded((value) => {
       while (pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] != undefined) {
         x = x + 1;
       }
-
       pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] = element;
     });
   }
@@ -218,6 +213,9 @@ window.BRIDGE.onImageLoaded((value) => {
 
 
 function initializeSpine(){
+  if (sessionStorage.getItem("pageDetails") == null || sessionStorage.getItem("pageDetails") == "null"){
+    sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
+  }
   let pageDetObj = parseSessionData("pageDetails");
   for (let val in pageDetObj) {
     if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit") {
@@ -277,7 +275,6 @@ function createTableBody(tbl, pageId, section) {
   let pageDetObj = parseSessionData("pageDetails");
   if (!pageDetObj[pageId] || !pageDetObj[pageId][section]) {
     pageDetObj[pageId] = emptyPage;
-    console.log(pageDetObj[pageId]);
     newImagesScripts(tbl, tbdy);
     return;
   }

@@ -24,6 +24,7 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
       aElement.setAttribute("class", "list-group-item list-group-item-action");
       aElement.setAttribute("id", project.name);
       aElement.setAttribute("onclick", "loadProject(this.id)");
+      aElement.setAttribute("tabindex", "0");
       let divElement = document.createElement("div");
       divElement.setAttribute("class", "d-flex w-100 justify-content-between");
       let headerElement = document.createElement("h6");
@@ -46,6 +47,7 @@ $(document).on("click", "#projectList .list-group-item", function (e) {
     $("#projectList .list-group-item").removeClass("active");
   }
   $(this).addClass("active")
+  enterPressed++;
 });
 
 // handle project list group items on click 
@@ -59,8 +61,30 @@ $(document).on("dblclick", "#projectList .list-group-item", function (e) {
     document.body.appendChild(elemDiv);
     document.getElementById('recentProjName').textContent = $(this).children('div').children('h6').text();
     $("#openRecentModal").show();
+    $("#openRecentModal button[class='btn-close']").trigger('focus');
   }
   
+});
+
+// handel enter key press when tabbing to the recent project a item
+var enterPressed = 0;
+$(document).on("keypress", "#projectList a", function (e) {
+  let keyCode = (e.keyCode || e.which);
+  // if (keyCode === 13) {
+  //   //for enter key
+  //   this.click();
+  // }
+  if (keyCode === 13) {
+    if (enterPressed === 0) {
+      enterPressed++;
+      this.click();
+    } else if (enterPressed > 0) {
+      e.preventDefault(); 
+      enterPressed = 0;
+      $("#projectList .list-group-item").trigger('dblclick');
+    }
+    return; 
+  }
 });
 
 function getOthSettings(){
@@ -85,6 +109,7 @@ function closeModal(modalID){
     document.body.removeChild(fadeDiv);
   }
   $('#'+modalID).hide();
+  $("#projectList .list-group-item.active").trigger('focus');
 }
 
 window.BRIDGE.onProjectData((value) => {

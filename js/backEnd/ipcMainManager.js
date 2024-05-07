@@ -3,6 +3,7 @@ const storage = require("electron-json-storage");
 const EPUBMaker = require("./EPUBMaker.js");
 const MetadataManager = require("./metadataManager.js");
 const PageManager = require("./pageManager.js");
+const shared = require("../shared.js");
 
 let fs = require("fs");
 
@@ -88,6 +89,10 @@ class ipcMainManager {
         }
         event.reply("projectData", jsonString);
       });
+    });
+
+    ipcMain.on("saveDataBtn", (event) => {
+      shared.saveData(window);
     });
 
     ///////////////////////////////////////////////////////////////

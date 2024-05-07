@@ -123,7 +123,7 @@ let infoObj = {
 };
 
 function initializeMetadata() {
-  if (sessionStorage.getItem("bookDetails") == null ){
+  if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == "null" ){
     sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   }
   createTable("Title", "selectedBox", "Title");
@@ -205,13 +205,9 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     return;
   }
   for (let val in bookDetObj[itemVal]) {
-    num = val
     let tr = document.createElement("tr");
     let th = document.createElement("th");
-    if (!isNaN(num)){
-      num = Number(num) + 1 
-    }
-    th.appendChild(document.createTextNode(num));
+    th.appendChild(document.createTextNode(val));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "metaHeader");
     tr.appendChild(th);
@@ -349,6 +345,14 @@ $(document).on("keypress", "#selectedBox li input[type='checkbox']", function (e
   }
 });
 
+// handel enter key press when tabbing to the plus icon
+$(document).on("keypress", "#selectedBox .bi-plus-square-fill", function (e) {
+  if (e.which === 13) {
+    //for enter key
+    this.click();
+  }
+});
+
 function createNewTable(tableTitle, elemID, intVal) {
   //create new table if the metadata doesn't have any data
   let tbl = document.createElement("table");
@@ -384,6 +388,9 @@ function addNewRow(tableTitle) {
   input.setAttribute("type", "text");
   input.setAttribute("class", "form-control");
   input.value = "";
+  if (!reqMeta.includes(elementTitle)) {
+    createIcon(td, "bi bi-trash3-fill", "delete entry");
+  }
   td.appendChild(input);
   tr.appendChild(td);
   tbdy.appendChild(tr);

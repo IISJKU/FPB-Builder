@@ -1,8 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const { report } = require("node:process");
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require("electron");
 const path = require("node:path");
 const IpcMainManager = require("./js/backEnd/ipcMainManager.js");
-const ProjectData = require("./js/backEnd/classes/ProjectData.js");
+const shared = require("./js/shared.js");
 let fs = require("fs");
 
 const createWindow = () => {
@@ -18,18 +17,60 @@ const createWindow = () => {
 
   mainWindow.loadFile("index.html");
 
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Save',
+          accelerator: 'Ctrl+S',
+          click() {
+            shared.saveData(mainWindow); }
+        },
+        { type: 'separator'},
+        { role: 'quit', 
+        },
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About',
+        },
+      ]
+    },
+  ]
+    
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
   //calling the constructor automatically registers all of the icpMain events
   let icpMainManager = new IpcMainManager(mainWindow);
 
-  
-  //comment this out, if it annoys you!
+  //application on close event check if there is any changes on the data before closing the app
   mainWindow.on("close", async function (event) {
     event.preventDefault();
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
       fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8",  (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
-        if (err.code == 'ENOENT' && name != '') {
-          jsonString = "";
+        if (err) {
+          if (err.code == 'ENOENT' && name != '') {
+            jsonString = "";
+          }
         }
         if (jsonString == undefined || jsonString == 'undefined'){
           app.exit();
@@ -41,7 +82,7 @@ const createWindow = () => {
             app.exit();
             return;
           }
-          const choice = require("electron").dialog.showMessageBoxSync(this, {
+          const choice = dialog.showMessageBoxSync(this, {
             type: "warning",
             buttons: ["Yes", "No"],
             title: "Confirm",
@@ -49,7 +90,7 @@ const createWindow = () => {
           });
           if (choice === 0) {
             event.preventDefault();
-            await writeData(mainWindow);
+            await shared.writeData(mainWindow);
             app.exit();
           }else{
             app.exit();
@@ -63,6 +104,7 @@ const createWindow = () => {
   //mainWindow.webContents.openDevTools();
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.webContents.send("recentProjectsLoaded", loadRecentProjects());
+    mainWindow.webContents.executeJavaScript("sessionStorage.clear()", true)
   });
 };
 
@@ -87,14 +129,4 @@ function loadRecentProjects() {
 
   //projects.toString()
   return loadedProjects;
-}
-
-async function writeData(window){
-  let dir = app.getPath("userData") + "\\projects\\";
-  let project = new ProjectData();
-  await project.fillData(window);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  fs.writeFileSync(dir + project.name + ".json", JSON.stringify(project));
 }

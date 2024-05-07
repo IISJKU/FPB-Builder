@@ -38,6 +38,9 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   loadJSON(name) {
     ipcRenderer.send("loadJSON", name);
   },
+  saveDataBtn() {
+    ipcRenderer.send("saveDataBtn");
+  },
   onDirectorySet: (callback) => ipcRenderer.on("directorySet", (_event, value) => callback(value)),
   //openFile: () => ipcRenderer.invoke("dialog:openFile"),
   onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),
