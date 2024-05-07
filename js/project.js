@@ -70,10 +70,6 @@ $(document).on("dblclick", "#projectList .list-group-item", function (e) {
 var enterPressed = 0;
 $(document).on("keypress", "#projectList a", function (e) {
   let keyCode = (e.keyCode || e.which);
-  // if (keyCode === 13) {
-  //   //for enter key
-  //   this.click();
-  // }
   if (keyCode === 13) {
     if (enterPressed === 0) {
       enterPressed++;
