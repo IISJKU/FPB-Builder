@@ -88,10 +88,10 @@ const createWindow = () => {
             title: "Confirm",
             message: "You have unsaved changes. Save before quitting?",
           });
+          // if the user choose to save the data of the book
           if (choice === 0) {
             event.preventDefault();
-            await shared.writeData(mainWindow);
-            app.exit();
+            await shared.writeData(mainWindow, true);
           }else{
             app.exit();
           }
@@ -103,8 +103,12 @@ const createWindow = () => {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
   mainWindow.webContents.on("did-finish-load", () => {
+    //load recent projects list
     mainWindow.webContents.send("recentProjectsLoaded", loadRecentProjects());
-    mainWindow.webContents.executeJavaScript("sessionStorage.clear()", true)
+    //clear session storage
+    mainWindow.webContents.executeJavaScript("sessionStorage.clear()", true);
+    // initialize tabs
+    mainWindow.webContents.executeJavaScript("initializeTabs()", true);
   });
 };
 

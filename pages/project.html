@@ -1,52 +1,53 @@
-<div class="row">
-  <div class="col-md-6" id="projectColumn">
-    <form>
-      <div class="form-group mb-3">
-        <label for="directory" class="custom-file-label required">Directory</label>
-        <input class="form-control" type="button" id="directory" value="Browse" aria-label="Open project directory" required/>
-        <!-- <button id="directory" aria-label="Open project directory">Set directory</button> -->
-      </div>
-      <div class="form-group mb-3">
-        <label for="name" class="required">Name</label>
-        <input type="text" class="form-control" id="projName" placeholder="Project Name" aria-label="Project name and can be modifiable" required/>
-      </div>
-      <div class="form-group mb-3">
-        <label for="publicationLanguage">Publication languages</label>
-        <select class="form-select" aria-label="select multiple Publication languages" id="publicationLanguage" multiple>
-          <option value="EN" data-tokens="English" selected>English</option>
-          <option value="FR" data-tokens="French">French</option>
-          <option value="IT" data-tokens="Italian">Italian</option>
-          <option value="LI" data-tokens="Lithuanian">Lithuanian</option>
-          <option value="DE" data-tokens="German">German</option>
-          <option value="BL" data-tokens="Bulgarian">Bulgarian</option>
-          <option value="CZ" data-tokens="Czech">Czech</option>
-          <option value="DN" data-tokens="Danish">Danish</option>
-        </select>
-      </div>
-      <div class="form-group mb-3">
-        <label for="otherSettings">Other settings</label>
-        <div class="settings" id="otherSettings">
-          <div class="input-group-text settDiv">
-            <input class="" type="checkbox" id="audioNarr" value="audioNarr" aria-label="Check if project contains audio Narrations" />
-            <label class="form-check-label" for="audioNarr"> Audio Narrations</label>
-          </div>
-          <div class="input-group-text settDiv">
-            <input class="" type="checkbox" id="instructions" value="instructions" aria-label="Check if project include instructions" />
-            <label class="form-check-label" for="instructions"> Include instructions</label>
-          </div>
-          <div class="input-group-text settDiv">
-            <input class="" type="checkbox" id="bookSettings" value="bookSettings" aria-label="Check if project settings within the book" />
-            <label class="form-check-label" for="bookSettings"> Settings within the book</label>
+<form id="ProjectForm">
+  <div class="row">
+    <div class="col-md-6" id="projectColumn">
+      <form>
+        <div class="form-group mb-3">
+          <label for="directory" class="custom-file-label required">Directory</label>
+          <input class="form-control" type="directory" id="directory" placeholder="Browse" title="Browse" aria-label="Open project directory" required/>
+        </div>
+        <div class="form-group mb-3">
+          <label for="name" class="required">Name</label>
+          <input type="text" class="form-control" id="projName" name="name" placeholder="Project Name" aria-label="Project name and can be modifiable" required minlength="3" maxlength="100"/>
+        </div>
+        <div class="form-group mb-3">
+          <label for="publicationLanguage">Publication languages</label>
+          <select class="form-select" aria-label="select multiple Publication languages" id="publicationLanguage" multiple>
+            <option value="EN" data-tokens="English" selected>English</option>
+            <option value="FR" data-tokens="French">French</option>
+            <option value="IT" data-tokens="Italian">Italian</option>
+            <option value="LI" data-tokens="Lithuanian">Lithuanian</option>
+            <option value="DE" data-tokens="German">German</option>
+            <option value="BL" data-tokens="Bulgarian">Bulgarian</option>
+            <option value="CZ" data-tokens="Czech">Czech</option>
+            <option value="DN" data-tokens="Danish">Danish</option>
+          </select>
+        </div>
+        <div class="form-group mb-3">
+          <label for="otherSettings">Other settings</label>
+          <div class="settings" id="otherSettings">
+            <div class="input-group-text settDiv">
+              <input class="" type="checkbox" id="audioNarr" value="audioNarr" aria-label="Check if project contains audio Narrations" />
+              <label class="form-check-label" for="audioNarr"> Audio Narrations</label>
+            </div>
+            <div class="input-group-text settDiv">
+              <input class="" type="checkbox" id="instructions" value="instructions" aria-label="Check if project include instructions" />
+              <label class="form-check-label" for="instructions"> Include instructions</label>
+            </div>
+            <div class="input-group-text settDiv">
+              <input class="" type="checkbox" id="bookSettings" value="bookSettings" aria-label="Check if project settings within the book" />
+              <label class="form-check-label" for="bookSettings"> Settings within the book</label>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
-  </div>
-  <div class="col-md-6" id="recentColumn">
-    <label id="recentProjects" class="">Recent projects</label>
-    <div class="list-group" id="projectList">
-      <!-- Elements will be loaded in dynamically -->
+      </form>
     </div>
+    <div class="col-md-6" id="recentColumn">
+      <label id="recentProjects" class="">Recent projects</label>
+      <div class="list-group" id="projectList">
+        <!-- Elements will be loaded in dynamically -->
+      </div>
+    </div>
+    <script src="./js/projectEventHandlers.js"></script>
   </div>
-  <script src="./js/projectEventHandlers.js"></script>
-</div>
+</form>

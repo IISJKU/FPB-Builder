@@ -11,40 +11,11 @@
   border-width: 1px;
 }
 
-/*
-input[type="file"]:after {
-  content: "Browse";
-  left: 100%;
-  position: sticky;
-  background-color: #e3e3e3;
-  color: #333;
-  border: 1px solid #e6e6e6;
-  border-radius: 3px;
-  padding: 7px 12px;
-  font-size: 16px;
-}
-
-input[type="file"]::file-selector-button {
-  display: none;
-}
-
-input[type="file"]::-webkit-file-upload-button {
-  display: none;
-}
-
-#list-group2 small{
-  float: left;
-  text-align: left;
-}
-*/ 
-
 #projectColumn {
   margin-top: 15px;
 }
 
 #directory {
-  /*padding-right: 0px;*/
-  /* border-right-width: 0px; */
   text-align: left;
   color: #504f4f;
 }

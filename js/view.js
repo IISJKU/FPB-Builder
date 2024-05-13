@@ -137,6 +137,64 @@ function isObject(object) {
   return object != null && typeof object === 'object';
 }
 
+//save data button function 
 function saveDataBtn(){
-  BRIDGE.saveDataBtn();
+  if (checkRequired() == true) BRIDGE.saveDataBtn();
+}
+
+//check required fields before pressing save button or closing the application
+function checkRequired(){
+  initializeReqFocus();
+  var emptyProjFields = formFilter('ProjectForm');
+  var emptyMetaFields = formFilter('metaForm');
+
+  emptyFields(emptyProjFields, 'project-list');
+  emptyFields(emptyMetaFields, 'metadata-list');
+  
+  if (emptyProjFields != 0 || emptyMetaFields != 0) {
+    error = document.getElementById("error");
+    error.innerHTML = '';
+    let div = document.createElement("div");
+    div.setAttribute("class", "col-md-12");
+    let header = document.createElement("h4");
+    header.appendChild(document.createTextNode('Please fill all mandatory fields (highlighted in red)'));
+    div.appendChild(header);
+    error.appendChild(div);
+    $('#error').show();
+    return false;
+  }
+  return true;
+}
+
+//Initialize application tabs when the application finish load event
+function initializeTabs(){
+  $("#publicationLanguage").trigger("change");
+  initializeMetadata();
+  initializeSpine();
+}
+
+// initiate on focus out event for all required input
+function initializeReqFocus(){
+  $(document).on("focusout", "input[required]", function (e) {
+    checkRequired();
+  });
+}
+
+// return count of null required input fields
+function formFilter(formId){
+  let reqFields= $('#'+formId+' input:required').filter(function() {
+    return $(this).val() === "";
+  }).length;
+  return reqFields;
+}
+
+// check if the required fields has empty required input and add exclamation triangle icon else hide error panel and remove the icon
+function emptyFields(reqFields, listId){
+  if (reqFields != 0) {
+    let metaList = document.getElementById(listId);
+    if($('#'+listId+' .bi-exclamation-triangle-fill').length == 0) createIcon(metaList, "bi bi-exclamation-triangle-fill", "error");
+  }else{
+    $('#error').hide();
+    $('#'+listId+' i.bi-exclamation-triangle-fill').remove();
+  }
 }

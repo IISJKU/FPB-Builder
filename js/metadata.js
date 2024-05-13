@@ -1,7 +1,7 @@
 //accessibility metadata options
 const accessMeta = ["AccessMode", "AccessibilityFeature", "AccessibilityHazard", "AccessibilitySummary", "AccessModeSufficient", "ConformsTo", "CertifiedBy"];
 //required metadata
-const reqMeta = ["Title", "Identifier", "AccessibilitySummary", "AccessModeSufficient"];
+const reqMeta = ["Title", "Identifier"];
 //Metdata that related to the selected languages in the project screen
 const langMetadata = [
   "Title",
@@ -122,6 +122,7 @@ let infoObj = {
     "</a>",
 };
 
+// initialize metadata screen data
 function initializeMetadata() {
   if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == "null" ){
     sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
@@ -132,6 +133,7 @@ function initializeMetadata() {
   updateAddedList(0, 1);
 }
 
+// create table for the exist metadata in the session variable
 function displayMetadataContent(){
   let bookDetObj = parseSessionData("bookDetails");
   for (let val in bookDetObj) {
@@ -144,6 +146,7 @@ function displayMetadataContent(){
       bookDetObj[val]={}
     }
     createTable(DispValue, "selectedBox", val);
+    reqAccessMeta(val)
     $("#itemBox option[value='"+val+"'").remove();
   }
 }
@@ -156,6 +159,7 @@ function addBtn() {
   }
   for (let i = 0; i < selectedOpts.length; i++) {
     createTable(selectedOpts[i].text, "selectedBox", selectedOpts[i].value);
+    reqAccessMeta(selectedOpts[i].value)
     $(selectedOpts[i]).remove();
   }
 }
@@ -179,6 +183,8 @@ function removeBtn() {
     optionElem.appendChild(document.createTextNode(metadataText));
     $("#itemBox").append(optionElem);
     $("#selectedBox #" + itemIntVal).remove();
+    // commented to check if they request it 
+    //checkSelectedAccess(itemIntVal);
   }
   
 }
@@ -218,6 +224,8 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     input.value = bookDetObj[itemVal][val];
     if (!reqMeta.includes(itemVal)) {
       createIcon(td, "bi bi-trash3-fill", "delete entry");
+    }else{
+      input.required = true;
     }
     td.appendChild(input);
     tr.appendChild(td);
@@ -250,6 +258,9 @@ function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
       input.value = value;
     } else {
       input.value = "";
+    }
+    if (reqMeta.includes(itIntVal)) {
+      input.required = true;
     }
     td.appendChild(input);
     tr.appendChild(td);
@@ -353,8 +364,8 @@ $(document).on("keypress", "#selectedBox .bi-plus-square-fill", function (e) {
   }
 });
 
+//create new table if the metadata doesn't have any data
 function createNewTable(tableTitle, elemID, intVal) {
-  //create new table if the metadata doesn't have any data
   let tbl = document.createElement("table");
   tbl.setAttribute("class", "table table-sm table-bordered table-striped");
   tableHeader(tbl, tableTitle, intVal);
@@ -366,6 +377,7 @@ function createNewTable(tableTitle, elemID, intVal) {
   liElement(tbl, intVal, elemID);
 }
 
+// add new row to the table when the user press plus icon
 function addNewRow(tableTitle) {
   let elementTitle = tableTitle.replace(/\s/g, "");
   var relTable = $("#selectedBox #" + elementTitle + " table");
@@ -390,12 +402,16 @@ function addNewRow(tableTitle) {
   input.value = "";
   if (!reqMeta.includes(elementTitle)) {
     createIcon(td, "bi bi-trash3-fill", "delete entry");
+  }else{
+    input.required = true;
   }
   td.appendChild(input);
   tr.appendChild(td);
   tbdy.appendChild(tr);
   relTable.append(tbdy);
 }
+
+// update book data details
 function updateBookData(tableItemVal, key, mode, val) {
   let bookDetObj = parseSessionData("bookDetails");
   if (mode == "delete") {
@@ -438,4 +454,53 @@ function updateInfo() {
     return;
   }
   document.getElementById("metadataInfo").innerHTML = infoObj[selectedOpts.val()];
+}
+
+  // add access summary and access mode sufficient to the required  and added meta list if they are not exist
+  // when the user add any accessibility metadata
+function reqAccessMeta(itemVal){
+  if (accessMeta.includes(itemVal)) {
+    if(reqMeta.indexOf("AccessibilitySummary") === -1) reqMeta.push("AccessibilitySummary")
+    if(reqMeta.indexOf("AccessModeSufficient") === -1) reqMeta.push("AccessModeSufficient")
+    if (checkAddedList("AccessibilitySummary") < 1) createTable("Summary", "selectedBox", "AccessibilitySummary");
+    if (checkAddedList("AccessModeSufficient") < 1) createTable("Mode Sufficient", "selectedBox", "AccessModeSufficient");
+  }
+}
+
+// check if any accessibility metadata exist if not will enable all metadata fields to the user to remove
+function checkSelectedAccess(itemVal){
+  let accessExist = 0;
+  if (accessMeta.includes(itemVal)) {
+    for (let i = 0; i < accessMeta.length; i++) {
+      if (checkAddedList(accessMeta[i]) > 0){
+        accessExist = 1;
+        return accessExist;
+      }else{
+        enableReqAccess("AccessibilitySummary")
+        enableReqAccess("AccessModeSufficient")
+      }
+    }
+  }
+  return accessExist;
+}
+
+// remove item from the given array
+function removeArrayItem(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+// add checkbox to the element, remove it from required array and remove required attributes 
+function enableReqAccess(Item){
+  removeArrayItem(reqMeta, Item)
+  $("#selectedBox #"+Item+">table>tbody>tr>td>input").removeAttr('required')
+  $("#selectedBox #"+Item+">table>thead>tr>th").removeClass('required')
+  let liInput = document.createElement("input");
+  liInput.setAttribute("type", "checkbox");
+  liInput.setAttribute("name", Item);
+  liInput.setAttribute("aria-label", "select "+ Item +' item');
+  $("#selectedBox #"+ Item).append(liInput);
 }
