@@ -1,0 +1,40 @@
+#fontList{
+    height: 92%;
+    max-height: 100%;
+    border: solid 0.5px #dee2e6;
+    border-radius: 0px;
+    overflow: scroll;
+}
+
+#selectAllItem{
+    margin-right: 0px;
+    margin-left: 0px;
+    padding-left: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#arialBlkLbl{
+    font-family: Arial, Arial Bold, sans-serif;
+}
+
+#lucioleLbl{
+    font-family: "Luciole", Georgia; 
+}
+
+#lucioleBldLbl{
+    font-family: "Luciole Bold", "Luciole", Georgia; 
+}
+
+#opDyslexLbl{
+    font-family: 'opendyslexic';
+	src: url('http://dyslexicfonts.com/fonts/OpenDyslexicMono-Regular.otf');
+}
+
+#verdanaLbl{
+    font-family: Verdana, sans-serif;
+}
+
+#verdanaBldLbl{
+    font-family: Verdana Bold, sans-serif;
+}

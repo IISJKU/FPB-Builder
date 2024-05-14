@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/metadata.css" />
     <link rel="stylesheet" href="css/spine.css" />
     <link rel="stylesheet" href="css/reviewPublish.css" />
+    <link rel="stylesheet" href="css/font.css" />
   </head>
   <body>
     <div class="container" id="pageContainer">
@@ -63,6 +64,17 @@
             </button>
             <button
               class="list-group-item list-group-item-action tablinks"
+              id="font-list"
+              data-bs-toggle="list"
+              onclick="changeContent(this, 'font-tab')"
+              role="tab"
+              aria-selected="false"
+              aria-controls="font-tab"
+              alt="font tab">
+              <i class="bi bi-file-font-fill" alt=""></i> Fonts
+            </button>
+            <button
+              class="list-group-item list-group-item-action tablinks"
               id="publish-list"
               data-bs-toggle="list"
               onclick="changeContent(this, 'publish-tab')"
@@ -99,6 +111,7 @@
             <div class="tab-pane show active tabcontent" id="project-tab" role="tabpanel" aria-labelledby="project-list"></div>
             <div class="tab-pane tabcontent" id="metadata-tab" role="tabpanel" aria-labelledby="metadata-list"></div>
             <div class="tab-pane tabcontent" id="spine-tab" role="tabpanel" aria-labelledby="spine-list"></div>
+            <div class="tab-pane tabcontent" id="font-tab" role="tabpanel" aria-labelledby="font-list"></div>
             <div class="tab-pane tabcontent" id="publish-tab" role="tabpanel" aria-labelledby="publish-list"></div>
             <div class="tab-pane tabcontent" id="about-tab" role="tabpanel" aria-labelledby="about-list"></div>
           </div>
@@ -114,6 +127,7 @@
     <script src="./js/metadata.js"></script>
     <script src="./js/spine.js"></script>
     <script src="./js/project.js"></script>
+    <script src="./js/font.js"></script>
      <!-- open recent project metadata values modal -->
      <div class="modal" id="openRecentModal" role="dialog" aria-labelledby="openProjectLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
