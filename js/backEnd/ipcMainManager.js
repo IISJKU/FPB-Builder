@@ -158,6 +158,22 @@ class ipcMainManager {
           EPUBMaker.manuallySelectDependency(value["filePaths"][0]);
         });
     });
+
+    ipcMain.on("selectFont", () => {
+      dialog
+      .showOpenDialog({
+        properties: ["openFile"],
+        // filters: [
+        //   {
+        //     name: "ttf/otf",
+        //     extensions: ["ttf","otf"],
+        //   },
+        // ],
+      })
+      .then((value) => {
+        this.window.webContents.send("fontSet", value.filePaths[0]);
+      });
+    });
   }
 }
 

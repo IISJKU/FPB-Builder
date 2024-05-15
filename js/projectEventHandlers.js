@@ -33,8 +33,6 @@ window.BRIDGE.onDirectorySet((value) => {
   sessionStorage.setItem("options", JSON.stringify(options));
 });
 
-$(document).ready(() => {
-  $("#directory").on("click", () => {
+$(document).on("click", "#directory", function (e) {
     BRIDGE.setFilePath();
-  });
 });

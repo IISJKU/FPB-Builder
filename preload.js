@@ -41,11 +41,15 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   saveDataBtn() {
     ipcRenderer.send("saveDataBtn");
   },
+  setFontPath() {
+    ipcRenderer.send("selectFont");
+  },
   onDirectorySet: (callback) => ipcRenderer.on("directorySet", (_event, value) => callback(value)),
   //openFile: () => ipcRenderer.invoke("dialog:openFile"),
   onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),
   onImageLoaded: (callback) => ipcRenderer.on("imageLoaded", (_event, value) => callback(value)),
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
+  onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
 });
 
 ipcRenderer.on("filePath", (_event, arg) => {
