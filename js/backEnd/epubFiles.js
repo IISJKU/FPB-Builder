@@ -313,22 +313,25 @@ function createNotice() {
 }
 
 function createTocXHTML(pages) {
-  let str = "";
+  if (pages.length != 0) {
+    let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
+    str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
 
-  str = str.replaceAll("{title}", title);
+    str = str.replaceAll("{title}", title);
 
-  pagesText = "";
+    pagesText = "";
 
-  pages.forEach((page) => {
-    pagesText = pagesText + '<li><a href="' + page.title + "-txt.xhtml#" + page.title + '">' + page.title + "</a></li>\n";
-  });
+    pages.forEach((page) => {
+      pagesText = pagesText + '<li><a href="' + page.title + "-txt.xhtml#" + page.title + '">' + page.title + "</a></li>\n";
+    });
 
-  str = str.replaceAll("{pages}", pagesText);
-  str = str.replaceAll("{firstpage}", pages[0].title + "-txt.xhtml");
+    str = str.replaceAll("{pages}", pagesText);
 
-  return str;
+    str = str.replaceAll("{firstpage}", pages[0].title + "-txt.xhtml");
+
+    return str;
+  }
 }
 
 //add the file that displays the credits

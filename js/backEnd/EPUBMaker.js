@@ -38,8 +38,6 @@ function fetchFromFrontend(window, callback) {
 }
 
 function make(metadata, pages, data) {
-  console.log(pages);
-
   data.languages.forEach((language) => {
     //this picks the name of the epub, according to how many files are in the folder,
     let dirName = data.dirName + "_" + language;

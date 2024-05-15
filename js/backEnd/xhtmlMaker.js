@@ -203,6 +203,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
   fileArray.push(coverImage);
   fileArray.push(coverNarration);
+
   fileArray.forEach((element) => {
     tempFile = "";
     rewritten = false;

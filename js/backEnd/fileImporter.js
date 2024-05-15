@@ -210,8 +210,11 @@ class FileImporter {
           //please select an image file!!
           console.log("Please Select an xhtml containing an image!");
         }
-      } else {
-        console.log();
+      } else if (page.title != "credit" && (page.imagesScripts.Image == "" || page.imagesScripts.Image == undefined)) {
+        if (page.title != "cover" && page != "") {
+          this.importedFiles.push(page);
+          if (page.narration[lang] != "") this.importedFiles.push(page.narration[lang]);
+        }
       }
     });
     return this.importedFiles;

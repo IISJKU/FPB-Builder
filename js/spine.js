@@ -171,6 +171,7 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
 
 // browse button event for xhtml image
 $(document).on("click", "#importImage", function (e) {
+  console.log("ye");
   BRIDGE.importImage();
 });
 

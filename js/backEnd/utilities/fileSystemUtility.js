@@ -19,6 +19,10 @@ function makeFile(location, name, content) {
     dirName = dirName + "(" + count + ")";
   }
 
+  if (content == null || content == undefined || content == "undefined") {
+    content = "";
+  }
+
   fs.writeFileSync(dirName, content);
 }
 
