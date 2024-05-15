@@ -5,7 +5,8 @@ $(document).ready(() => {
     let frontendData = {};
     frontendData["languages"] = JSON.parse(sessionStorage.getItem("pubLang"));
     frontendData["bookDetails"] = JSON.parse(sessionStorage.getItem("bookDetails"));
-    frontendData["pages"] = pageDetails;
+    //frontendData["pages"] = pageDetails;
+    frontendData["pages"] = JSON.parse(sessionStorage.getItem("pageDetails"));
     frontendData["options"] = JSON.parse(sessionStorage.getItem("options"));
     frontendData["dirName"] = dirName;
 

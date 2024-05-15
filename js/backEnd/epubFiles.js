@@ -335,8 +335,6 @@ function createTocXHTML(pages) {
 function createCredits(creditPage) {
   let str = "";
 
-  console.log(creditPage);
-
   str = fs.readFileSync("./js/backEnd/templates/" + language + "/credits.xhtml", "utf-8");
 
   /*

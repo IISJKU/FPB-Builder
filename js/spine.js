@@ -1,10 +1,12 @@
 let pageDetails = {
   cover: {
-    text: {/*
+    text: {
+      /*
       EN: "Little Red Riding Hood",
       IT: "Cappuccetto Rosso",*/
     },
-    narration: {/*
+    narration: {
+      /*
       EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
       IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",*/
     },
@@ -13,7 +15,8 @@ let pageDetails = {
       Image: "C:\\Users\\ak127746\\Pictures\\1513-Rafael-SistineMadonna-Cherubs.jpg",
       Style: "",*/
     },
-    alt: {/*
+    alt: {
+      /*
       EN: "Little Red Riding Hood Alt",
       IT: "Cappuccetto Rosso Alt",*/
     },
@@ -194,7 +197,7 @@ window.BRIDGE.onImageLoaded((value) => {
     pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
     value["foundFiles"].forEach((element) => {
       let tag = "";
-      console.log(element.toLowerCase().includes(".js"));
+      //console.log(element.toLowerCase().includes(".js"));
 
       if (element.includes(".js")) tag = "Script";
       else if (element.includes(".mp3" || ".wav")) tag = "Audio";
@@ -208,12 +211,11 @@ window.BRIDGE.onImageLoaded((value) => {
     });
   }
 
-  console.log(value);
+  //console.log(value);
 });
 
-
-function initializeSpine(){
-  if (sessionStorage.getItem("pageDetails") == null || sessionStorage.getItem("pageDetails") == "null"){
+function initializeSpine() {
+  if (sessionStorage.getItem("pageDetails") == null || sessionStorage.getItem("pageDetails") == "null") {
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
   }
   let pageDetObj = parseSessionData("pageDetails");
@@ -233,7 +235,7 @@ function createPage(id) {
   let creditPage = document.getElementById("credit");
   let aElem = document.createElement("a");
   pageLength = id;
-  if (pageLength == '' || pageLength == undefined) pageLength = $("#pageList a").length - 2;
+  if (pageLength == "" || pageLength == undefined) pageLength = $("#pageList a").length - 2;
   aElem.setAttribute("href", "#");
   aElem.setAttribute("id", pageLength);
   aElem.setAttribute("class", "list-group-item list-group-item-action");
@@ -290,7 +292,7 @@ function createTableBody(tbl, pageId, section) {
       let browseBtn = document.createElement("button");
       browseBtn.setAttribute("type", "button");
       browseBtn.setAttribute("alt", "Browse images and scripts button");
-      if (pageId == "cover" && val == "Image" ) {
+      if (pageId == "cover" && val == "Image") {
         browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
         browseBtn.setAttribute("id", "coverImage");
       } else if (val == "Image") {
@@ -337,9 +339,9 @@ function createLangRows(tbl, tbdy, pageId, section) {
       textElem = document.createElement("input");
       textElem.setAttribute("type", "text");
       textElem.setAttribute("class", "form-control");
-      textElem.value = colVal
+      textElem.value = colVal;
       td.appendChild(textElem);
-    }else if (section == "narration") {
+    } else if (section == "narration") {
       td.appendChild(document.createTextNode(colVal));
       let browseBtn = document.createElement("button");
       browseBtn.setAttribute("type", "button");
@@ -348,10 +350,10 @@ function createLangRows(tbl, tbdy, pageId, section) {
       btnText = document.createTextNode("Browse");
       browseBtn.appendChild(btnText);
       td.append(browseBtn);
-    }else{
+    } else {
       textElem = document.createElement("textarea");
       textElem.setAttribute("class", "form-control");
-      textElem.value = colVal
+      textElem.value = colVal;
       td.appendChild(textElem);
     }
     tr.appendChild(td);
@@ -381,7 +383,7 @@ function newImagesScripts(tbl, tbdy) {
   tbl.append(tbdy);
 }
 
-function saveData(){
+function saveData() {
   let pageId = $("#pageList .list-group-item.active").attr("id");
   let pageDetObj = parseSessionData("pageDetails");
   $("#contentBox tbody tr").each(function () {
