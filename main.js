@@ -122,6 +122,9 @@ app.on("window-all-closed", () => {
 });
 
 function loadRecentProjects() {
+  if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
+    fs.mkdirSync(app.getPath("userData") + "\\projects");
+  } 
   let projects = fs.readdirSync(app.getPath("userData") + "\\projects\\");
   let loadedProjects = new Array();
 
