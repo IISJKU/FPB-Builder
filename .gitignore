@@ -134,5 +134,3 @@ dist
 .vs/FPB-Builder/v17/DocumentLayout.json
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
-package-lock.json
-package.json
