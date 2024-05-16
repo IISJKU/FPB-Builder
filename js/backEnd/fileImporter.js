@@ -180,11 +180,91 @@ class FileImporter {
       dependencyList.isImage = false;
     }
 
-    dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
+    //dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
+
+    dependencyList.imageFile = src;
     let d = JSON.stringify(dependencyList);
+
+    console.log(dependencyList);
     return dependencyList;
     //storage.set("dependencies", d);
   }
+
+  /*
+importImage(src) {
+    let dependencyList = new DependencyList();
+
+    let data = fs.readFileSync(src, "utf8");
+    //split file at linebreaks to parse it line by line
+    let lineArray = data.split("\n");
+
+    if (this.checkIfImage(lineArray)) {
+      dependencyList.isImage = true;
+
+      lineArray.forEach((element) => {
+        let done = false;
+        let index = 0;
+        let round = 0;
+        let filename = "";
+
+        //this while loop allows us to look for multiple imports per line!
+        while (!done) {
+          filename = "";
+
+          //check if line has tag after index
+          let tline = element.substring(index, element.length);
+
+          if (tline.includes("<link", index)) {
+            filename = PathUtilities.cutOutFilename(tline, "href");
+            index = tline.indexOf("href");
+          } else if (tline.includes("<script", index)) {
+            filename = PathUtilities.cutOutFilename(tline, "src");
+            index = tline.indexOf("src");
+          } else if (tline.includes("<source", index)) {
+            filename = PathUtilities.cutOutFilename(tline, "src");
+            index = tline.indexOf("src");
+          }
+          index = index + 1;
+
+          if (filename != "") {
+            let t = PathUtilities.getAbsolutePath(src, filename);
+            let shortName = t.substring(t.lastIndexOf("\\") + 1, t.length);
+
+            //check if the file was already imported!
+            if (this.dependencyMap.has(shortName)) {
+              //already imported
+              dependencyList.found(shortName);
+            } else {
+              //if it exists, add it to imported files, if not:
+              //let the user manually select it.
+              if (fs.existsSync(t)) {
+                this.importedFiles.push(t);
+                this.dependencyMap.set(shortName, t);
+                dependencyList.found(shortName);
+              } else {
+                console.log("didnt find: " + shortName);
+                dependencyList.missing(shortName);
+                //prompt user to select it here!
+              }
+            }
+          } else {
+            done = true;
+          }
+          round = round + 1;
+          filename = "";
+        }
+      });
+    } else {
+      dependencyList.isImage = false;
+    }
+
+    dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
+    let d = JSON.stringify(dependencyList);
+
+    return dependencyList;
+    //storage.set("dependencies", d);
+  }
+  */
 
   /**
    * Loads all the files into an array, after they are checked!
@@ -194,8 +274,10 @@ class FileImporter {
    */
   import(pages, lang) {
     this.importedFiles = [];
+    console.log(pages);
     pages.forEach((page) => {
       if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {
+        console.log("it gets in here!");
         let data = fs.readFileSync(page.imagesScripts.Image, "utf8");
         //split file at linebreaks to parse it line by line
         let dataSplit = data.split("\n");
@@ -205,7 +287,6 @@ class FileImporter {
           this.importedFiles.push(page);
           this.importedFiles.push(page.imagesScripts.Image);
           this.importedFiles.push(page.narration[lang]);
-          //console.log(importedFiles);
         } else {
           //please select an image file!!
           console.log("Please Select an xhtml containing an image!");

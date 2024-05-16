@@ -29,9 +29,9 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
       divElement.setAttribute("class", "d-flex w-100 justify-content-between");
       let headerElement = document.createElement("h6");
       headerElement.setAttribute("class", "mb-1");
-      headerElement.appendChild(document.createTextNode(project.name))
+      headerElement.appendChild(document.createTextNode(project.name));
       let smallElement = document.createElement("small");
-      smallElement.appendChild(document.createTextNode(project.directory))
+      smallElement.appendChild(document.createTextNode(project.directory));
       divElement.appendChild(headerElement);
       divElement.appendChild(smallElement);
       aElement.appendChild(divElement);
@@ -41,91 +41,98 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
   projects = value;
 });
 
-// handle project list group items on click 
+// handle project list group items on click
 $(document).on("click", "#projectList .list-group-item", function (e) {
   if ($("#projectList .list-group-item").hasClass("active")) {
     $("#projectList .list-group-item").removeClass("active");
   }
-  $(this).addClass("active")
+  $(this).addClass("active");
   enterPressed++;
 });
 
-// handle project list group items on click 
+// handle project list group items on click
 $(document).on("dblclick", "#projectList .list-group-item", function (e) {
   //check if the fade div is exist
-  if ($("#modal-fade").length == 0){
+  if ($("#modal-fade").length == 0) {
     // create div to appy the fading when the modal opens
-    var elemDiv = document.createElement('div');
-    elemDiv.setAttribute('class', 'modal-backdrop fade show');
-    elemDiv.setAttribute('id', 'modal-fade');
+    var elemDiv = document.createElement("div");
+    elemDiv.setAttribute("class", "modal-backdrop fade show");
+    elemDiv.setAttribute("id", "modal-fade");
     document.body.appendChild(elemDiv);
-    document.getElementById('recentProjName').textContent = $(this).children('div').children('h6').text();
+    document.getElementById("recentProjName").textContent = $(this).children("div").children("h6").text();
     $("#openRecentModal").show();
-    $("#openRecentModal button[class='btn-close']").trigger('focus');
+    $("#openRecentModal button[class='btn-close']").trigger("focus");
   }
-  
 });
 
 // handel enter key press when tabbing to the recent project a item
 var enterPressed = 0;
 $(document).on("keypress", "#projectList a", function (e) {
-  let keyCode = (e.keyCode || e.which);
+  let keyCode = e.keyCode || e.which;
   if (keyCode === 13) {
     if (enterPressed === 0) {
       enterPressed++;
       this.click();
     } else if (enterPressed > 0) {
-      e.preventDefault(); 
+      e.preventDefault();
       enterPressed = 0;
-      $("#projectList .list-group-item").trigger('dblclick');
+      $("#projectList .list-group-item").trigger("dblclick");
     }
-    return; 
+    return;
   }
 });
 
-function getOthSettings(){
+function getOthSettings() {
   var selectedSettings = [];
-  $('#otherSettings input:checked').each(function() {
-    selectedSettings.push($(this).attr('value'));
+  $("#otherSettings input:checked").each(function () {
+    selectedSettings.push($(this).attr("value"));
   });
-  return selectedSettings
+  return selectedSettings;
 }
 
-function loadJSONProject(){
-  closeModal('openRecentModal');
-  let name = $('#recentProjName').text();
+function loadJSONProject() {
+  closeModal("openRecentModal");
+  let name = $("#recentProjName").text();
   BRIDGE.loadJSON(name);
 }
 
 // hide modal
-function closeModal(modalID){
+function closeModal(modalID) {
   // check if the fade div is exist
   var fadeDiv = document.getElementById("modal-fade");
-  if (fadeDiv != null){
+  if (fadeDiv != null) {
     document.body.removeChild(fadeDiv);
   }
-  $('#'+modalID).hide();
-  $("#projectList .list-group-item.active").trigger('focus');
+  $("#" + modalID).hide();
+  $("#projectList .list-group-item.active").trigger("focus");
 }
 
 window.BRIDGE.onProjectData((value) => {
   resetFields();
   let projData = JSON.parse(value);
-  document.getElementById('directory').value =  projData['directory'];
-  document.getElementById('projName').value =  projData['name'];
-  sessionStorage.setItem("projectName", projData['name']);
-  sessionStorage.setItem("bookDetails", JSON.stringify(projData['metadata']));
-  sessionStorage.setItem("pubLang", JSON.stringify(projData['languages']));
-  langOpt = document.getElementById('publicationLanguage');
-  if (Object.keys(projData['languages']).length != 0) {
+  console.log(projData);
+  document.getElementById("directory").value = projData["directory"];
+
+  document.getElementById("projName").value = projData["name"];
+  sessionStorage.setItem("projectName", projData["name"]);
+  sessionStorage.setItem("bookDetails", JSON.stringify(projData["metadata"]));
+  sessionStorage.setItem("pubLang", JSON.stringify(projData["languages"]));
+
+  sessionStorage.setItem(
+    "options",
+    JSON.stringify({ directory: projData["directory"], includeInstructions: false, includeNarrations: false, includeBookSettings: false })
+  );
+
+  langOpt = document.getElementById("publicationLanguage");
+  if (Object.keys(projData["languages"]).length != 0) {
     for (let i = 0; i < langOpt.options.length; i++) {
-      langOpt.options[i].selected = projData['languages'].indexOf(langOpt.options[i].value) >= 0;
+      langOpt.options[i].selected = projData["languages"].indexOf(langOpt.options[i].value) >= 0;
     }
   }
-  sessionStorage.setItem("pageDetails", JSON.stringify(projData['pages']));
-  if (Object.keys(projData['settings']).length != 0) {
-    for (let j = 0; j < projData['settings'].length; j++) {
-    document.getElementById(projData['settings'][j]).checked = true;
+  sessionStorage.setItem("pageDetails", JSON.stringify(projData["pages"]));
+  if (Object.keys(projData["settings"]).length != 0) {
+    for (let j = 0; j < projData["settings"].length; j++) {
+      document.getElementById(projData["settings"][j]).checked = true;
     }
   }
 });

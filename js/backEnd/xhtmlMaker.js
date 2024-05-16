@@ -213,8 +213,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
       //
       // Import Text file here!
       //
-      FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", element.title + "-txt.xhtml", EPUBFileCreator.createPageText(element));
-      spine.push("..\\OEBPS\\xhtml\\" + element.title + "-txt.xhtml");
+      if (element != undefined) {
+        FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", element.title + "-txt.xhtml", EPUBFileCreator.createPageText(element));
+        spine.push("..\\OEBPS\\xhtml\\" + element.title + "-txt.xhtml");
+      }
     } else {
       //look at where the name should be cut!
       let i = element.lastIndexOf("\\");
@@ -255,7 +257,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         FileSystemManager.makeFile(relAdress, element.slice(i, element.length), tempFile);
       } else {
         relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length);
-        fs.copyFileSync(element, relAdress);
+
+        if (!(element == "" || relAdress == "")) {
+          fs.copyFileSync(element, relAdress);
+        }
       }
 
       relativePaths.push(relAdress);

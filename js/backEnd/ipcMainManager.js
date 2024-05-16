@@ -69,7 +69,7 @@ class ipcMainManager {
           filters: [
             {
               name: "All Files",
-              extensions: ["*"],
+              extensions: [""],
             },
           ],
         })
@@ -115,6 +115,7 @@ class ipcMainManager {
       PageManager.setLanguages(rawData.languages);
 
       MetadataManager.setData(rawData.bookDetails);
+      console.log(rawData.pages);
       PageManager.setData(rawData.pages);
 
       //check if stuff is valid!
@@ -139,7 +140,12 @@ class ipcMainManager {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
-          filters: ["xhtml"],
+          filters: [
+            {
+              name: "Files",
+              extensions: ["xhtml"],
+            },
+          ],
         })
         .then((value) => {
           let dependencyList = EPUBMaker.importImage(value["filePaths"][0]);
@@ -161,18 +167,18 @@ class ipcMainManager {
 
     ipcMain.on("selectFont", () => {
       dialog
-      .showOpenDialog({
-        properties: ["openFile"],
-        // filters: [
-        //   {
-        //     name: "ttf/otf",
-        //     extensions: ["ttf","otf"],
-        //   },
-        // ],
-      })
-      .then((value) => {
-        this.window.webContents.send("fontSet", value.filePaths[0]);
-      });
+        .showOpenDialog({
+          properties: ["openFile"],
+          // filters: [
+          //   {
+          //     name: "ttf/otf",
+          //     extensions: ["ttf","otf"],
+          //   },
+          // ],
+        })
+        .then((value) => {
+          this.window.webContents.send("fontSet", value.filePaths[0]);
+        });
     });
   }
 }

@@ -362,33 +362,33 @@ function createCredits(creditPage) {
     IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz.",
   };
 
-  creditPage.text[language] = creditPage.text[language].trim();
-
-  if (creditPage.text[language].slice(-2) != "\n") {
-    creditPage.text[language] += "\n";
-  }
-
-  creditPage.text[language] = creditPage.text[language] + ourCredit[language];
-  let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
-  let count = 1;
-
-  if (!Array.isArray(creditPage.text[language])) {
-    creditPage.text[language] = creditPage.text[language].split("\n");
-  }
-
-  creditPage.text[language].forEach((credit) => {
-    let t = "";
-    if (count < 10) {
-      t = "0" + count;
-    } else {
-      t = count;
+  if (creditPage.text[language] != undefined) {
+    creditPage.text[language] = creditPage.text[language].trim();
+    if (creditPage.text[language].slice(-2) != "\n") {
+      creditPage.text[language] += "\n";
     }
-    text = text + '        <p class="tsl_sentence' + t + '">' + credit + "</p>\n";
-    count = count + 1;
-  });
 
-  str = str.replaceAll("{credits}", text);
+    creditPage.text[language] = creditPage.text[language] + ourCredit[language];
+    let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
+    let count = 1;
 
+    if (!Array.isArray(creditPage.text[language])) {
+      creditPage.text[language] = creditPage.text[language].split("\n");
+    }
+
+    creditPage.text[language].forEach((credit) => {
+      let t = "";
+      if (count < 10) {
+        t = "0" + count;
+      } else {
+        t = count;
+      }
+      text = text + '        <p class="tsl_sentence' + t + '">' + credit + "</p>\n";
+      count = count + 1;
+    });
+
+    str = str.replaceAll("{credits}", text);
+  }
   return str;
 }
 
@@ -493,6 +493,9 @@ function createPageText(obj){
 
 //prettier-ignore
 function createCover(title, cover, altText, audio){
+  if(audio == undefined || audio == null ){
+    audio = "";
+  }
   let str = 
   '<?xml version="1.0" encoding="utf-8" standalone="no"?>\n' +
   '<html xmlns:epub="http://www.idpf.org/2007/ops" xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">\n' +

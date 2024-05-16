@@ -34,5 +34,5 @@ window.BRIDGE.onDirectorySet((value) => {
 });
 
 $(document).on("click", "#directory", function (e) {
-    BRIDGE.setFilePath();
+  BRIDGE.setFilePath();
 });

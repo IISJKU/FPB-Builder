@@ -9,6 +9,7 @@ $(document).ready(() => {
     frontendData["pages"] = JSON.parse(sessionStorage.getItem("pageDetails"));
     frontendData["options"] = JSON.parse(sessionStorage.getItem("options"));
     frontendData["dirName"] = dirName;
+    console.log(dirName);
 
     sessionStorage.setItem("frontendData", JSON.stringify(frontendData));
 

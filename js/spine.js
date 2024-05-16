@@ -161,17 +161,16 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
     return;
   }
   if ($("#pageList .list-group-item").hasClass("active")) {
-    saveData();
     $("#pageList .list-group-item").removeClass("active");
   }
 
   $(e.target).addClass("active");
   fillData();
+  saveData();
 });
 
 // browse button event for xhtml image
 $(document).on("click", "#importImage", function (e) {
-  console.log("ye");
   BRIDGE.importImage();
 });
 
@@ -196,6 +195,9 @@ window.BRIDGE.onImageLoaded((value) => {
 
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
     pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
+    console.log("yea?");
+    console.log(pageDetailsObj[pageID]["imagesScripts"]["Image"]);
+
     value["foundFiles"].forEach((element) => {
       let tag = "";
       //console.log(element.toLowerCase().includes(".js"));
@@ -210,9 +212,10 @@ window.BRIDGE.onImageLoaded((value) => {
       }
       pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] = element;
     });
-  }
 
-  //console.log(value);
+    console.log(JSON.stringify(pageDetailsObj));
+    sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+  }
 });
 
 function initializeSpine() {
