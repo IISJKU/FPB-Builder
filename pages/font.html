@@ -1,34 +1,34 @@
 <form id="fontForm">
     <div class="row">
         <div class="col-md-11" id="fontListColumn">
-            <label for="fontList">Fonts List</label>
+            <label for="fontList">Font List</label>
             <div class="list-group" id="fontList">
                 <li class="form-check-inline" id="selectAllItem">
-                    <input class="custom-control-input" type="checkbox" id="selectAll" name="selectAll" value="all" aria-label="select all fonts" />
+                    <input class="custom-control-input" type="checkbox" id="selectAll" name="selectAll" value="all" aria-label="select all fonts"/>
                     <label class="custom-control-label" for="selectAll">Select All</label>
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="arialBlk" name="arialBlk" value="" aria-label="arial black font" />
-                    <label class="custom-control-label" id="arialBlkLbl" for="arialBlk">Arial Black Bold</label>
+                    <input class="custom-control-input fontItem" type="checkbox" id="arialBlk" name="arialBlk" value="" aria-label="arial black font" data-path="..\js\backEnd\imports\fonts\ariablk.ttf"/>
+                    <label class="custom-control-label" id="arialBlkLbl" for="arialBlk">Arial Black</label>
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="luciole" name="luciole" value="" aria-label="luciole font" />
+                    <input class="custom-control-input fontItem" type="checkbox" id="luciole" name="luciole" value="" aria-label="luciole font" data-path="..\js\backEnd\imports\fonts\Luciole-Regular.ttf"/>
                     <label class="custom-control-label" id="lucioleLbl" for="luciole">Luciole</label>
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="lucioleBld" name="lucioleBld" value="" aria-label="luciole bold font" />
+                    <input class="custom-control-input fontItem" type="checkbox" id="lucioleBld" name="lucioleBld" value="" aria-label="luciole bold font" data-path="..\js\backEnd\imports\fonts\Luciole-Bold.ttf"/>
                     <label class="custom-control-label" id="lucioleBldLbl" for="lucioleBld">Luciole Bold</label>
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="opDyslex" name="opDyslex" value="" aria-label="open dyslexic monospace font" />
+                    <input class="custom-control-input fontItem" type="checkbox" id="opDyslex" name="opDyslex" value="" aria-label="open dyslexic monospace font" data-path="..\js\backEnd\imports\fonts\OpenDyslexicMono-Regular.otf"/>
                     <label class="custom-control-label" id="opDyslexLbl" for="opDyslex">Open Dyslexic monospace</label> 
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="verdana" name="verdana" value="" aria-label="verdana font" />
+                    <input class="custom-control-input fontItem" type="checkbox" id="verdana" name="verdana" value="" aria-label="verdana font" data-path="..\js\backEnd\imports\fonts\verdana.ttf"/>
                     <label class="custom-control-label" id="verdanaLbl" for="verdana">Verdana</label>
                 </li>
                 <li class="list-group-item" id="">
-                    <input class="custom-control-input fontItem" type="checkbox" id="verdanaBld" name="verdanaBld" value="" aria-label="verdana bold font" />
+                    <input class="custom-control-input fontItem" type="checkbox" id="verdanaBld" name="verdanaBld" value="" aria-label="verdana bold font" data-path="..\js\backEnd\imports\fonts\verdanab.ttf"/>
                     <label class="custom-control-label" id="verdanaBldLbl" for="verdanaBld">Verdana Bold</label>
                 </li>
             </div>
@@ -36,7 +36,6 @@
         <div class="col-md-11" id="">
             <div id="addFontDiv" class="form-group mb-3">
                 <button type="button" id="addFont" class="btn btn-outline-primary">Add</button> 
-                <!-- <input class="form-control" type="directory" id="addFont" placeholder="Browse" title="Browse" aria-label="Add font"/>-->
             </div>
         </div>
     </div>

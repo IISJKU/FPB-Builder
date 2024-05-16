@@ -1,5 +1,13 @@
+let selectedFonts = {}
+
+// initialize metadata screen data
+function initializeFonts() {
+    $("#selectAll").trigger('click');
+}
+
 $(document).on("click", "#selectAll", function (e) {
     $(".fontItem").prop('checked', $(this).prop('checked'));
+    getSelectedFonts();
 });
 
 $(document).on("click", "#addFont", function (e) {
@@ -7,25 +15,42 @@ $(document).on("click", "#addFont", function (e) {
 });
 
 window.BRIDGE.onFontSet((value) => {
-    console.log(value.replace(/\\/g, '/'))
-    let fontText= value.lastIndexOf("\\") + 1;
+    let lastInd= value.lastIndexOf("\\") + 1;
     let extIndex= value.indexOf(".");
+    let fontText = value.slice(lastInd,extIndex)
     let fontList = document.getElementById("fontList");
     let liElement = document.createElement("li");
     liElement.setAttribute("class", "list-group-item");
-    //liElement.setAttribute("id", );
+    //liElement.setAttribute("id",);
     let liInput = document.createElement("input");
     liInput.setAttribute("class", "custom-control-input fontItem");
     liInput.setAttribute("type", "checkbox");
+    liInput.setAttribute("id",camelCaseStr(fontText));
+    liInput.setAttribute("name",camelCaseStr(fontText));
+    liInput.setAttribute("aria-label", "select item");
     liInput.setAttribute("data-path", value);
-    //liInput.setAttribute("name", );
-    //liInput.setAttribute("aria-label", "select item");
     let inputLabel = document.createElement("label");
-    inputLabel.setAttribute("class", "custom-control-label");
-    //inputLabel.setAttribute("id", "");
-    //inputLabel.setAttribute("for", "");
-    inputLabel.appendChild(document.createTextNode(value.slice(fontText,extIndex)));
+    inputLabel.setAttribute("class", "custom-control-label fontLbl");
+    inputLabel.setAttribute("id", camelCaseStr(fontText)+'Lbl');
+    inputLabel.setAttribute("for", camelCaseStr(fontText));
+    inputLabel.appendChild(document.createTextNode(fontText));
     liElement.appendChild(liInput);
     liElement.appendChild(inputLabel);
     fontList.appendChild(liElement);
 });
+
+function getSelectedFonts(){
+    $(".fontItem:checkbox:checked").each(function () {
+        //get label text
+        let fontTxt = $(this).parent(0).children(1).text();
+        let fontPath = $(this).data('path');
+        selectedFonts[fontTxt] = fontPath.replace(/\\/g, '/');
+        sessionStorage.setItem("selectedFonts", JSON.stringify(selectedFonts));
+    });
+}
+
+// handle on change event for the font items checkbox elements
+$(document).on("change", ".fontItem", function (e) {
+    getSelectedFonts();
+});
+  
