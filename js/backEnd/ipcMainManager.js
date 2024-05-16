@@ -142,7 +142,7 @@ class ipcMainManager {
           properties: ["openFile"],
           filters: [
             {
-              name: "Files",
+              name: "xhtml",
               extensions: ["xhtml"],
             },
           ],

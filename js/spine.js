@@ -188,6 +188,11 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
 // browse button event for xhtml image
 $(document).on("click", "#importImage", function (e) {
   BRIDGE.importImage();
+  /*
+  let pageID = $("#pageList .list-group-item.active").attr("id");
+  let sessionPageDet = parseSessionData("pageDetails");
+  sessionPageDet[pageID]["name"] = $("#importImage").value; 
+  sessionStorage.setItem("pageDetails", JSON.stringify(sessionPageDet));*/
 });
 
 // browse button event for narrations audio
@@ -240,7 +245,7 @@ function initializeSpine() {
   }
   let pageDetObj = parseSessionData("pageDetails");
   for (let val in pageDetObj) {
-    if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit") {
+    if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit" || $("#pageList #"+ val).length > 0 ) {
       continue;
     }
     createPage(val);
