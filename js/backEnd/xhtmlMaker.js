@@ -157,6 +157,8 @@ function rewriteDependencies(filePath) {
   });
 }
 
+function addAltText(elem) {}
+
 /**
  *  takes the array containing absolute paths (of files regardless of type) and text  as input and creates xhtml out of it
  * @param {Array} fileArray The array of files, that can also contain text
@@ -205,6 +207,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fileArray.push(coverNarration);
 
   fileArray.forEach((element) => {
+    console.log(fileArray);
     tempFile = "";
     rewritten = false;
     let subFolder = "";
@@ -225,24 +228,30 @@ function createXHTMLFiles(fileArray, path, newDirName) {
       }
 
       //handle files where path was given!
-      if (element.includes(".xhtml")) {
+      if (element.toLowerCase().includes(".xhtml")) {
         rewriteDependencies(element);
+        addAltText(element);
         subFolder = "\\OEBPS\\xhtml\\";
         rewritten = true;
         spine.push(element.slice(i, element.length));
         //fs.copyFileSync(element, directory + "\\" + newDirName + "\\OEBPS\\xhtml" + PathUtilities.cutOutFilename(element));
-      } else if (element.includes(".css")) {
+      } else if (element.toLowerCase().includes(".css")) {
         subFolder = "\\OEBPS\\css\\";
         importFonts(element, path, newDirName);
         rewritten = true;
         contents.push("..\\OEBPS\\xhtml\\" + element);
-      } else if (element.includes(".js")) {
+      } else if (element.toLowerCase().includes(".js")) {
         subFolder = "\\OEBPS\\Misc\\";
         contents.push(element);
-      } else if (element.includes(".mp3") || element.includes(".wav")) {
+      } else if (element.toLowerCase().includes(".mp3") || element.toLowerCase().includes(".wav")) {
         subFolder = "\\OEBPS\\audio\\";
         contents.push(element);
-      } else if (element.includes(".jpg") || element.includes(".svg") || element.includes(".svg") || element.includes(".png")) {
+      } else if (
+        element.toLowerCase().includes(".jpg") ||
+        element.toLowerCase().includes(".svg") ||
+        element.toLowerCase().includes(".svg") ||
+        element.toLowerCase().includes(".png")
+      ) {
         subFolder = "\\OEBPS\\images\\";
         if (element.includes("/notice/")) {
           subFolder = "\\OEBPS\\images\\notice\\";

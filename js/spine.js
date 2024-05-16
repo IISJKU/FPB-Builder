@@ -113,27 +113,43 @@ let emptyPage = {
 
 // page orgnisation down arrow icon event
 $(document).on("click", "#pageList .bi-arrow-down", function (e) {
+  let pageDetailsObj = parseSessionData("pageDetails");
+
   let cItem = $(this).closest("a");
   let tItem = cItem.next("a");
+
   if (tItem.length == 0 || tItem.attr("id") == "plusIcon" || tItem.attr("id") == "credit") {
     //[1] to insert the item after the cover page
     cItem.insertBefore($(this).closest("div").children()[1]);
     return;
+  } else {
+    var t = pageDetailsObj[cItem.attr("id")];
+    pageDetailsObj[cItem.attr("id")] = pageDetailsObj[tItem.attr("id")];
+    pageDetailsObj[tItem.attr("id")] = t;
   }
   cItem.insertAfter(tItem);
+
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
 // page orgnisation up arrow icon event
 $(document).on("click", "#pageList .bi-arrow-up", function (e) {
   let cItem = $(this).closest("a");
   let tItem = cItem.prev("a");
+  let pageDetailsObj = parseSessionData("pageDetails");
   if (tItem.length == 0 || tItem.attr("id") == "cover") {
     let childrenLength = $(this).closest("div").children().length;
     //it should be -1 but -3 because of the plus list item and the credit page
     cItem.insertAfter($(this).closest("div").children()[childrenLength - 3]);
     return;
+  } else {
+    var t = pageDetailsObj[cItem.attr("id")];
+    pageDetailsObj[cItem.attr("id")] = pageDetailsObj[tItem.attr("id")];
+    pageDetailsObj[tItem.attr("id")] = t;
   }
   cItem.insertBefore(tItem);
+
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
 // delete page icon event
