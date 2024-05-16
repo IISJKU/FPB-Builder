@@ -185,7 +185,6 @@ class FileImporter {
     dependencyList.imageFile = src;
     let d = JSON.stringify(dependencyList);
 
-    console.log(dependencyList);
     return dependencyList;
     //storage.set("dependencies", d);
   }
@@ -198,7 +197,6 @@ class FileImporter {
    */
   import(pages, lang) {
     this.importedFiles = [];
-    console.log(pages);
     pages.forEach((page) => {
       if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {
         let data = fs.readFileSync(page.imagesScripts.Image, "utf8");
