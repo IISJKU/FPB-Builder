@@ -169,12 +169,12 @@ class ipcMainManager {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
-          // filters: [
-          //   {
-          //     name: "ttf/otf",
-          //     extensions: ["ttf","otf"],
-          //   },
-          // ],
+          filters: [
+            {
+              name: "ttf/otf",
+              extensions: ["ttf","otf"],
+            },
+          ],
         })
         .then((value) => {
           this.window.webContents.send("fontSet", value.filePaths[0]);

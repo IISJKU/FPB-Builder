@@ -171,6 +171,7 @@ function initializeTabs(){
   $("#publicationLanguage").trigger("change");
   initializeMetadata();
   initializeSpine();
+  initializeFonts();
 }
 
 // initiate on focus out event for all required input
@@ -197,4 +198,11 @@ function emptyFields(reqFields, listId){
     $('#error').hide();
     $('#'+listId+' i.bi-exclamation-triangle-fill').remove();
   }
+}
+
+function camelCaseStr(str) {
+  return str
+      .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
+      .replace(/\s/g, '')
+      .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
 }
