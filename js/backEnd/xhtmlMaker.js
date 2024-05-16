@@ -20,6 +20,17 @@ let pages = [];
 let cover;
 let credit;
 
+let altText = new Map();
+
+function setAltText(pages) {
+  altText = new Map();
+  pages.forEach((page) => {
+    altText.set(page.imagesScripts.Image, altText);
+  });
+
+  console.log(altText);
+}
+
 function initialize(metad, lang, pag) {
   spine = [];
   contents = [];
@@ -32,6 +43,8 @@ function initialize(metad, lang, pag) {
   cover = pages[pages.length - 2];
   credit = pages[pages.length - 1];
   pages.splice(pages.length - 2, 2);
+
+  setAltText(pages);
 
   language = lang;
 
@@ -79,7 +92,7 @@ function initialize(metad, lang, pag) {
  * open the file, and replace old paths of css and js with the new paths!
  * @param {String} filePath
  */
-function rewriteDependencies(filePath) {
+function rewriteXHTMLFile(filePath) {
   tempFile = "";
   let loadedFile = fs.readFileSync(filePath, "utf8");
 
@@ -88,11 +101,14 @@ function rewriteDependencies(filePath) {
   let linkTag = "href";
   let hrefTag = "src";
 
+  let ariaSearchActive = false;
+
   fileSplit.forEach((line) => {
+    let tempLine = line;
+
     if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
       let done = false;
       let index = 0;
-      let tempLine = line;
 
       //this loop allows us to catch multiple tags in the same row! sometimes, there are multiple link tags in the same one
       while (!done) {
@@ -151,9 +167,17 @@ function rewriteDependencies(filePath) {
       }
 
       tempFile = tempFile + tempLine + "\n";
-    } else {
-      tempFile = tempFile + line + "\n";
+    } else if (line.includes("<svg")) {
+      ariaSearchActive = true;
     }
+
+    if (ariaSearchActive && line.includes("aria-label")) {
+      ariaSearchActive = false;
+      tempLine =
+        line.substring(0, line.indexOf('"', line.indexOf("aria-label")) + 1) + altText.get(filePath) + line.substring(line.lastIndexOf('"'), line.length);
+    }
+
+    tempFile = tempFile + tempLine + "\n";
   });
 }
 
@@ -207,7 +231,6 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fileArray.push(coverNarration);
 
   fileArray.forEach((element) => {
-    console.log(fileArray);
     tempFile = "";
     rewritten = false;
     let subFolder = "";
@@ -229,8 +252,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
       //handle files where path was given!
       if (element.toLowerCase().includes(".xhtml")) {
-        rewriteDependencies(element);
-        addAltText(element);
+        rewriteXHTMLFile(element);
+
         subFolder = "\\OEBPS\\xhtml\\";
         rewritten = true;
         spine.push(element.slice(i, element.length));
