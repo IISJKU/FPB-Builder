@@ -23,12 +23,12 @@ let credit;
 let altText = new Map();
 
 function setAltText(pages) {
+  // WORK ON THIS!!!
   altText = new Map();
   pages.forEach((page) => {
-    altText.set(page.imagesScripts.Image, altText);
+    altText.set(page.imagesScripts.Image, page.alt[language]);
+    console.log(language);
   });
-
-  console.log(altText);
 }
 
 function initialize(metad, lang, pag) {
@@ -44,9 +44,8 @@ function initialize(metad, lang, pag) {
   credit = pages[pages.length - 1];
   pages.splice(pages.length - 2, 2);
 
-  setAltText(pages);
-
   language = lang;
+  setAltText(pages);
 
   //this is some truely gangster stuff:
   //remove this as soon as there is an alternative lol
@@ -173,6 +172,7 @@ function rewriteXHTMLFile(filePath) {
 
     if (ariaSearchActive && line.includes("aria-label")) {
       ariaSearchActive = false;
+      console.log(altText);
       tempLine =
         line.substring(0, line.indexOf('"', line.indexOf("aria-label")) + 1) + altText.get(filePath) + line.substring(line.lastIndexOf('"'), line.length);
     }

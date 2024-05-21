@@ -50,8 +50,7 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onImageLoaded: (callback) => ipcRenderer.on("imageLoaded", (_event, value) => callback(value)),
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
+  onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value) => callback(value)),
 });
 
-ipcRenderer.on("filePath", (_event, arg) => {
-  console.log(arg);
-});
+ipcRenderer.on("filePath", (_event, arg) => {});

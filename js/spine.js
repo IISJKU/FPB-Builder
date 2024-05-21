@@ -195,8 +195,10 @@ $(document).on("click", "#importImage", function (e) {
   sessionStorage.setItem("pageDetails", JSON.stringify(sessionPageDet));*/
 });
 
+let activeLang = "";
 // browse button event for narrations audio
 $(document).on("click", ".narrations", function (e) {
+  activeLang = $(this).closest("tr").children("th").text();
   BRIDGE.narrations();
 });
 
@@ -216,12 +218,9 @@ window.BRIDGE.onImageLoaded((value) => {
 
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
     pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
-    console.log("yea?");
-    console.log(pageDetailsObj[pageID]["imagesScripts"]["Image"]);
 
     value["foundFiles"].forEach((element) => {
       let tag = "";
-      //console.log(element.toLowerCase().includes(".js"));
 
       if (element.includes(".js")) tag = "Script";
       else if (element.includes(".mp3" || ".wav")) tag = "Audio";
@@ -239,13 +238,20 @@ window.BRIDGE.onImageLoaded((value) => {
   }
 });
 
+window.BRIDGE.onNarrationLoaded((value) => {
+  let pageID = $("#pageList .list-group-item.active").attr("id");
+  let pageDetailsObj = parseSessionData("pageDetails");
+  pageDetailsObj[pageID].narration[activeLang] = value[0];
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+});
+
 function initializeSpine() {
   if (sessionStorage.getItem("pageDetails") == null || sessionStorage.getItem("pageDetails") == "null") {
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
   }
   let pageDetObj = parseSessionData("pageDetails");
   for (let val in pageDetObj) {
-    if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit" || $("#pageList #"+ val).length > 0 ) {
+    if (Object.keys(pageDetObj[val]).length == 0 || val == "cover" || val == "credit" || $("#pageList #" + val).length > 0) {
       continue;
     }
     createPage(val);
@@ -421,7 +427,9 @@ function saveData() {
     if (pageDetObj[pageId][section] == undefined) {
       pageDetObj[pageId][section] = {};
     }
-    pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+
+    //Change this later!
+    if (attr != "Image") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
   });
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetObj));
 }

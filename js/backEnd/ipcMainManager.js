@@ -36,7 +36,7 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("filePath", result.filePaths);
+          event.reply("narrationLoaded", result.filePaths);
         })
         .catch((err) => {
           console.log(err);
@@ -172,7 +172,7 @@ class ipcMainManager {
           filters: [
             {
               name: "ttf/otf",
-              extensions: ["ttf","otf"],
+              extensions: ["ttf", "otf"],
             },
           ],
         })
