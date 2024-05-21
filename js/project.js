@@ -117,11 +117,7 @@ window.BRIDGE.onProjectData((value) => {
   sessionStorage.setItem("projectName", projData["name"]);
   sessionStorage.setItem("bookDetails", JSON.stringify(projData["metadata"]));
   sessionStorage.setItem("pubLang", JSON.stringify(projData["languages"]));
-
-  sessionStorage.setItem(
-    "options",
-    JSON.stringify({ directory: projData["directory"], includeInstructions: false, includeNarrations: false, includeBookSettings: false })
-  );
+  sessionStorage.setItem("options", JSON.stringify(projData["settings"]));
 
   langOpt = document.getElementById("publicationLanguage");
   if (Object.keys(projData["languages"]).length != 0) {

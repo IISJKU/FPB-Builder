@@ -36,7 +36,7 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("narrationLoaded", result.filePaths);
+          event.reply("narrationLoaded", result.filePaths[0]);
         })
         .catch((err) => {
           console.log(err);
@@ -55,7 +55,8 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("filePath", result.filePaths);
+          result['type']='cover';
+          event.reply("setFilePath", result);
         })
         .catch((err) => {
           console.log(err);
@@ -66,15 +67,9 @@ class ipcMainManager {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
-          filters: [
-            {
-              name: "All Files",
-              extensions: [""],
-            },
-          ],
         })
         .then((result) => {
-          event.reply("filePath", result.filePaths);
+          event.reply("setFilePath", result);
         })
         .catch((err) => {
           console.log(err);
