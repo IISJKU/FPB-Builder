@@ -70,17 +70,11 @@
   text-align: center;
 }
 
-.browseBtn{
-  background-color: #e9ecef00;
-  color: black;
-  float: right;
-}
-
 #contentBoxLabel{
   width: 100%;
 }
 
-.langHeader{
+.header{
   width: 7%;
   min-width: 7%;
 }

@@ -188,7 +188,7 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
 });
 
 // browse button event for xhtml image
-$(document).on("click", "#importImage", function (e) {
+$(document).on("click", ".importImage", function (e) {
   BRIDGE.importImage();
   /*
   let pageID = $("#pageList .list-group-item.active").attr("id");
@@ -214,10 +214,31 @@ $(document).on("click", ".otherFiles", function (e) {
   BRIDGE.otherFiles();
 });
 
+window.BRIDGE.onSetFilePath((value) => {
+  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
+  let pthLength = value['filePaths'][0].length;
+  let imgName = value['filePaths'][0].slice(lastIdx,pthLength);
+  if (value.hasOwnProperty('type') && value['type'] == 'cover'){
+    $("#coverImage").val(imgName);
+    $("#coverImage").attr("data-path", value['filePaths'][0]);
+  }else{
+    $(".otherFiles").val(imgName);
+    $(".otherFiles").attr("data-path", value['filePaths'][0]);
+  }
+});
+
 window.BRIDGE.onImageLoaded((value) => {
+  let lastIdx = value['imageFile'].lastIndexOf("\\") + 1;
+  let pthLength = value['imageFile'].length;
+  let imgName = value['imageFile'].slice(lastIdx,pthLength);
+  $(".importImage").val(imgName);
+  $(".importImage").attr("data-path", value['imageFile']);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-
+  pageDetailsObj[pageID]["name"] = value['imageFile'].slice(lastIdx,value['imageFile'].indexOf("."));
+  if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] !='' || pageDetailsObj[pageID]["name"] != undefined )){
+    $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"])
+  }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
     pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
 
@@ -241,6 +262,11 @@ window.BRIDGE.onImageLoaded((value) => {
 });
 
 window.BRIDGE.onNarrationLoaded((value) => {
+  let lastIdx = value[0].lastIndexOf("\\") + 1;
+  let pthLength =value[0].length;
+  let imgName = value[0].slice(lastIdx,pthLength);
+  $(".narrations").val(imgName);
+  $(".narrations").attr("data-path", value['imageFile']);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID].narration[activeLang] = value[0];
@@ -308,9 +334,9 @@ function createTableBody(tbl, pageId, section) {
     return;
   }
   let pageDetObj = parseSessionData("pageDetails");
-  if (!pageDetObj[pageId] || !pageDetObj[pageId][section]) {
+  if (!pageDetObj[pageId] || !pageDetObj[pageId][section] || Object.keys(pageDetObj[pageId][section]) == 0) {
     pageDetObj[pageId] = emptyPage;
-    newImagesScripts(tbl, tbdy);
+    newImagesScripts(tbl, tbdy, pageId);
     return;
   }
   for (let val in pageDetObj[pageId][section]) {
@@ -318,25 +344,26 @@ function createTableBody(tbl, pageId, section) {
     let th = document.createElement("th");
     th.appendChild(document.createTextNode(val));
     th.setAttribute("scope", "row");
+    th.setAttribute("class", "header");
     tr.appendChild(th);
     let td = document.createElement("td");
-    td.appendChild(document.createTextNode(pageDetObj[pageId][section][val]));
+    //td.appendChild(document.createTextNode(pageDetObj[pageId][section][val]));
     if (section == "imagesScripts") {
-      let browseBtn = document.createElement("button");
-      browseBtn.setAttribute("type", "button");
-      browseBtn.setAttribute("alt", "Browse images and scripts button");
+      let imageInput = document.createElement("input");
+      imageInput.setAttribute("type", "imageInput");
+      imageInput.setAttribute("alt", "Browse images and scripts button");
+      imageInput.setAttribute("placeholder", "Browse");
+      imageInput.setAttribute("title", "XHTML page image");
+      imageInput.value = pageDetObj[pageId][section][val];
       if (pageId == "cover" && val == "Image") {
-        browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
-        browseBtn.setAttribute("id", "coverImage");
+        imageInput.setAttribute("class", "form-control");
+        imageInput.setAttribute("id", "coverImage");
       } else if (val == "Image") {
-        browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
-        browseBtn.setAttribute("id", "importImage");
+        imageInput.setAttribute("class", "form-control importImage");
       } else if (val != "Image") {
-        browseBtn.setAttribute("class", "btn btn-secondary browseBtn otherFiles");
+        imageInput.setAttribute("class", "form-control otherFiles");
       }
-      btnText = document.createTextNode("Browse");
-      browseBtn.appendChild(btnText);
-      td.append(browseBtn);
+      td.append(imageInput);
     }
     tr.appendChild(td);
     tbdy.appendChild(tr);
@@ -358,7 +385,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     let th = document.createElement("th");
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
-    th.setAttribute("class", "langHeader");
+    th.setAttribute("class", "header");
     tr.appendChild(th);
     let td = document.createElement("td");
     let pageDetObj = parseSessionData("pageDetails");
@@ -375,14 +402,15 @@ function createLangRows(tbl, tbdy, pageId, section) {
       textElem.value = colVal;
       td.appendChild(textElem);
     } else if (section == "narration") {
-      td.appendChild(document.createTextNode(colVal));
-      let browseBtn = document.createElement("button");
-      browseBtn.setAttribute("type", "button");
-      browseBtn.setAttribute("alt", "Browse narration button");
-      browseBtn.setAttribute("class", "btn btn-secondary browseBtn narrations");
-      btnText = document.createTextNode("Browse");
-      browseBtn.appendChild(btnText);
-      td.append(browseBtn);
+      //td.appendChild(document.createTextNode(colVal));
+      let narrInput = document.createElement("input");
+      narrInput.setAttribute("type", "narrInput");
+      narrInput.setAttribute("class", "form-control narrations");
+      narrInput.setAttribute("alt", "Browse narration button");
+      narrInput.setAttribute("placeholder", "Browse");
+      narrInput.setAttribute("title", "Browse xHTML image");
+      narrInput.value = colVal;
+      td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");
       textElem.setAttribute("class", "form-control");
@@ -396,21 +424,26 @@ function createLangRows(tbl, tbdy, pageId, section) {
 }
 
 //create images and scripts panel for new pages
-function newImagesScripts(tbl, tbdy) {
+function newImagesScripts(tbl, tbdy, pageID) {
   let tr = document.createElement("tr");
   let th = document.createElement("th");
   th.appendChild(document.createTextNode("Image"));
   th.setAttribute("scope", "row");
+  th.setAttribute("class", "header");
   tr.appendChild(th);
   let td = document.createElement("td");
-  let browseBtn = document.createElement("button");
-  browseBtn.setAttribute("type", "button");
-  browseBtn.setAttribute("alt", "Browse images and scripts button");
-  browseBtn.setAttribute("class", "btn btn-secondary browseBtn");
-  browseBtn.setAttribute("id", "importImage");
-  btnText = document.createTextNode("Browse");
-  browseBtn.appendChild(btnText);
-  td.append(browseBtn);
+  let imageInput = document.createElement("input");
+  imageInput.setAttribute("type", "imageInput");
+  if (pageID == "cover") {
+    imageInput.setAttribute("class", "form-control");
+    imageInput.setAttribute("id", "coverImage");
+  }else{
+    imageInput.setAttribute("class", "form-control importImage");
+  }
+  imageInput.setAttribute("alt", "Browse images and scripts button");
+  imageInput.setAttribute("placeholder", "Browse");
+  imageInput.setAttribute("title", "Browse xHTML image");
+  td.append(imageInput);
   tr.appendChild(td);
   tbdy.appendChild(tr);
   tbl.append(tbdy);
@@ -429,7 +462,6 @@ function saveData() {
     if (pageDetObj[pageId][section] == undefined) {
       pageDetObj[pageId][section] = {};
     }
-
     //Change this later!
     if (attr != "Image") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
   });
@@ -437,7 +469,7 @@ function saveData() {
 }
 
 // save the values when the input element loses the focus
-$(document).on("focusout", "#contentBox input[type='text'],#contentBox textarea", function (e) {
+$(document).on("focusout", "#contentBox input,#contentBox textarea", function (e) {
   if ($(this)) {
     saveData();
   }

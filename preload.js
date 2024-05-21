@@ -51,6 +51,5 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
   onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value) => callback(value)),
+  onSetFilePath: (callback) => ipcRenderer.on("setFilePath", (_event, value) => callback(value)),
 });
-
-ipcRenderer.on("filePath", (_event, arg) => {});
