@@ -10,6 +10,7 @@ $(document).on("change", "#publicationLanguage", function (e) {
 });
 
 $(document).on("change", "#audioNarrations", function (e) {
+  options = sessionStorage.getItem("options");
   options.includeNarrations = !options.includeNarrations;
   sessionStorage.setItem("options", JSON.stringify(options));
 });

@@ -130,6 +130,7 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
   cItem.insertAfter(tItem);
 
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+  fillData();
 });
 
 // page orgnisation up arrow icon event
@@ -150,6 +151,7 @@ $(document).on("click", "#pageList .bi-arrow-up", function (e) {
   cItem.insertBefore(tItem);
 
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+  fillData();
 });
 
 // delete page icon event

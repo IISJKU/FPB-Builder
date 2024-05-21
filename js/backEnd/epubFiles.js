@@ -17,6 +17,7 @@ let publisher = "";
 let copyright = "";
 let description = "";
 let contributors = [];
+let options = [];
 
 let date = new Date().toISOString();
 let dateText = date.substring(0, date.indexOf(".")) + "Z";
@@ -32,6 +33,10 @@ function setMetadata(metadata) {
   dateText = date.substring(0, date.indexOf(".")) + "Z";
   description = metadata.description[language];
   contributors = metadata.contributors;
+}
+
+function setOptions(opt) {
+  options = opt;
 }
 
 function setCover(cover) {
@@ -92,7 +97,12 @@ function createTOC() {
   navLabels = "";
   let i = 0;
 
-  menuItems.forEach((item) => {
+  let mItems = menuItems;
+
+  if(!options.includeInstructions) mItems = mItems.splice(1,1);
+
+  mItems.forEach((item) => {
+    
     let nav =
       '<navPoint id="navPoint' + i + '" playOrder="' + i + '">\n' +
       "<navLabel>\n" +
@@ -472,10 +482,14 @@ function createPageText(obj){
   '          <rect width="10" height="30" x="5" y="-15" fill="black" stroke="none"/>\n' +
   '        </g>\n' +
   '      </g>\n' +
-  '    </svg>\n' +
+  '    </svg>\n'
+
+  if(options.includeNarrations) str = str + 
   '    <audio preload="auto" id="monTexteAudio">\n' +
   '      <source src="../audio/' + audio.substring(audio.lastIndexOf("\\")+1, audio.length) + '" type="audio/mpeg" />\n' +
-  '    </audio>\n' +
+  '    </audio>\n';
+
+  str = str +
   '      <section id="monTexte" class="section-texte ldqr-font-luciole ldqr-font-bold">\n' +
   '       <span epub:type="pagebreak" id="'+ title + '" aria-label="' + title + '" role="doc-pagebreak"></span>\n' +
   '       <div class="texte">'+ processedText + '</div>\n' +
@@ -529,6 +543,7 @@ function createCover(title, cover, altText, audio){
   return str;
 }
 
+exports.setOptions = setOptions;
 exports.setLanguage = setLanguage;
 exports.setCover = setCover;
 exports.createPage00 = createPage00;

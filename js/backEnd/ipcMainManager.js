@@ -105,12 +105,15 @@ class ipcMainManager {
     function dataLoaded(rawData) {
       rawData = JSON.parse(rawData);
 
+      console.log("LOOOOOOOOOOOOOK");
+      console.log(rawData);
+
       EPUBMaker.setDirectory(rawData.options.directory);
       MetadataManager.setLanguages(rawData.languages);
       PageManager.setLanguages(rawData.languages);
 
       MetadataManager.setData(rawData.bookDetails);
-      console.log(rawData.pages);
+
       PageManager.setData(rawData.pages);
 
       //check if stuff is valid!

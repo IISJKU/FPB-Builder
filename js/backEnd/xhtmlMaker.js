@@ -19,6 +19,7 @@ let pages = [];
 
 let cover;
 let credit;
+let options;
 
 let altText = new Map();
 
@@ -31,14 +32,14 @@ function setAltText(pages) {
   });
 }
 
-function initialize(metad, lang, pag) {
+function initialize(metad, lang, pag, opt) {
   spine = [];
   contents = [];
   pages = [];
   fonts = [];
   metadata = metad;
   pages = pag;
-
+  options = opt;
   //remove cover and credit from datastructure ;o
   cover = pages[pages.length - 2];
   credit = pages[pages.length - 1];
@@ -194,6 +195,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   tempFile = "";
   EPUBFileCreator.setLanguage(language);
   EPUBFileCreator.setMetadata(metadata);
+  EPUBFileCreator.setOptions(options);
+
   //import the images needed for the settings / notice
   fileArray = fileArray.concat(pathsToImages(language));
 
@@ -223,9 +226,11 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     fs.copyFileSync(p, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
   });
 
-  //make page 00
-  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
-  spine.push("page00.xhtml");
+  if (options.includeBookSettings) {
+    //make page 00
+    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
+    spine.push("page00.xhtml");
+  }
 
   fileArray.push(coverImage);
   fileArray.push(coverNarration);
@@ -300,13 +305,15 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   });
   tempFile = "";
 
-  //make the notice_toc file
-  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice_toc.xhtml", EPUBFileCreator.createNoticeToc());
-  spine.push("notice_toc.xhtml");
+  if (options.includeInstructions) {
+    //make the notice_toc file
+    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice_toc.xhtml", EPUBFileCreator.createNoticeToc());
+    spine.push("notice_toc.xhtml");
 
-  //make the notice file
-  FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice.xhtml", EPUBFileCreator.createNotice());
-  spine.push("notice.xhtml");
+    //make the notice file
+    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "notice.xhtml", EPUBFileCreator.createNotice());
+    spine.push("notice.xhtml");
+  }
 
   //make the credits
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "credits.xhtml", EPUBFileCreator.createCredits(credit));
