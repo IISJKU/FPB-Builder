@@ -362,7 +362,12 @@ function createTableBody(tbl, pageId, section) {
       imageInput.setAttribute("alt", "Browse images and scripts button");
       imageInput.setAttribute("placeholder", "Browse");
       imageInput.setAttribute("title", "XHTML page image");
-      imageInput.value = pageDetObj[pageId][section][val];
+      let imgPath = pageDetObj[pageId][section][val]
+      let lastIdx = imgPath.lastIndexOf("\\") + 1;
+      let pthLength =imgPath.length;
+      let imgName = imgPath.slice(lastIdx,pthLength);
+      imageInput.value = imgName;
+      imageInput.setAttribute("data-path", imgPath);
       if (pageId == "cover" && val == "Image") {
         imageInput.setAttribute("class", "form-control");
         imageInput.setAttribute("id", "coverImage");
@@ -417,7 +422,11 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("alt", "Browse narration button");
       narrInput.setAttribute("placeholder", "Browse");
       narrInput.setAttribute("title", "Browse xHTML image");
-      narrInput.value = colVal;
+      let lastIdx = colVal.lastIndexOf("\\") + 1;
+      let pthLength = colVal.length;
+      let narrName = colVal.slice(lastIdx,pthLength);
+      narrInput.value = narrName;
+      narrInput.setAttribute("data-path", colVal);
       td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");
@@ -472,6 +481,9 @@ function saveData() {
     }
     //Change this later!
     if (attr != "Image") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+    if (section == 'narration' || section == "imagesScripts"){
+      pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr('data-path');
+    }
   });
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetObj));
 }
