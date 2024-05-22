@@ -322,6 +322,25 @@ function createNotice() {
   return str;
 }
 
+function filterToc(str, argument) {
+  let t = str.split("\n");
+  let open = false;
+  str = "";
+  t.forEach((line) => {
+    if (line.trim() == argument && !open) {
+      open = true;
+    } else if (line.trim() == "<!-- manual -->" && open) {
+      open = false;
+    }
+
+    if (!open) {
+      str = str + line + "\n";
+    }
+  });
+
+  return str;
+}
+
 function createTocXHTML(pages) {
   if (pages.length != 0) {
     let str = "";
@@ -339,6 +358,14 @@ function createTocXHTML(pages) {
     str = str.replaceAll("{pages}", pagesText);
 
     str = str.replaceAll("{firstpage}", pages[0].title + "-txt.xhtml");
+
+    if (!options.includeInstructions) {
+      str = filterToc(str, "<!-- manual -->");
+    }
+
+    if (!options.includeBookSettings) {
+      str = filterToc(str, "<!-- config -->");
+    }
 
     return str;
   }
@@ -461,7 +488,11 @@ function createPageText(obj){
   '  </head>\n' +
   '\n' +
   '  <body class="body">\n' +
-  '    <section class="page" epub:type="chapter" role="doc-chapter">\n' + 
+  '    <section class="page" epub:type="chapter" role="doc-chapter">\n';
+  
+  
+  if(options.includeNarrations) 
+    str = str + 
   '    <svg id="monAudioPlay" version="1.1" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMinYMin meet" viewBox="0 0 50 66" width="100%" height="50" xml:space="preserve">\n' +
   '      <g id="menuHaut" transform="translate(100,29)">\n' +
   '        <g>\n' +
@@ -482,9 +513,7 @@ function createPageText(obj){
   '          <rect width="10" height="30" x="5" y="-15" fill="black" stroke="none"/>\n' +
   '        </g>\n' +
   '      </g>\n' +
-  '    </svg>\n'
-
-  if(options.includeNarrations) str = str + 
+  '    </svg>\n'+
   '    <audio preload="auto" id="monTexteAudio">\n' +
   '      <source src="../audio/' + audio.substring(audio.lastIndexOf("\\")+1, audio.length) + '" type="audio/mpeg" />\n' +
   '    </audio>\n';
