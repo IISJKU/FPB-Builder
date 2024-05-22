@@ -32,8 +32,9 @@
     margin-left: 0px;
 }
 
-.bi-person-wheelchair::before {
+.bi-universal-access-circle::before {
     color: blue;
+    padding-right: 1%;
 }
 
 #selectedBox .bi-plus-square-fill {

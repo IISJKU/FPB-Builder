@@ -177,7 +177,7 @@ function removeBtn() {
     let optionElem = document.createElement("option");
     optionElem.setAttribute("value", itemIntVal);
     if (accessMeta.includes(itemIntVal)) {
-     optionElem.setAttribute("class", "bi bi-person-wheelchair");
+     optionElem.setAttribute("class", "bi bi-universal-access-circle");
       optionElem.setAttribute("data-tokens", metadataText);
     }
     optionElem.appendChild(document.createTextNode(metadataText));
