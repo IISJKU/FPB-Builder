@@ -214,6 +214,7 @@ $(document).on("click", ".otherFiles", function (e) {
 });
 
 window.BRIDGE.onSetPath((value) => {
+  if (value['canceled'] == true) return; 
   let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
   let pthLength = value['filePaths'][0].length;
   let imgName = value['filePaths'][0].slice(lastIdx,pthLength);
@@ -227,6 +228,7 @@ window.BRIDGE.onSetPath((value) => {
 });
 
 window.BRIDGE.onImageLoaded((value) => {
+  if (value['canceled'] == true) return; 
   let lastIdx = value['imageFile'].lastIndexOf("\\") + 1;
   let pthLength = value['imageFile'].length;
   let imgName = value['imageFile'].slice(lastIdx,pthLength);
@@ -238,6 +240,10 @@ window.BRIDGE.onImageLoaded((value) => {
   if (pageID !='cover' && pageID != 'credit'){
     if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] !='' || pageDetailsObj[pageID]["name"] != undefined )){
       $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"])
+        //Create up and down icons to the element
+        let pageElem = document.getElementById(pageID);
+        createIcon(pageElem, "bi bi-arrow-up icons", "Move the page up");
+        createIcon(pageElem, "bi bi-arrow-down icons", "Move the page down");
     }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
@@ -263,6 +269,7 @@ window.BRIDGE.onImageLoaded((value) => {
 });
 
 window.BRIDGE.onNarrationLoaded((value) => {
+  if (value['canceled'] == true) return; 
   let lastIdx = value[0].lastIndexOf("\\") + 1;
   let pthLength =value[0].length;
   let imgName = value[0].slice(lastIdx,pthLength);

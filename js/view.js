@@ -52,11 +52,6 @@ function getSessionElem(item, elem) {
   return SessionDetObj[elem];
 }
 
-// Function to hide the Spinner 
-function hideSpinner() { 
-  document.getElementById('spinner').style.display = 'none'; 
-}  
-
 function resetFields(){
   sessionStorage.clear();
   //sessionStorage.removeItem("bookDetails");
