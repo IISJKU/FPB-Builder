@@ -189,32 +189,31 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
 
 // browse button event for xhtml image
 $(document).on("click", ".importImage", function (e) {
-  BRIDGE.importImage();
-  /*
-  let pageID = $("#pageList .list-group-item.active").attr("id");
-  let sessionPageDet = parseSessionData("pageDetails");
-  sessionPageDet[pageID]["name"] = $("#importImage").value; 
-  sessionStorage.setItem("pageDetails", JSON.stringify(sessionPageDet));*/
+  let path = $(this).data('path');
+  BRIDGE.importImage(path);
 });
 
 let activeLang = "";
 // browse button event for narrations audio
 $(document).on("click", ".narrations", function (e) {
   activeLang = $(this).closest("tr").children("th").text();
-  BRIDGE.narrations();
+  let path = $(this).data('path');
+  BRIDGE.narrations(path);
 });
 
 // browse button event for the cover image
 $(document).on("click", "#coverImage", function (e) {
-  BRIDGE.coverImage();
+  let path = $(this).data('path');
+  BRIDGE.coverImage(path);
 });
 
 // browse button event for the other files
 $(document).on("click", ".otherFiles", function (e) {
-  BRIDGE.otherFiles();
+  let path = $(this).data('path');
+  BRIDGE.otherFiles(path);
 });
 
-window.BRIDGE.onSetFilePath((value) => {
+window.BRIDGE.onSetPath((value) => {
   let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
   let pthLength = value['filePaths'][0].length;
   let imgName = value['filePaths'][0].slice(lastIdx,pthLength);
@@ -236,8 +235,10 @@ window.BRIDGE.onImageLoaded((value) => {
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID]["name"] = value['imageFile'].slice(lastIdx,value['imageFile'].indexOf("."));
-  if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] !='' || pageDetailsObj[pageID]["name"] != undefined )){
-    $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"])
+  if (pageID !='cover' && pageID != 'credit'){
+    if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] !='' || pageDetailsObj[pageID]["name"] != undefined )){
+      $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"])
+    }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
     pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
@@ -266,7 +267,7 @@ window.BRIDGE.onNarrationLoaded((value) => {
   let pthLength =value[0].length;
   let imgName = value[0].slice(lastIdx,pthLength);
   $(".narrations").val(imgName);
-  $(".narrations").attr("data-path", value['imageFile']);
+  $(".narrations").attr("data-path", value[0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID].narration[activeLang] = value[0];

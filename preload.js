@@ -3,16 +3,16 @@ const { ipcRenderer, contextBridge } = require("electron");
 //expose all of these main process functions to the renderer in namespace "BRIDGE"
 contextBridge.exposeInMainWorld("BRIDGE", {
   desktop: true,
-  narrations() {
-    ipcRenderer.send("narrations");
+  narrations(defPath) {
+    ipcRenderer.send("narrations", defPath);
   },
 
-  coverImage() {
-    ipcRenderer.send("coverImage");
+  coverImage(defPath) {
+    ipcRenderer.send("coverImage", defPath);
   },
 
-  otherFiles() {
-    ipcRenderer.send("otherFiles");
+  otherFiles(defPath) {
+    ipcRenderer.send("otherFiles", defPath);
   },
   setFilePath() {
     ipcRenderer.send("selectDirectory");
@@ -29,8 +29,8 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   selectNewPage() {
     ipcRenderer.send("generateEpubs");
   },
-  importImage() {
-    ipcRenderer.send("importImage");
+  importImage(defPath) {
+    ipcRenderer.send("importImage", defPath);
   },
   importDependency() {
     ipcRenderer.send("importDependency");
@@ -51,5 +51,5 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
   onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value) => callback(value)),
-  onSetFilePath: (callback) => ipcRenderer.on("setFilePath", (_event, value) => callback(value)),
+  onSetPath: (callback) => ipcRenderer.on("setPath", (_event, value) => callback(value)),
 });

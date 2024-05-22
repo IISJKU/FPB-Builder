@@ -24,10 +24,11 @@ class ipcMainManager {
           })
       );
     });
-    ipcMain.on("narrations", (event, arg) => {
+    ipcMain.on("narrations", (event, defPath) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
+          defaultPath: defPath,
           filters: [
             {
               name: "Audio",
@@ -36,17 +37,18 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("narrationLoaded", result.filePaths[0]);
+          event.reply("narrationLoaded", result.filePaths);
         })
         .catch((err) => {
           console.log(err);
         });
     });
 
-    ipcMain.on("coverImage", (event, arg) => {
+    ipcMain.on("coverImage", (event, defPath) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
+          defaultPath: defPath,
           filters: [
             {
               name: "Images",
@@ -56,20 +58,21 @@ class ipcMainManager {
         })
         .then((result) => {
           result['type']='cover';
-          event.reply("setFilePath", result);
+          event.reply("setPath", result);
         })
         .catch((err) => {
           console.log(err);
         });
     });
 
-    ipcMain.on("otherFiles", (event, arg) => {
+    ipcMain.on("otherFiles", (event, defPath) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
+          defaultPath: defPath,
         })
         .then((result) => {
-          event.reply("setFilePath", result);
+          event.reply("setPath", result);
         })
         .catch((err) => {
           console.log(err);
@@ -134,10 +137,11 @@ class ipcMainManager {
 
     //Allows you to import a file!#
     //Still testing this out, this will be the one where xhtml gets imported & the file is scanned for imports
-    ipcMain.on("importImage", () => {
+    ipcMain.on("importImage", (event, defPath) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
+          defaultPath: defPath,
           filters: [
             {
               name: "xhtml",
@@ -152,7 +156,7 @@ class ipcMainManager {
     });
 
     //manually import dependency
-    ipcMain.on("importDependency", () => {
+    ipcMain.on("importDependency", (event, arg) => {
       //console.log(JSON.parse(storage.getSync("dependencies")));
       dialog
         .showOpenDialog({
@@ -163,7 +167,7 @@ class ipcMainManager {
         });
     });
 
-    ipcMain.on("selectFont", () => {
+    ipcMain.on("selectFont", (event, arg) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
