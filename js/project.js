@@ -3,6 +3,15 @@ let projects = new Array();
 
 const projectChangedEvent = new CustomEvent("projectChanged");
 
+let o = {
+  directory: "",
+  includeInstructions: false,
+  includeNarrations: false,
+  includeBookSettings: false,
+};
+
+sessionStorage.setItem("options", o);
+
 //prettier-ignore
 function loadProject(name) {
   let project;
@@ -117,7 +126,15 @@ window.BRIDGE.onProjectData((value) => {
   sessionStorage.setItem("projectName", projData["name"]);
   sessionStorage.setItem("bookDetails", JSON.stringify(projData["metadata"]));
   sessionStorage.setItem("pubLang", JSON.stringify(projData["languages"]));
-  sessionStorage.setItem("options", JSON.stringify(projData["settings"]));
+
+  let o = {
+    directory: projData["directory"],
+    includeInstructions: projData["settings"].includes("instructions"),
+    includeNarrations: projData["settings"].includes("audioNarr"),
+    includeBookSettings: projData["settings"].includes("bookSettings"),
+  };
+
+  sessionStorage.setItem("options", JSON.stringify(o));
 
   langOpt = document.getElementById("publicationLanguage");
   if (Object.keys(projData["languages"]).length != 0) {
