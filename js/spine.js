@@ -189,7 +189,7 @@ $(document).on("click", "#pageList .list-group-item", function (e) {
 
 // browse button event for xhtml image
 $(document).on("click", ".importImage", function (e) {
-  let path = $(this).data('path');
+  let path = $(this).data("path");
   BRIDGE.importImage(path);
 });
 
@@ -197,53 +197,53 @@ let activeLang = "";
 // browse button event for narrations audio
 $(document).on("click", ".narrations", function (e) {
   activeLang = $(this).closest("tr").children("th").text();
-  let path = $(this).data('path');
+  let path = $(this).data("path");
   BRIDGE.narrations(path);
 });
 
 // browse button event for the cover image
 $(document).on("click", "#coverImage", function (e) {
-  let path = $(this).data('path');
+  let path = $(this).data("path");
   BRIDGE.coverImage(path);
 });
 
 // browse button event for the other files
 $(document).on("click", ".otherFiles", function (e) {
-  let path = $(this).data('path');
+  let path = $(this).data("path");
   BRIDGE.otherFiles(path);
 });
 
 window.BRIDGE.onSetPath((value) => {
-  if (value['canceled'] == true) return; 
-  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
-  let pthLength = value['filePaths'][0].length;
-  let imgName = value['filePaths'][0].slice(lastIdx,pthLength);
-  if (value.hasOwnProperty('type') && value['type'] == 'cover'){
+  if (value["canceled"] == true) return;
+  let lastIdx = value["filePaths"][0].lastIndexOf("\\") + 1;
+  let pthLength = value["filePaths"][0].length;
+  let imgName = value["filePaths"][0].slice(lastIdx, pthLength);
+  if (value.hasOwnProperty("type") && value["type"] == "cover") {
     $("#coverImage").val(imgName);
-    $("#coverImage").attr("data-path", value['filePaths'][0]);
-  }else{
+    $("#coverImage").attr("data-path", value["filePaths"][0]);
+  } else {
     $(".otherFiles").val(imgName);
-    $(".otherFiles").attr("data-path", value['filePaths'][0]);
+    $(".otherFiles").attr("data-path", value["filePaths"][0]);
   }
 });
 
 window.BRIDGE.onImageLoaded((value) => {
-  if (value['canceled'] == true) return; 
-  let lastIdx = value['imageFile'].lastIndexOf("\\") + 1;
-  let pthLength = value['imageFile'].length;
-  let imgName = value['imageFile'].slice(lastIdx,pthLength);
+  if (value["canceled"] == true) return;
+  let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
+  let pthLength = value["imageFile"].length;
+  let imgName = value["imageFile"].slice(lastIdx, pthLength);
   $(".importImage").val(imgName);
-  $(".importImage").attr("data-path", value['imageFile']);
+  $(".importImage").attr("data-path", value["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID]["name"] = value['imageFile'].slice(lastIdx,value['imageFile'].indexOf("."));
-  if (pageID !='cover' && pageID != 'credit'){
-    if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] !='' || pageDetailsObj[pageID]["name"] != undefined )){
-      $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"])
-        //Create up and down icons to the element
-        let pageElem = document.getElementById(pageID);
-        createIcon(pageElem, "bi bi-arrow-up icons", "Move the page up");
-        createIcon(pageElem, "bi bi-arrow-down icons", "Move the page down");
+  pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
+  if (pageID != "cover" && pageID != "credit") {
+    if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] != "" || pageDetailsObj[pageID]["name"] != undefined)) {
+      $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
+      //Create up and down icons to the element
+      let pageElem = document.getElementById(pageID);
+      createIcon(pageElem, "bi bi-arrow-up icons", "Move the page up");
+      createIcon(pageElem, "bi bi-arrow-down icons", "Move the page down");
     }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
@@ -269,15 +269,16 @@ window.BRIDGE.onImageLoaded((value) => {
 });
 
 window.BRIDGE.onNarrationLoaded((value) => {
-  if (value['canceled'] == true) return; 
+  if (value["canceled"] == true) return;
   let lastIdx = value[0].lastIndexOf("\\") + 1;
-  let pthLength =value[0].length;
-  let imgName = value[0].slice(lastIdx,pthLength);
+  let pthLength = value[0].length;
+  let imgName = value[0].slice(lastIdx, pthLength);
   $(".narrations").val(imgName);
   $(".narrations").attr("data-path", value[0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID].narration[activeLang] = value[0];
+  console.log(pageDetailsObj);
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
@@ -454,7 +455,7 @@ function newImagesScripts(tbl, tbdy, pageID) {
   if (pageID == "cover") {
     imageInput.setAttribute("class", "form-control");
     imageInput.setAttribute("id", "coverImage");
-  }else{
+  } else {
     imageInput.setAttribute("class", "form-control importImage");
   }
   imageInput.setAttribute("alt", "Browse images and scripts button");
