@@ -11,7 +11,7 @@ $(document).on("change", "#publicationLanguage", function (e) {
 
 function getOptions() {
   if (JSON.parse(sessionStorage.getItem("options")) == null) {
-    options = { directory: "", includeInstructions: false, includeNarrations: false, includeBookSettings: false };
+    options = { directory: "", includeInstructions: true, includeNarrations: true, includeBookSettings: true };
     return options;
   } else {
     return JSON.parse(sessionStorage.getItem("options"));
@@ -45,9 +45,9 @@ window.BRIDGE.onDirectorySet((value) => {
   if (options == null || options == undefined) {
     options = {
       directory: "",
-      includeInstructions: false,
-      includeNarrations: false,
-      includeBookSettings: false,
+      includeInstructions: true,
+      includeNarrations: true,
+      includeBookSettings: true,
     };
   }
 

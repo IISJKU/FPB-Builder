@@ -5,9 +5,9 @@ const projectChangedEvent = new CustomEvent("projectChanged");
 
 let o = {
   directory: "",
-  includeInstructions: false,
-  includeNarrations: false,
-  includeBookSettings: false,
+  includeInstructions: true,
+  includeNarrations: true,
+  includeBookSettings: true,
 };
 
 sessionStorage.setItem("options", o);

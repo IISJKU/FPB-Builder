@@ -77,7 +77,6 @@ class FileImporter {
             //
             // TODO: prompt the user to select it!!
             //
-
             if (fs.existsSync(t)) {
               this.importedFiles.push(t);
             } else {
@@ -155,17 +154,17 @@ class FileImporter {
             //check if the file was already imported!
             if (this.dependencyMap.has(shortName)) {
               //already imported
-              dependencyList.found(shortName);
+              dependencyList.found(t);
             } else {
               //if it exists, add it to imported files, if not:
               //let the user manually select it.
               if (fs.existsSync(t)) {
                 this.importedFiles.push(t);
                 this.dependencyMap.set(shortName, t);
-                dependencyList.found(shortName);
+                dependencyList.found(t);
               } else {
                 console.log("didnt find: " + shortName);
-                dependencyList.missing(shortName);
+                dependencyList.missing(t);
                 //prompt user to select it here!
               }
             }
