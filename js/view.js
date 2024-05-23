@@ -142,17 +142,20 @@ function checkRequired(){
   initializeReqFocus();
   var emptyProjFields = formFilter('ProjectForm');
   var emptyMetaFields = formFilter('metaForm');
+  var missDepSpine = $('#spineForm input:required').length;
 
   emptyFields(emptyProjFields, 'project-list');
   emptyFields(emptyMetaFields, 'metadata-list');
+  emptyFields(missDepSpine, 'spine-list');
   
-  if (emptyProjFields != 0 || emptyMetaFields != 0) {
+  if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) {
     error = document.getElementById("error");
     error.innerHTML = '';
     let div = document.createElement("div");
     div.setAttribute("class", "col-md-12");
     let header = document.createElement("h4");
-    header.appendChild(document.createTextNode('Please fill all mandatory fields (highlighted in red)'));
+    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode('Please fill all mandatory fields (highlighted in red)'));
+    if (missDepSpine != 0) header.appendChild(document.createTextNode('Please resolve spine missing dependencies'));
     div.appendChild(header);
     error.appendChild(div);
     $('#error').show();
