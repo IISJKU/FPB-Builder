@@ -142,7 +142,7 @@ function checkRequired(){
   initializeReqFocus();
   var emptyProjFields = formFilter('ProjectForm');
   var emptyMetaFields = formFilter('metaForm');
-  var missDepSpine = $('#spineForm input:required').length;
+  var missDepSpine = $('#spineForm input:required:invalid').length;
 
   emptyFields(emptyProjFields, 'project-list');
   emptyFields(emptyMetaFields, 'metadata-list');
@@ -155,6 +155,7 @@ function checkRequired(){
     div.setAttribute("class", "col-md-12");
     let header = document.createElement("h4");
     if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode('Please fill all mandatory fields (highlighted in red)'));
+    if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) header.appendChild(document.createElement("br"));
     if (missDepSpine != 0) header.appendChild(document.createTextNode('Please resolve spine missing dependencies'));
     div.appendChild(header);
     error.appendChild(div);

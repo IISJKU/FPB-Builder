@@ -149,10 +149,18 @@ window.BRIDGE.onSetPath((value, elemId) => {
     if ($("#"+ elemId).attr("data-missing") == 1){
       $("#"+ elemId).get(0).setCustomValidity('');
       $("#"+ elemId).attr("data-missing", 0);
+      // add the solved dependency to imagesScripts object and delete it from missing object
+      elemKey = $("#"+ elemId).closest('tr').children('th').text();
+      let pageID = $("#pageList .list-group-item.active").attr("id");
+      let parsedDet = parseSessionData("pageDetails");
+      parsedDet[pageID]["imagesScripts"][elemKey] = value["filePaths"][0];
+      delete parsedDet[pageID]["imagesScripts"]['missing'][elemKey];
+      sessionStorage.setItem("pageDetails", JSON.stringify(parsedDet));
     }
   }
 });
 
+// handle on image loaded event
 window.BRIDGE.onImageLoaded((value) => {
   if (value["canceled"] == true) return;
   let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
@@ -193,6 +201,7 @@ window.BRIDGE.onImageLoaded((value) => {
   }
 });
 
+// handle on narration loaded event
 window.BRIDGE.onNarrationLoaded((value, elemId) => {
   if (value["canceled"] == true) return;
   let lastIdx = value[0].lastIndexOf("\\") + 1;
@@ -207,6 +216,7 @@ window.BRIDGE.onNarrationLoaded((value, elemId) => {
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
+// initialize spine page
 function initializeSpine() {
   if (sessionStorage.getItem("pageDetails") == null || sessionStorage.getItem("pageDetails") == "null") {
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetails));
@@ -256,8 +266,43 @@ function fillData() {
     let theadTxt = $(this).children("thead").children("tr").children("th");
     let section = theadTxt.attr("name");
     $(this).find("tbody").html("");
+    if (section =='imagesScripts') clearBody(table, pageId, section);
     createTableBody(table, pageId, section);
   });
+}
+
+// handle clear data of the body of imagesScripts panel
+function clearBody(tbl, pageID, sec){
+    tbdy = tbl.children('tbody');
+    let pageDetObj = parseSessionData("pageDetails");
+    let tr = document.createElement("tr");
+    let th = document.createElement("th");
+    th.appendChild(document.createTextNode("Image"));
+    th.setAttribute("scope", "row");
+    th.setAttribute("class", "header");
+    tr.appendChild(th);
+    let td = document.createElement("td");
+    let imageInput = document.createElement("input");
+    imageInput.setAttribute("type", "imageInput");
+    imageInput.setAttribute("class", "form-control");
+    imageInput.setAttribute("alt", "Browse images and scripts button");
+    imageInput.setAttribute("placeholder", "Browse");
+    imageInput.setAttribute("title", "Browse xHTML image");
+    if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0 ){
+      if (pageDetObj[pageID][sec].hasOwnProperty('Image') && pageDetObj[pageID][sec]['Image'] != undefined && pageDetObj[pageID][sec]['Image'] != ""){
+        imageInput.value = pageDetObj[pageID][sec]['Image'];
+      }
+    }
+    if (pageID == "cover") {
+      imageInput.setAttribute("id", "coverImage");
+    } else {
+      imageInput.setAttribute("id", "importImage");
+    }
+    td.append(imageInput);
+    tr.appendChild(td);
+    tbdy.append(tr);
+    tbl.append(tbdy);
+  
 }
 
 //create body of the table based on the filled data
@@ -273,12 +318,12 @@ function createTableBody(tbl, pageId, section) {
   let pageDetObj = parseSessionData("pageDetails");
   if (!pageDetObj[pageId] || !pageDetObj[pageId][section] || Object.keys(pageDetObj[pageId][section]) == 0) {
     pageDetObj[pageId] = emptyPage;
-    newImagesScripts(tbl, tbdy, pageId);
+    newImagesScripts(pageId);
     return;
   }
   for (let val in pageDetObj[pageId][section]) {
     if (val == "missing"){
-      addMissScripts(pageDetObj[pageId][section][val], pageId);
+      missingDependencies(tbl, tbdy, pageId);
       continue;
     }
     let tr = document.createElement("tr");
@@ -289,24 +334,26 @@ function createTableBody(tbl, pageId, section) {
     tr.appendChild(th);
     let td = document.createElement("td");
     if (section == "imagesScripts") {
-      let imageInput = document.createElement("input");
-      imageInput.setAttribute("type", "imageInput");
-      imageInput.setAttribute("alt", "Browse images and scripts button");
-      imageInput.setAttribute("placeholder", "Browse");
-      imageInput.setAttribute("title", "XHTML page image");
-      imageInput.value = sliceName(pageDetObj[pageId][section][val]);
-      imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
-      imageInput.setAttribute("id", camelCaseStr(val));
       if (pageId == "cover" && val == "Image") {
-        imageInput.setAttribute("class", "form-control");
-        imageInput.setAttribute("id", "coverImage");
+        let coverImg= document.getElementById("coverImage");
+        coverImg.value = sliceName(pageDetObj[pageId][section][val]);
+        continue;
       } else if (val == "Image") {
-        imageInput.setAttribute("class", "form-control");
-        imageInput.setAttribute("id", "importImage");
-      } else if (val != "Image") {
+        let importImg= document.getElementById("importImage");
+        importImg.value = sliceName(pageDetObj[pageId][section][val]);
+        continue;
+      }else if (val != "Image") {
+        let imageInput = document.createElement("input");
+        imageInput.setAttribute("type", "imageInput");
+        imageInput.setAttribute("alt", "Browse images and scripts button");
+        imageInput.setAttribute("placeholder", "Browse");
+        imageInput.setAttribute("title", "XHTML page image");
+        imageInput.value = sliceName(pageDetObj[pageId][section][val]);
+        imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
+        imageInput.setAttribute("id", camelCaseStr(val));
         imageInput.setAttribute("class", "form-control otherFiles");
+        td.append(imageInput);
       }
-      td.append(imageInput);
     }
     tr.appendChild(td);
     tbdy.append(tr);
@@ -367,31 +414,15 @@ function createLangRows(tbl, tbdy, pageId, section) {
   tbl.append(tbdy);
 }
 
-//create images and scripts panel for new pages
-function newImagesScripts(tbl, tbdy, pageID) {
-  let tr = document.createElement("tr");
-  let th = document.createElement("th");
-  th.appendChild(document.createTextNode("Image"));
-  th.setAttribute("scope", "row");
-  th.setAttribute("class", "header");
-  tr.appendChild(th);
-  let td = document.createElement("td");
-  let imageInput = document.createElement("input");
-  imageInput.setAttribute("type", "imageInput");
-  if (pageID == "cover") {
-    imageInput.setAttribute("class", "form-control");
+// handle images and scripts panel for new pages
+function newImagesScripts(pageID) {
+  let imageInput = document.getElementById('importImage');
+  if (pageID == "cover" && document.getElementById('coverImage')== undefined) {
     imageInput.setAttribute("id", "coverImage");
-  } else {
-    imageInput.setAttribute("class", "form-control");
+  } else if (pageID != "cover" && pageID != "credit" && document.getElementById('importImage') == undefined ) {
+    imageInput = document.getElementById('coverImage');
     imageInput.setAttribute("id", "importImage");
   }
-  imageInput.setAttribute("alt", "Browse images and scripts button");
-  imageInput.setAttribute("placeholder", "Browse");
-  imageInput.setAttribute("title", "Browse xHTML image");
-  td.append(imageInput);
-  tr.appendChild(td);
-  tbdy.append(tr);
-  tbl.append(tbdy);
 }
 
 function saveData() {
@@ -407,10 +438,15 @@ function saveData() {
     if (pageDetObj[pageId][section] == undefined) {
       pageDetObj[pageId][section] = {};
     }
+    missingAttr = $(this).children("td").children(0).attr('data-missing');
     //Change this later!
-    if (attr != "Image") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
-    if (section == 'narration' || section == "imagesScripts"){
-      pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr('data-path');
+    if (section != "imagesScripts") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+    if ((section == 'narration' || section == "imagesScripts") && $(this).children("td").children(0).attr('data-path') != undefined){
+      if (missingAttr == '1'){
+        pageDetObj[pageId][section]['missing'][attr] = $(this).children("td").children(0).attr('data-path');
+      }else{
+        pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr('data-path');
+      }
     }
   });
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetObj));
