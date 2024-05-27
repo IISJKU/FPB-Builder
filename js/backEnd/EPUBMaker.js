@@ -42,6 +42,8 @@ function fetchFromFrontend(window, callback) {
 function make(metadata, pages, data) {
   options = data.options;
 
+  XHTMLMaker.initialize(metadata, pages, options);
+
   data.languages.forEach((language) => {
     //this picks the name of the epub, according to how many files are in the folder,
     let dirName = data.dirName + "_" + language;
@@ -61,7 +63,7 @@ function make(metadata, pages, data) {
     fileImporter.printImportedFiles();
     //writes the xhtml files into that new file structure
 
-    XHTMLMaker.initialize(metadata, language, pages, options);
+    XHTMLMaker.setLanguage(language);
     XHTMLMaker.createXHTMLFiles(files, directory, dirName);
     makeEPUB(dirName);
   });

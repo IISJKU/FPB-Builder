@@ -57,7 +57,7 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          result['type']='cover';
+          result["type"] = "cover";
           event.reply("setPath", result);
         })
         .catch((err) => {
@@ -107,9 +107,6 @@ class ipcMainManager {
 
     function dataLoaded(rawData) {
       rawData = JSON.parse(rawData);
-
-      console.log("LOOOOOOOOOOOOOK");
-      console.log(rawData);
 
       EPUBMaker.setDirectory(rawData.options.directory);
       MetadataManager.setLanguages(rawData.languages);

@@ -67,6 +67,7 @@ function MenuItem(name, src) {
 
 let menuItems = [
   new MenuItem("Einstellungen", "xhtml/page00.xhtml#toc-epubtools-22"),
+  new MenuItem("Die Geschichte", "xhtml/page1-txt.xhtml"),
   new MenuItem('Anleitung zu "' + title + '"', "xhtml/notice_toc.xhtml#toc-epubtools-3"),
   new MenuItem("Inhaltsverzeichnis", "xhtml/notice_toc.xhtml#toc-epubtools-16"),
   new MenuItem("Menü", "xhtml/notice.xhtml#toc-epubtools-5"),
@@ -99,10 +100,30 @@ function createTOC() {
 
   let mItems = menuItems;
 
-  if(!options.includeInstructions) mItems = mItems.splice(1,1);
+
+  if(!options.includeInstructions){
+    let t = [];
+    mItems.forEach((item) => {
+        if(!item.src.includes("notice")){
+          t.push(item);
+        }
+     });
+     mItems = t;
+  } 
+
+  
+  if(!options.includeBookSettings){
+    let t = [];
+    mItems.forEach((item) => {
+        if(!item.src.includes("page00")){
+          t.push(item);
+        }
+        
+     });
+     mItems = t;
+  }
 
   mItems.forEach((item) => {
-    
     let nav =
       '<navPoint id="navPoint' + i + '" playOrder="' + i + '">\n' +
       "<navLabel>\n" +
@@ -118,6 +139,21 @@ function createTOC() {
   fileContents = fileContents + "</ncx>\n";
 
   return fileContents;
+}
+
+function makeID(str) {
+  /*
+  if (str.includes(".")) {
+    str = str.substring(0, str.indexOf("."));
+  }
+
+  str = str.replaceAll("-", "");
+  str = str.replaceAll(/[0-9]/g, ""); */
+
+  if (!isNaN(parseInt(str[0]))) {
+    str = "_" + str;
+  }
+  return str;
 }
 
 function createContentFile(files, spineFiles) {
@@ -250,10 +286,10 @@ function createContentFile(files, spineFiles) {
       line = '   <item id="' + name + '" href="fonts/' + name + '" media-type="application/vnd.ms-opentype" />';
     } else if (filename.includes(".mp3")) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
-    } else if (filename.includes(".jpg")) {
-      if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
+    } else if (filename.includes(".jpg") || filename.includes(".jpeg")) {
+      if (filename.includes("/notice")) line = '   <item id="' + makeID(name) + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
       else if (coverImage.includes(name)) {
-        line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
+        line = '   <item id="' + makeID(name) + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
       } else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
     } else if (filename.includes(".png")) {
       if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
@@ -270,7 +306,11 @@ function createContentFile(files, spineFiles) {
   spineFiles.forEach((filename) => {
     let line = "";
     let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+
     let properties = "scripted svg";
+
+    if (filename.includes("-txt.xhtml") && !options.includeNarrations) properties = "scripted";
+
     if (filename == "toc.xhtml") properties = "nav";
     if (filename == "cover.xhtml" || filename == "notice_toc.xhtml") properties = "scripted";
     line =
@@ -299,11 +339,14 @@ function createContentFile(files, spineFiles) {
 }
 
 //this reads page00 from a template,
-function createPage00() {
+function createPage00(firstPageNarration) {
   let str = "";
+
+  firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
 
   str = fs.readFileSync("./js/backEnd/templates/" + language + "/page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
+  str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
 
   return str;
 }
@@ -342,33 +385,34 @@ function filterToc(str, argument) {
 }
 
 function createTocXHTML(pages) {
+  let str = "";
+
+  str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
+
+  str = str.replaceAll("{title}", title);
+
+  pagesText = "";
   if (pages.length != 0) {
-    let str = "";
-
-    str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
-
-    str = str.replaceAll("{title}", title);
-
-    pagesText = "";
-
+    pagesText = pagesText + "<ol>\n";
     pages.forEach((page) => {
       pagesText = pagesText + '<li><a href="' + page.title + "-txt.xhtml#" + page.title + '">' + page.title + "</a></li>\n";
     });
-
-    str = str.replaceAll("{pages}", pagesText);
-
+    pagesText = pagesText + "</ol>\n";
     str = str.replaceAll("{firstpage}", pages[0].title + "-txt.xhtml");
-
-    if (!options.includeInstructions) {
-      str = filterToc(str, "<!-- manual -->");
-    }
-
-    if (!options.includeBookSettings) {
-      str = filterToc(str, "<!-- config -->");
-    }
-
-    return str;
+  } else {
+    str = str.replaceAll("{firstpage}", "");
   }
+  str = str.replaceAll("{pages}", pagesText);
+
+  if (!options.includeInstructions) {
+    str = filterToc(str, "<!-- manual -->");
+  }
+
+  if (!options.includeBookSettings) {
+    str = filterToc(str, "<!-- config -->");
+  }
+
+  return str;
 }
 
 //add the file that displays the credits
@@ -392,40 +436,43 @@ function createCredits(creditPage) {
   ];*/
 
   let ourCredit = {
-    EN: "This EPUB was created with the Flexi Picture EBook Builder, which was developed at the JKU Linz by Danya Gharbieh and Maximilian Punz.",
-    DE: "Dieses EPUB wurde mit dem Flexi Picture EBook Builder erstellt, der an der JKU Linz von Danya Gharbieh und Maximilian Punz entwickelt wurde.",
-    LIT: 'Šis EPUB buvo sukurtas naudojant "Flexi Picture EBook Builder" programą, kurią JKU sukūrė Danya Gharbieh ir Maximilian Punz.',
-    FR: "Cet EPUB a été créé avec le Flexi Picture EBook Builder, développé à la JKU par Danya Gharbieh et Maximilian Punz.",
-    IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz.",
+    EN: "This EPUB was created with the Flexi Picture EBook Builder, which was developed at the JKU Linz by Danya Gharbieh and Maximilian Punz. \n This book also contains scripts developed by Les Doigts Qui Rêvent.",
+    DE: "Dieses EPUB wurde mit dem Flexi Picture EBook Builder erstellt, der an der JKU Linz von Danya Gharbieh und Maximilian Punz entwickelt wurde. \n Dieses Buch enthält Skripte die von Les Doigts Qui Rêvent entwickelt wurden.",
+    LIT: 'Šis EPUB buvo sukurtas naudojant "Flexi Picture EBook Builder" programą, kurią JKU sukūrė Danya Gharbieh ir Maximilian Punz. \n Šioje knygoje taip pat yra scenarijų, kuriuos sukūrė Les Doigts Qui Rêvent.',
+    FR: "Cet EPUB a été créé avec le Flexi Picture EBook Builder, développé à la JKU par Danya Gharbieh et Maximilian Punz. \n Ces livres enthält scénarisent les Doigts Qui Rêvent écrits par les gens. ",
+    IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz. \n Questo libro contiene anche script sviluppati da Les Doigts Qui Rêvent.",
   };
 
-  if (creditPage.text[language] != undefined) {
-    creditPage.text[language] = creditPage.text[language].trim();
-    if (creditPage.text[language].slice(-2) != "\n") {
-      creditPage.text[language] += "\n";
-    }
-
-    creditPage.text[language] = creditPage.text[language] + ourCredit[language];
-    let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
-    let count = 1;
-
-    if (!Array.isArray(creditPage.text[language])) {
-      creditPage.text[language] = creditPage.text[language].split("\n");
-    }
-
-    creditPage.text[language].forEach((credit) => {
-      let t = "";
-      if (count < 10) {
-        t = "0" + count;
-      } else {
-        t = count;
-      }
-      text = text + '        <p class="tsl_sentence' + t + '">' + credit + "</p>\n";
-      count = count + 1;
-    });
-
-    str = str.replaceAll("{credits}", text);
+  if (creditPage.text[language] == undefined) {
+    creditPage.text[language] = "";
   }
+
+  creditPage.text[language] = creditPage.text[language].trim();
+  if (creditPage.text[language].slice(-2) != "\n") {
+    creditPage.text[language] += "\n";
+  }
+
+  creditPage.text[language] = creditPage.text[language] + ourCredit[language];
+  let text = '<p class="isbn">ISBN <span class="tslt_isbn">' + pubISBN + "</span></p>\n";
+  let count = 1;
+
+  if (!Array.isArray(creditPage.text[language])) {
+    creditPage.text[language] = creditPage.text[language].split("\n");
+  }
+
+  creditPage.text[language].forEach((credit) => {
+    let t = "";
+    if (count < 10) {
+      t = "0" + count;
+    } else {
+      t = count;
+    }
+    text = text + '        <p class="tsl_sentence' + t + '">' + credit + "</p>\n";
+    count = count + 1;
+  });
+
+  str = str.replaceAll("{credits}", text);
+
   return str;
 }
 
@@ -555,11 +602,17 @@ function createCover(title, cover, altText, audio){
   '  }\n' +
   '</style>\n' +
   '</head>\n\n' +
-  '<body>\n' +
-  '  <audio preload="auto" id="monTexteAudio">\n' +
-  '    <source src="../audio/' + audio.substring(audio.lastIndexOf("\\") + 1, audio.length) +'" type="audio/mpeg">\n' +
-  '    </source>\n' +
-  '  </audio>\n' +
+  '<body>\n'
+
+
+  if(audio != "" || audio.substring(audio.lastIndexOf("\\") + 1, audio.length) != ""){
+    str =  str + '  <audio preload="auto" id="monTexteAudio">\n' +
+    '    <source src="../audio/' + audio.substring(audio.lastIndexOf("\\") + 1, audio.length) +'" type="audio/mpeg">\n' +
+    '    </source>\n' +
+    '  </audio>\n';
+  }
+
+  str = str +
   '  <div style="text-align: center; height: 100%">\n' +
   '    <img epub:type="cover" role="doc-cover" class="alt_sentence0" src="../images/' + cover.substring(cover.lastIndexOf("\\") + 1, cover.length) + '" alt="' + altText +'" style="max-width: 100%; max-height: 100%" />\n' +
   '  </div>\n' +

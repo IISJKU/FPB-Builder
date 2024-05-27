@@ -28,11 +28,10 @@ function setAltText(pages) {
   altText = new Map();
   pages.forEach((page) => {
     altText.set(page.imagesScripts.Image, page.alt[language]);
-    console.log(language);
   });
 }
 
-function initialize(metad, lang, pag, opt) {
+function initialize(metad, pag, opt) {
   spine = [];
   contents = [];
   pages = [];
@@ -45,47 +44,13 @@ function initialize(metad, lang, pag, opt) {
   credit = pages[pages.length - 1];
   pages.splice(pages.length - 2, 2);
 
-  language = lang;
-  setAltText(pages);
-
   //this is some truely gangster stuff:
   //remove this as soon as there is an alternative lol
-  cover = {
-    text: {
-      EN: "Little Red Riding Hood",
-      IT: "Cappuccetto Rosso",
-    },
-    narration: {
-      EN: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
-      IT: "C:\\Users\\ak127746\\Desktop\\EPUB file exploration\\OEBPS\\audio\\page02.mp3",
-    },
-    imagesScripts: {
-      Image: "C:\\Users\\ak127746\\Pictures\\1513-Rafael-SistineMadonna-Cherubs.jpg",
-      Style: "",
-    },
-    alt: {
-      EN: "Little Red Riding Hood Alt",
-      IT: "Cappuccetto Rosso Alt",
-    },
-  };
+}
 
-  credit = {
-    text: {
-      EN:
-        'Digital illustrated volume from the series <span lang="fr">Les Doigts Qui Rêvent</span> (France)\n' +
-        "Validation: pagina EPUB-Checker version 2.0.6 and Ace by DAISY version 1.1.5\n" +
-        'Digital volume "Ben wants a bat", an ePub3 version of the children\'s book <span lang="fr">"Émile veut une chauve-souris"</span> by <span lang="fr">Vincent Cuvellier</span> and <span lang="fr">Ronan Badel</span>, published by <span lang="fr">Gallimard</span>, France, adapted in text and illustration\n' +
-        '<b class="ldqr-font-bold">Design and production of the adapted illustrations</b> by <span lang="fr">Yuvanoe</span> and <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, France)\n',
-      IT:
-        'Volume digitale illustrato della collana <span lang="fr">Les Doigts Qui Rêvent</span> (Francia)\n' +
-        "Convalida: pagina EPUB-Checker versione 2.0.6 e Ace by DAISY versione 1.1.5\n" +
-        'Volume digitale "Ben wants a bat", versione ePub3 del libro per bambini <span lang="fr">"Émile veut une chauve-souris"</span> di <span lang="fr">Vincent Cuvellier</span> e <span lang="fr">Ronan Badel</span>, pubblicato da <span lang="fr">Gallimard</span>, Francia, adattato nel testo e nelle illustrazioni "Progetto e produzione di illustrazioni adattate".\n' +
-        '<b class="ldqr-font-bold">Progettazione e realizzazione delle illustrazioni adattate</b> di <span lang="fr">Yuvanoe</span> e <span lang="fr">Anaïs Brard</span> (<span lang="fr">Les Doigts Qui Rêvent</span>, Francia)\n',
-    },
-    narration: {},
-    imagesScripts: {},
-    alt: {},
-  };
+function setLanguage(lang) {
+  language = lang;
+  setAltText(pages);
 }
 
 /**
@@ -166,7 +131,9 @@ function rewriteXHTMLFile(filePath) {
         }
       }
 
-      tempFile = tempFile + tempLine + "\n";
+      //i comented this out as an attempt at a bugfix, thats why im leaving it like this
+      //dont know why this fixes it, but it does!
+      //tempFile = tempFile + tempLine + "\n";
     } else if (line.includes("<svg")) {
       ariaSearchActive = true;
     }
@@ -203,9 +170,9 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
 
-  const coverImage = cover.imagesScripts.Image;
+  let coverImage = cover.imagesScripts.Image;
   EPUBFileCreator.setCover(coverImage);
-  const coverNarration = cover.narration[language];
+  let coverNarration = cover.narration[language];
 
   spine = [];
   contents = [];
@@ -228,7 +195,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
   if (options.includeBookSettings) {
     //make page 00
-    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00());
+    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00(pages[0].narration[language]));
     spine.push("page00.xhtml");
   }
 
@@ -276,6 +243,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         contents.push(element);
       } else if (
         element.toLowerCase().includes(".jpg") ||
+        element.toLowerCase().includes(".jpeg") ||
         element.toLowerCase().includes(".svg") ||
         element.toLowerCase().includes(".svg") ||
         element.toLowerCase().includes(".png")
@@ -416,10 +384,13 @@ function pathsToMenuDependencies() {
     "./js/backEnd/imports/colorisation.min.js",
     "./js/backEnd/imports/ldqr_main.min.css",
     "./js/backEnd/imports/colorisation.css",
-    "./js/backEnd/templates/page00_svg.css",
-    "./js/backEnd/templates/page00.min.js",
-    "./js/backEnd/templates/radiobutton.js",
-    "./js/backEnd/templates/radiogroup.js"
+    "./js/backEnd/imports/page00_svg.css",
+    "./js/backEnd/imports/page00.min.js",
+    "./js/backEnd/imports/radiobutton.js",
+    "./js/backEnd/imports/radiogroup.js",
+    "./js/backEnd/imports/ldqr.min.js",
+    "./js/backEnd/imports/localforage.min.js",
+    "./js/backEnd/imports/SVGPanZoom.min.js"
   );
 }
 
@@ -479,4 +450,5 @@ function pathsToImages(language) {
 }
 
 module.exports.initialize = initialize;
+module.exports.setLanguage = setLanguage;
 module.exports.createXHTMLFiles = createXHTMLFiles;
