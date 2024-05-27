@@ -24,7 +24,7 @@ class ipcMainManager {
           })
       );
     });
-    ipcMain.on("narrations", (event, defPath) => {
+    ipcMain.on("narrations", (event, defPath, element) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
@@ -37,7 +37,7 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("narrationLoaded", result.filePaths);
+          event.reply("narrationLoaded", result.filePaths, element);
         })
         .catch((err) => {
           console.log(err);
@@ -65,14 +65,14 @@ class ipcMainManager {
         });
     });
 
-    ipcMain.on("otherFiles", (event, defPath) => {
+    ipcMain.on("otherFiles", (event, defPath, element) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
           defaultPath: defPath,
         })
         .then((result) => {
-          event.reply("setPath", result);
+          event.reply("setPath", result, element);
         })
         .catch((err) => {
           console.log(err);
