@@ -148,4 +148,10 @@ window.BRIDGE.onProjectData((value) => {
       document.getElementById(projData["settings"][j]).checked = true;
     }
   }
+  if (Object.keys(projData["fonts"]).length != 0) {
+    for (let k = 0; k < projData["fonts"].length; k++) {
+      document.getElementById(projData["fonts"][k]).checked = true;
+    }
+  }
+  sessionStorage.setItem("selectedFonts", JSON.stringify(projData["fonts"]));
 });

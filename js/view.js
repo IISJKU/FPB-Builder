@@ -54,9 +54,6 @@ function getSessionElem(item, elem) {
 
 function resetFields(){
   sessionStorage.clear();
-  //sessionStorage.removeItem("bookDetails");
-  //sessionStorage.removeItem("pubLang");
-  //sessionStorage.removeItem("pageDetails");
   document.getElementById('directory').value = '';
   document.getElementById('projName').value =  '';
   langOpt = document.getElementById('publicationLanguage');
@@ -68,6 +65,10 @@ function resetFields(){
     }
   }
   $('#otherSettings input:checked').each(function() {
+    $(this).prop('checked', false);
+  });
+
+  $('#fontList input:checked').each(function() {
     $(this).prop('checked', false);
   });
 }
@@ -95,6 +96,9 @@ function compareData(data) {
   if (!arrEq(langArr, data['languages'])) checkStatus = 0;
   if (Object.keys(data['settings']).length != 0) {
     if (!arrEq(getOthSettings(), data['settings'])) checkStatus = 0;
+  }
+  if (Object.keys(data['fonts']).length != 0) {
+    if (!arrEq(getSelectedFonts(), data['fonts'])) checkStatus = 0;
   }
   return checkStatus;
 };

@@ -8,6 +8,7 @@ class ProjectData {
   languages = [];
   pages = [];
   settings = [];
+  fonts = [];
 
   async fillData(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("bookDetails"))', true).then(async (result) => {
@@ -41,6 +42,13 @@ class ProjectData {
   async getSettings(window){
     await window.webContents.executeJavaScript('getOthSettings()', true).then(async (result) => {
       this.settings = result;
+      await this.getFonts(window);
+    });
+  }
+
+  async getFonts(window){
+    await window.webContents.executeJavaScript('getSelectedFonts()', true).then(async (result) => {
+      this.fonts = result;
       await this.getPages(window);
     });
   }
@@ -59,6 +67,7 @@ class ProjectData {
     this.settings;
     this.metadata;
     this.pages;
+    this.fonts;
   }
 }
 

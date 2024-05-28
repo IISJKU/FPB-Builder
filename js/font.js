@@ -40,17 +40,22 @@ window.BRIDGE.onFontSet((value) => {
 });
 
 function getSelectedFonts(){
+    var selectedFonts = [];
     $(".fontItem:checkbox:checked").each(function () {
         //get label text
         let fontTxt = $(this).parent(0).children(1).text();
         let fontPath = $(this).data('path');
         selectedFonts[fontTxt] = fontPath.replace(/\\/g, '/');
+        selectedFonts.push($(this).attr("id"));
         sessionStorage.setItem("selectedFonts", JSON.stringify(selectedFonts));
     });
+    return selectedFonts;
 }
 
 // handle on change event for the font items checkbox elements
 $(document).on("change", ".fontItem", function (e) {
     getSelectedFonts();
+   if ($(this).is(':checked') == false && $("#selectAll").prop('checked') == true){
+        $("#selectAll").prop('checked', false);
+   }
 });
-  
