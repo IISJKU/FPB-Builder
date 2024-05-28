@@ -85,6 +85,7 @@ class ipcMainManager {
           console.log("File read failed:", err);
           return;
         }
+        EPUBMaker.importScriptsFromJSON(jsonString);
         event.reply("projectData", jsonString);
       });
     });

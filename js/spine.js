@@ -37,7 +37,7 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
 
   let cItem = $(this).closest("a");
   let tItem = cItem.next("a");
-  let tempObj = '';
+  let tempObj = "";
 
   if (tItem.length == 0 || tItem.attr("id") == "plusIcon" || tItem.attr("id") == "credit") {
     //[1] to insert the item after the cover page
@@ -67,7 +67,7 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
 $(document).on("click", "#pageList .bi-arrow-up", function (e) {
   let cItem = $(this).closest("a");
   let tItem = cItem.prev("a");
-  let tempObj = '';
+  let tempObj = "";
   let pageDetailsObj = parseSessionData("pageDetails");
   if (tItem.length == 0 || tItem.attr("id") == "cover") {
     let childrenLength = $(this).closest("div").children().length;
@@ -102,7 +102,7 @@ $(document).on("click", "#deletePage", function (e) {
     $("#pageList .list-group-item.active").prev("a").addClass("active");
     //delete the page element
     $("#pageList #" + elem).remove();
-    $("#contentBox table").each(function () {;
+    $("#contentBox table").each(function () {
       $(this).find("tbody").html("");
     });
     let parsedDet = parseSessionData("pageDetails");
@@ -170,17 +170,23 @@ window.BRIDGE.onSetPath((value, elemId) => {
     $("#coverImage").val(imgName);
     $("#coverImage").attr("data-path", value["filePaths"][0]);
   } else {
-    $("#"+ elemId).val(imgName);
-    $("#"+ elemId).attr("data-path", value["filePaths"][0]);
-    if ($("#"+ elemId).attr("data-missing") == 1){
-      $("#"+ elemId).get(0).setCustomValidity('');
-      $("#"+ elemId).attr("data-missing", 0);
+    $("#" + elemId).val(imgName);
+    $("#" + elemId).attr("data-path", value["filePaths"][0]);
+    if ($("#" + elemId).attr("data-missing") == 1) {
+      $("#" + elemId)
+        .get(0)
+        .setCustomValidity("");
+      $("#" + elemId).attr("data-missing", 0);
       // add the solved dependency to imagesScripts object and delete it from missing object
-      elemKey = $("#"+ elemId).closest('tr').children('th').text();
+      elemKey = $("#" + elemId)
+        .closest("tr")
+        .children("th")
+        .text();
       let pageID = $("#pageList .list-group-item.active").attr("id");
       let parsedDet = parseSessionData("pageDetails");
       parsedDet[pageID]["imagesScripts"][elemKey] = value["filePaths"][0];
-      delete parsedDet[pageID]["imagesScripts"]['missing'][elemKey];
+      delete parsedDet[pageID]["imagesScripts"]["missing"][elemKey];
+      window.BRIDGE.importDependency2(value["filePaths"][0]);
       sessionStorage.setItem("pageDetails", JSON.stringify(parsedDet));
     }
   }
@@ -219,9 +225,9 @@ window.BRIDGE.onImageLoaded((value) => {
         x = x + 1;
       }
       pageDetailsObj[pageID]["imagesScripts"][tag + " " + x] = newarr[i];
-    };
+    }
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
-    let table = $('#contentBox #imagesScripts table');
+    let table = $("#contentBox #imagesScripts table");
     createTableBody(table, pageID, "imagesScripts");
     if (value["missingFiles"]) addMissScripts(value["missingFiles"], pageID);
   }
@@ -233,8 +239,8 @@ window.BRIDGE.onNarrationLoaded((value, elemId) => {
   let lastIdx = value[0].lastIndexOf("\\") + 1;
   let pthLength = value[0].length;
   let imgName = value[0].slice(lastIdx, pthLength);
-  $("#"+ elemId).val(imgName);
-  $("#"+ elemId).attr("data-path", value[0]);
+  $("#" + elemId).val(imgName);
+  $("#" + elemId).attr("data-path", value[0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID].narration[activeLang] = value[0];
@@ -292,50 +298,49 @@ function fillData() {
     let theadTxt = $(this).children("thead").children("tr").children("th");
     let section = theadTxt.attr("name");
     $(this).find("tbody").html("");
-    if (section =='imagesScripts') clearBody(table, pageId, section);
+    if (section == "imagesScripts") clearBody(table, pageId, section);
     createTableBody(table, pageId, section);
   });
 }
 
 // handle clear data of the body of imagesScripts panel
-function clearBody(tbl, pageID, sec){
-    tbdy = tbl.children('tbody');
-    let pageDetObj = parseSessionData("pageDetails");
-    let tr = document.createElement("tr");
-    let th = document.createElement("th");
-    th.appendChild(document.createTextNode("Image"));
-    th.setAttribute("scope", "row");
-    th.setAttribute("class", "header");
-    tr.appendChild(th);
-    let td = document.createElement("td");
-    let imageInput = document.createElement("input");
-    imageInput.setAttribute("type", "imageInput");
-    imageInput.setAttribute("class", "form-control");
-    imageInput.setAttribute("alt", "Browse images and scripts button");
-    imageInput.setAttribute("placeholder", "Browse");
-    imageInput.setAttribute("title", "Browse xHTML image");
-    if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0 ){
-      if (pageDetObj[pageID][sec].hasOwnProperty('Image') && pageDetObj[pageID][sec]['Image'] != undefined && pageDetObj[pageID][sec]['Image'] != ""){
-        imageInput.value = pageDetObj[pageID][sec]['Image'];
-      }
+function clearBody(tbl, pageID, sec) {
+  tbdy = tbl.children("tbody");
+  let pageDetObj = parseSessionData("pageDetails");
+  let tr = document.createElement("tr");
+  let th = document.createElement("th");
+  th.appendChild(document.createTextNode("Image"));
+  th.setAttribute("scope", "row");
+  th.setAttribute("class", "header");
+  tr.appendChild(th);
+  let td = document.createElement("td");
+  let imageInput = document.createElement("input");
+  imageInput.setAttribute("type", "imageInput");
+  imageInput.setAttribute("class", "form-control");
+  imageInput.setAttribute("alt", "Browse images and scripts button");
+  imageInput.setAttribute("placeholder", "Browse");
+  imageInput.setAttribute("title", "Browse xHTML image");
+  if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0) {
+    if (pageDetObj[pageID][sec].hasOwnProperty("Image") && pageDetObj[pageID][sec]["Image"] != undefined && pageDetObj[pageID][sec]["Image"] != "") {
+      imageInput.value = pageDetObj[pageID][sec]["Image"];
     }
-    if (pageID == "cover") {
-      imageInput.setAttribute("id", "coverImage");
-    } else {
-      imageInput.setAttribute("id", "importImage");
-    }
-    td.append(imageInput);
-    tr.appendChild(td);
-    tbdy.append(tr);
-    tbl.append(tbdy);
-  
+  }
+  if (pageID == "cover") {
+    imageInput.setAttribute("id", "coverImage");
+  } else {
+    imageInput.setAttribute("id", "importImage");
+  }
+  td.append(imageInput);
+  tr.appendChild(td);
+  tbdy.append(tr);
+  tbl.append(tbdy);
 }
 
 //create body of the table based on the filled data
 function createTableBody(tbl, pageId, section) {
   let tbdy = document.createElement("tbody");
-  if(tbl.find("tbody").length > 0){
-    tbdy = tbl.children('tbody');
+  if (tbl.find("tbody").length > 0) {
+    tbdy = tbl.children("tbody");
   }
   if (section == "text" || section == "alt" || section == "narration") {
     createLangRows(tbl, tbdy, pageId, section);
@@ -348,7 +353,7 @@ function createTableBody(tbl, pageId, section) {
     return;
   }
   for (let val in pageDetObj[pageId][section]) {
-    if (val == "missing"){
+    if (val == "missing") {
       missingDependencies(tbl, tbdy, pageId);
       continue;
     }
@@ -361,14 +366,14 @@ function createTableBody(tbl, pageId, section) {
     let td = document.createElement("td");
     if (section == "imagesScripts") {
       if (pageId == "cover" && val == "Image") {
-        let coverImg= document.getElementById("coverImage");
+        let coverImg = document.getElementById("coverImage");
         coverImg.value = sliceName(pageDetObj[pageId][section][val]);
         continue;
       } else if (val == "Image") {
-        let importImg= document.getElementById("importImage");
+        let importImg = document.getElementById("importImage");
         importImg.value = sliceName(pageDetObj[pageId][section][val]);
         continue;
-      }else if (val != "Image") {
+      } else if (val != "Image") {
         let imageInput = document.createElement("input");
         imageInput.setAttribute("type", "imageInput");
         imageInput.setAttribute("alt", "Browse images and scripts button");
@@ -424,7 +429,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("alt", "Browse narration button");
       narrInput.setAttribute("placeholder", "Browse");
       narrInput.setAttribute("title", "Browse xHTML image");
-      narrInput.setAttribute("id", langs[i].toLowerCase()+'Narr');
+      narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
       td.append(narrInput);
@@ -442,11 +447,11 @@ function createLangRows(tbl, tbdy, pageId, section) {
 
 // handle images and scripts panel for new pages
 function newImagesScripts(pageID) {
-  let imageInput = document.getElementById('importImage');
-  if (pageID == "cover" && document.getElementById('coverImage')== undefined) {
+  let imageInput = document.getElementById("importImage");
+  if (pageID == "cover" && document.getElementById("coverImage") == undefined) {
     imageInput.setAttribute("id", "coverImage");
-  } else if (pageID != "cover" && pageID != "credit" && document.getElementById('importImage') == undefined ) {
-    imageInput = document.getElementById('coverImage');
+  } else if (pageID != "cover" && pageID != "credit" && document.getElementById("importImage") == undefined) {
+    imageInput = document.getElementById("coverImage");
     imageInput.setAttribute("id", "importImage");
   }
 }
@@ -464,14 +469,14 @@ function saveData() {
     if (pageDetObj[pageId][section] == undefined) {
       pageDetObj[pageId][section] = {};
     }
-    missingAttr = $(this).children("td").children(0).attr('data-missing');
+    missingAttr = $(this).children("td").children(0).attr("data-missing");
     //Change this later!
     if (section != "imagesScripts") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
-    if ((section == 'narration' || section == "imagesScripts") && $(this).children("td").children(0).attr('data-path') != undefined){
-      if (missingAttr == '1'){
-        pageDetObj[pageId][section]['missing'][attr] = $(this).children("td").children(0).attr('data-path');
-      }else{
-        pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr('data-path');
+    if ((section == "narration" || section == "imagesScripts") && $(this).children("td").children(0).attr("data-path") != undefined) {
+      if (missingAttr == "1") {
+        pageDetObj[pageId][section]["missing"][attr] = $(this).children("td").children(0).attr("data-path");
+      } else {
+        pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr("data-path");
       }
     }
   });
@@ -486,18 +491,18 @@ $(document).on("focusout", "#contentBox input,#contentBox textarea", function (e
 });
 
 //slice the given value to extract the file name with it's extenstion
-function sliceName(value){
-  if (value=="") return ""
+function sliceName(value) {
+  if (value == "") return "";
   let lastIdx = value.lastIndexOf("\\") + 1;
-  let pthLength =value.length;
-  let retName = value.slice(lastIdx,pthLength);
-  return retName
+  let pthLength = value.length;
+  let retName = value.slice(lastIdx, pthLength);
+  return retName;
 }
 
-//after the user choose the xhtml image the page name and the page title in the content box  
-function updatePageName(detObj, pageID){
-  if (pageID !='cover' && pageID != 'credit'){
-    if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] !='' || detObj[pageID]["name"] != undefined )){
+//after the user choose the xhtml image the page name and the page title in the content box
+function updatePageName(detObj, pageID) {
+  if (pageID != "cover" && pageID != "credit") {
+    if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       $("#pageList .list-group-item.active").text(detObj[pageID]["name"]);
       let pageLabel = document.getElementById("contentBoxLabel");
       pageLabel.innerText = detObj[pageID]["name"];
@@ -511,17 +516,17 @@ function updatePageName(detObj, pageID){
 }
 
 //sort the given array based on the element extension
-function sortArr(arr){
+function sortArr(arr) {
   let sortedArr = [];
   let jsArr = [];
   let cssArr = [];
   let audioArr = [];
   for (let x = 0; x < arr.length; x++) {
-    if (arr[x].includes(".js")){
+    if (arr[x].includes(".js")) {
       jsArr.push(arr[x]);
-    }else if (arr[x].includes(".css")){
+    } else if (arr[x].includes(".css")) {
       cssArr.push(arr[x]);
-    }else if (arr[x].includes(".mp3" || ".wav")){
+    } else if (arr[x].includes(".mp3" || ".wav")) {
       audioArr.push(arr[x]);
     }
   }
@@ -529,31 +534,31 @@ function sortArr(arr){
   return sortedArr;
 }
 
-function addMissScripts(filesArr, pageID){
+function addMissScripts(filesArr, pageID) {
   let newarr = sortArr(filesArr);
   let detObj = parseSessionData("pageDetails");
-  detObj[pageID]["imagesScripts"]['missing']= {};
+  detObj[pageID]["imagesScripts"]["missing"] = {};
   for (let i = 0; i < newarr.length; i++) {
     let tag = "";
     if (newarr[i].includes(".js")) tag = "Script";
     else if (newarr[i].includes(".mp3" || ".wav")) tag = "Audio";
     else if (newarr[i].includes(".css")) tag = "Style";
     let x = itemNum(tag, detObj[pageID]["imagesScripts"]) + 1;
-    while (detObj[pageID]["imagesScripts"]['missing'][tag + " " + x] != undefined) {
+    while (detObj[pageID]["imagesScripts"]["missing"][tag + " " + x] != undefined) {
       x = x + 1;
     }
-    if (!Object.values(detObj[pageID]["imagesScripts"]['missing']).includes(newarr[i])) detObj[pageID]["imagesScripts"]['missing'][tag + " " + x] = newarr[i];
-  };
+    if (!Object.values(detObj[pageID]["imagesScripts"]["missing"]).includes(newarr[i])) detObj[pageID]["imagesScripts"]["missing"][tag + " " + x] = newarr[i];
+  }
   sessionStorage.setItem("pageDetails", JSON.stringify(detObj));
-  let table = $('#contentBox #imagesScripts table');
-  let body = $('#contentBox #imagesScripts table tbody');
+  let table = $("#contentBox #imagesScripts table");
+  let body = $("#contentBox #imagesScripts table tbody");
   missingDependencies(table, body, pageID);
 }
 
 //create missing dependencies body of the table based on the filled data
 function missingDependencies(tbl, tbdy, pageId) {
   let pageObj = parseSessionData("pageDetails");
-  for (let val in pageObj[pageId]['imagesScripts']['missing']) {
+  for (let val in pageObj[pageId]["imagesScripts"]["missing"]) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
     th.appendChild(document.createTextNode(val));
@@ -571,8 +576,8 @@ function missingDependencies(tbl, tbdy, pageId) {
     imageInput.setAttribute("placeholder", "Browse");
     imageInput.setAttribute("title", "XHTML page image");
     imageInput.setAttribute("id", camelCaseStr(val));
-    imageInput.value = sliceName(pageObj[pageId]['imagesScripts']['missing'][val]);
-    imageInput.setAttribute("data-path", pageObj[pageId]['imagesScripts']['missing'][val]);
+    imageInput.value = sliceName(pageObj[pageId]["imagesScripts"]["missing"][val]);
+    imageInput.setAttribute("data-path", pageObj[pageId]["imagesScripts"]["missing"][val]);
     td.append(imageInput);
     tr.appendChild(td);
     tbdy.append(tr);
@@ -580,21 +585,21 @@ function missingDependencies(tbl, tbdy, pageId) {
   tbl.append(tbdy);
 }
 
-function itemNum(type, arr){
+function itemNum(type, arr) {
   let count = 0;
   for (const key in arr) {
-    if (key.includes(type)) count ++;
+    if (key.includes(type)) count++;
   }
-  return count
+  return count;
 }
 
-function pageSorting(){
+function pageSorting() {
   let dtailsObj = parseSessionData("pageDetails");
   let pagesArr = $("#pageList .list-group-item");
   let oldId;
   let oldObj = parseSessionData("pageDetails");
-  for (let i=1; i < pagesArr.length - 2; i ++){
-    if(pagesArr[i].id == 'credit') return;
+  for (let i = 1; i < pagesArr.length - 2; i++) {
+    if (pagesArr[i].id == "credit") return;
     oldId = pagesArr[i].id;
     pagesArr[i].id = i;
     dtailsObj[i] = oldObj[oldId];

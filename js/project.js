@@ -118,6 +118,7 @@ function closeModal(modalID) {
 
 window.BRIDGE.onProjectData((value) => {
   resetFields();
+
   let projData = JSON.parse(value);
   document.getElementById("directory").value = projData["directory"];
 
