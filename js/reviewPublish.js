@@ -9,7 +9,6 @@ $(document).ready(() => {
     frontendData["pages"] = JSON.parse(sessionStorage.getItem("pageDetails"));
     frontendData["options"] = JSON.parse(sessionStorage.getItem("options"));
     frontendData["dirName"] = dirName;
-    console.log(dirName);
 
     sessionStorage.setItem("frontendData", JSON.stringify(frontendData));
 
@@ -19,4 +18,8 @@ $(document).ready(() => {
 
 $(document).on("change", "#pubFileName", function (e) {
   dirName = $("#pubFileName").val();
+});
+
+window.BRIDGE.onPublishUpdate((value) => {
+  console.log(value);
 });

@@ -5,7 +5,9 @@ const storage = require("electron-json-storage");
 
 class FileImporter {
   importedFiles = [];
+  oldFiles = [];
   images = [];
+  missingDependencies = [];
   dependencyMap = new Map();
 
   constructor() {
@@ -14,6 +16,12 @@ class FileImporter {
 
   printImportedFiles() {
     console.log(this.importedFiles);
+  }
+
+  setFiles() {
+    this.oldFiles = this.importedFiles;
+    console.log("SET FILES");
+    console.log(this.oldFiles);
   }
 
   //checks if xhtml file is an image
@@ -107,6 +115,19 @@ class FileImporter {
     this.dependencyMap.set(name, path);
   }
 
+  //this function gets called, when a dependency has to be manually selected
+  manuallySelectDependency2(path) {
+    let name = path.substring(path.lastIndexOf("\\") + 1, path.length);
+    ////////////////////////////////////////
+    //
+    //  TODO: Maybe do some validation
+    //
+    ////////////////////////////////////////
+    //this.dependencyList.found(name);
+    this.importedFiles.push(path);
+    this.dependencyMap.set(name, path);
+  }
+
   /**
    *  looks through the line-array of the file, and finds the absolute path of the dependencies
    *  saves a list of files to storage, that are
@@ -195,7 +216,12 @@ class FileImporter {
    * @returns An array containing the imported files
    */
   import(pages, lang) {
-    this.importedFiles = [];
+    //this.importedFiles = [];
+
+    //this.importedFiles = [];
+    //this.importedFiles.concat(this.missingDependencies);
+    //console.log(this.importedFiles);
+
     pages.forEach((page) => {
       if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {
         let data = fs.readFileSync(page.imagesScripts.Image, "utf8");
@@ -218,6 +244,9 @@ class FileImporter {
         }
       }
     });
+
+    console.log(this.importedFiles.length);
+
     return this.importedFiles;
   }
 }

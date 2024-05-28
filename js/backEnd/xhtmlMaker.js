@@ -140,7 +140,6 @@ function rewriteXHTMLFile(filePath) {
 
     if (ariaSearchActive && line.includes("aria-label")) {
       ariaSearchActive = false;
-      console.log(altText);
       tempLine =
         line.substring(0, line.indexOf('"', line.indexOf("aria-label")) + 1) + altText.get(filePath) + line.substring(line.lastIndexOf('"'), line.length);
     }
