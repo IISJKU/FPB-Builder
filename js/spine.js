@@ -37,19 +37,29 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
 
   let cItem = $(this).closest("a");
   let tItem = cItem.next("a");
+  let tempObj = '';
 
   if (tItem.length == 0 || tItem.attr("id") == "plusIcon" || tItem.attr("id") == "credit") {
     //[1] to insert the item after the cover page
-    cItem.insertBefore($(this).closest("div").children()[1]);
-    return;
+    let child = $(this).closest("div").children()[1];
+    let tempId = child.id;
+    child.id = cItem.attr("id");
+    cItem.attr("id", tempId);
+    tempObj = pageDetailsObj[child.id];
+    pageDetailsObj[child.id] = pageDetailsObj[cItem.attr("id")];
+    pageDetailsObj[cItem.attr("id")] = tempObj;
+    cItem.insertBefore(child);
   } else {
-    var t = pageDetailsObj[cItem.attr("id")];
-    pageDetailsObj[cItem.attr("id")] = pageDetailsObj[tItem.attr("id")];
-    pageDetailsObj[tItem.attr("id")] = t;
+    let tempId = tItem.attr("id");
+    tItem.attr("id", cItem.attr("id"));
+    cItem.attr("id", tempId);
+    tempObj = pageDetailsObj[tItem.attr("id")];
+    pageDetailsObj[tItem.attr("id")] = pageDetailsObj[cItem.attr("id")];
+    cItem.insertAfter(tItem);
   }
-  cItem.insertAfter(tItem);
-
+  pageDetailsObj[cItem.attr("id")] = tempObj;
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+  pageSorting();
   fillData();
 });
 
@@ -57,20 +67,30 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
 $(document).on("click", "#pageList .bi-arrow-up", function (e) {
   let cItem = $(this).closest("a");
   let tItem = cItem.prev("a");
+  let tempObj = '';
   let pageDetailsObj = parseSessionData("pageDetails");
   if (tItem.length == 0 || tItem.attr("id") == "cover") {
     let childrenLength = $(this).closest("div").children().length;
     //it should be -1 but -3 because of the plus list item and the credit page
-    cItem.insertAfter($(this).closest("div").children()[childrenLength - 3]);
-    return;
+    let child = $(this).closest("div").children()[childrenLength - 3];
+    let tempId = child.id;
+    child.id = cItem.attr("id");
+    cItem.attr("id", tempId);
+    tempObj = pageDetailsObj[child.id];
+    pageDetailsObj[child.id] = pageDetailsObj[cItem.attr("id")];
+    pageDetailsObj[cItem.attr("id")] = tempObj;
+    cItem.insertAfter(child);
   } else {
-    var t = pageDetailsObj[cItem.attr("id")];
-    pageDetailsObj[cItem.attr("id")] = pageDetailsObj[tItem.attr("id")];
-    pageDetailsObj[tItem.attr("id")] = t;
+    let tempId = cItem.attr("id");
+    cItem.attr("id", tItem.attr("id"));
+    tItem.attr("id", tempId);
+    tempObj = pageDetailsObj[tItem.attr("id")];
+    pageDetailsObj[tItem.attr("id")] = pageDetailsObj[cItem.attr("id")];
+    cItem.insertBefore(tItem);
   }
-  cItem.insertBefore(tItem);
-
+  pageDetailsObj[cItem.attr("id")] = tempObj;
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+  pageSorting();
   fillData();
 });
 
@@ -82,6 +102,12 @@ $(document).on("click", "#deletePage", function (e) {
     $("#pageList .list-group-item.active").prev("a").addClass("active");
     //delete the page element
     $("#pageList #" + elem).remove();
+    $("#contentBox table").each(function () {;
+      $(this).find("tbody").html("");
+    });
+    let parsedDet = parseSessionData("pageDetails");
+    delete parsedDet[elem];
+    sessionStorage.setItem("pageDetails", JSON.stringify(parsedDet));
     //update the page details for the activated page
     fillData();
   }
@@ -560,4 +586,18 @@ function itemNum(type, arr){
     if (key.includes(type)) count ++;
   }
   return count
+}
+
+function pageSorting(){
+  let dtailsObj = parseSessionData("pageDetails");
+  let pagesArr = $("#pageList .list-group-item");
+  let oldId;
+  let oldObj = parseSessionData("pageDetails");
+  for (let i=1; i < pagesArr.length - 2; i ++){
+    if(pagesArr[i].id == 'credit') return;
+    oldId = pagesArr[i].id;
+    pagesArr[i].id = i;
+    dtailsObj[i] = oldObj[oldId];
+  }
+  sessionStorage.setItem("pageDetails", JSON.stringify(dtailsObj));
 }
