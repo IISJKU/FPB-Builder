@@ -105,8 +105,11 @@ function manuallySelectDependency2(path) {
   fileImporter.manuallySelectDependency2(path);
 }
 
-function setMetadata() {}
+function importScriptsFromJSON(json) {
+  fileImporter.importScriptsFromJSON(json);
+}
 
+exports.importScriptsFromJSON = importScriptsFromJSON;
 exports.fetchFromFrontend = fetchFromFrontend;
 exports.importImage = importImage;
 exports.manuallySelectDependency = manuallySelectDependency;

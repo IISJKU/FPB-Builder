@@ -124,8 +124,15 @@ class FileImporter {
     //
     ////////////////////////////////////////
     //this.dependencyList.found(name);
-    this.importedFiles.push(path);
+    console.log(path);
+    this.missingDependencies.push(path);
     this.dependencyMap.set(name, path);
+  }
+
+  importScriptsFromJSON(json) {
+    this.missingDependencies = [];
+    let j = JSON.parse(json);
+    console.log(j);
   }
 
   /**
@@ -216,10 +223,8 @@ class FileImporter {
    * @returns An array containing the imported files
    */
   import(pages, lang) {
-    //this.importedFiles = [];
-
-    //this.importedFiles = [];
-    //this.importedFiles.concat(this.missingDependencies);
+    this.importedFiles = [];
+    this.importedFiles = this.importedFiles.concat(this.missingDependencies);
     //console.log(this.importedFiles);
 
     pages.forEach((page) => {
