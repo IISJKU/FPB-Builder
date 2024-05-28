@@ -44,6 +44,8 @@ function make(metadata, pages, data) {
 
   XHTMLMaker.initialize(metadata, pages, options);
 
+  fileImporter.setFiles();
+
   data.languages.forEach((language) => {
     //this picks the name of the epub, according to how many files are in the folder,
     let dirName = data.dirName + "_" + language;
@@ -60,7 +62,7 @@ function make(metadata, pages, data) {
     FileSystemManager.createFileStructure(dirName, directory);
     //import all of the required files!
     let files = fileImporter.import(pages, language);
-    fileImporter.printImportedFiles();
+    //fileImporter.printImportedFiles();
     //writes the xhtml files into that new file structure
 
     XHTMLMaker.setLanguage(language);
@@ -99,11 +101,16 @@ function manuallySelectDependency(path) {
   fileImporter.manuallySelectDependency(path);
 }
 
+function manuallySelectDependency2(path) {
+  fileImporter.manuallySelectDependency2(path);
+}
+
 function setMetadata() {}
 
 exports.fetchFromFrontend = fetchFromFrontend;
 exports.importImage = importImage;
 exports.manuallySelectDependency = manuallySelectDependency;
+exports.manuallySelectDependency2 = manuallySelectDependency2;
 exports.setDirectory = setDirectory;
 exports.makeEPUB = makeEPUB;
 exports.make = make;

@@ -35,6 +35,9 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   importDependency() {
     ipcRenderer.send("importDependency");
   },
+  importDependency2(val) {
+    ipcRenderer.send("importDependency2", val);
+  },
   loadJSON(name) {
     ipcRenderer.send("loadJSON", name);
   },
@@ -49,6 +52,7 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),
   onImageLoaded: (callback) => ipcRenderer.on("imageLoaded", (_event, value) => callback(value)),
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
+  onPublishUpdate: (callback) => ipcRenderer.on("publishUpdate", (_event, value) => callback(value)),
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
   onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value, elementId) => callback(value, elementId)),
   onSetPath: (callback) => ipcRenderer.on("setPath", (_event, value, elementId) => callback(value, elementId)),

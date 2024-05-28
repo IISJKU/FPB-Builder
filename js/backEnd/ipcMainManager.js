@@ -164,6 +164,13 @@ class ipcMainManager {
         });
     });
 
+    //manually import dependency with arguments
+    ipcMain.on("importDependency2", (event, arg) => {
+      //console.log(JSON.parse(storage.getSync("dependencies")));
+
+      EPUBMaker.manuallySelectDependency2(arg);
+    });
+
     ipcMain.on("selectFont", (event, arg) => {
       dialog
         .showOpenDialog({
