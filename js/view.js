@@ -203,9 +203,41 @@ function emptyFields(reqFields, listId){
   }
 }
 
+// return the given string in a camel case form
 function camelCaseStr(str) {
   return str
       .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
       .replace(/\s/g, '')
       .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+}
+
+// returns processed array of translation.csv file
+function translationArr() {
+  var lines = [];
+  fetch("translation.csv")
+  .then((res) => res.text())
+  .then((text) => {
+    var allTextLines = text.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(';');
+    for (var i=1; i<allTextLines.length; i++) {
+      var data = allTextLines[i].split(';');
+      if (data.length == headers.length) {
+          var tarr = {};
+          for (var j=0; j<headers.length; j++) {
+              tarr[headers[j]]= data[j]
+          }
+          lines.push(tarr);
+      }
+    }})
+  .catch((e) => console.error(e));
+  return lines;
+}
+
+// search for value with a property in an array of objects  
+function arrObjSearch(value, prop, arr){
+  for (let i=0; i < myArray.length; i++) {
+      if (arr[i][prop] === value) {
+          return arr[i];
+      }
+  }
 }

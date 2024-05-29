@@ -54,7 +54,7 @@ body {
 }
 
 .logo {
-  width: 100%;
+  width: 78%;
   padding-right: 5px;
   padding-left: 5px;
   bottom: 0px;
@@ -62,7 +62,7 @@ body {
 
 @media (min-width: 1290px) {
   .logo {
-    width: 63%;
+    width: 46%;
   }
 }
 
@@ -70,7 +70,7 @@ body {
   position: absolute;
   align-self: end;
   margin-bottom: 1%;
-  margin-left: 1.5%;
+  margin-left: 2.5%;
   width: 14%;
 }
 
@@ -145,4 +145,15 @@ input:invalid:required {
   50% {
     opacity: 0;
   }
+}
+
+#langGroup{
+  padding-bottom: 10px;
+  padding-top: 10px;
+  /* background: #e3e3e3; */
+  padding-left: 25%;
+}
+
+#appLang{
+  text-align: center;
 }

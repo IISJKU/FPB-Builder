@@ -26,7 +26,21 @@
       </div>
       <div class="row" id="mainRow">
         <div class="col-md-2" id="navColumn" role="navigation">
-          <div id="saveDiv"><button id="saveDataBtn" type="button" onclick="saveDataBtn()" class="btn btn-primary">Save</button></div>
+          <div class="input-group" id="langGroup">
+            <select class="custom-select" id="appLang">
+              <option value="EN" data-tokens="English" selected>English</option>
+              <option value="FR" data-tokens="French">French</option>
+              <option value="IT" data-tokens="Italian">Italian</option>
+              <option value="LIT" data-tokens="Lithuanian">Lithuanian</option>
+              <option value="DE" data-tokens="German">German</option>
+            </select>
+            <!---<div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">Language</button>
+            </div>--->
+          </div>
+          <div id="saveDiv">
+            <button id="saveDataBtn" type="button" onclick="saveDataBtn()" class="btn btn-primary">Save</button>
+          </div>
           <!-- list of tabs -->
           <div class="list-group tab" id="listTab" role="tablist">
             <button
