@@ -40,13 +40,13 @@ window.BRIDGE.onFontSet((value) => {
 });
 
 function getSelectedFonts(){
-    var selectedFonts = [];
+    var selectedFonts = {};
     $(".fontItem:checkbox:checked").each(function () {
         //get label text
         let fontTxt = $(this).parent(0).children(1).text();
         let fontPath = $(this).data('path');
         selectedFonts[fontTxt] = fontPath.replace(/\\/g, '/');
-        selectedFonts.push($(this).attr("id"));
+        //selectedFonts.push($(this).attr("id"));
         sessionStorage.setItem("selectedFonts", JSON.stringify(selectedFonts));
     });
     return selectedFonts;
