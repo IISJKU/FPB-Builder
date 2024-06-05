@@ -173,15 +173,14 @@ window.BRIDGE.onSetPath((value, elemId) => {
     $("#" + elemId).val(imgName);
     $("#" + elemId).attr("data-path", value["filePaths"][0]);
     if ($("#" + elemId).attr("data-missing") == 1) {
-      $("#" + elemId)
-        .get(0)
-        .setCustomValidity("");
+      $("#" + elemId).get(0) .setCustomValidity("");
       $("#" + elemId).attr("data-missing", 0);
       // add the solved dependency to imagesScripts object and delete it from missing object
-      elemKey = $("#" + elemId)
-        .closest("tr")
-        .children("th")
-        .text();
+      elemKey = TranslateToEN($("#" + elemId).closest("tr").children("th").text());
+      if (elemKey.indexOf(' ') != -1 && elemKey.split(' ').length > 1){
+        let spElem = elemKey.split(' ');
+        elemKey = TranslateToEN(spElem[0])+ ' '+ spElem[1];
+      }
       let pageID = $("#pageList .list-group-item.active").attr("id");
       let parsedDet = parseSessionData("pageDetails");
       parsedDet[pageID]["imagesScripts"][elemKey] = value["filePaths"][0];
@@ -208,8 +207,8 @@ window.BRIDGE.onImageLoaded((value) => {
       $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
       //Create up and down icons to the element
       let pageElem = document.getElementById(pageID);
-      createIcon(pageElem, "bi bi-arrow-up icons", "Move the page up");
-      createIcon(pageElem, "bi bi-arrow-down icons", "Move the page down");
+      createIcon(pageElem, "bi bi-arrow-up icons", translateTxt("Move the page up"));
+      createIcon(pageElem, "bi bi-arrow-down icons", translateTxt("Move the page down"));
     }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
@@ -274,11 +273,11 @@ function createPage(id) {
   aElem.setAttribute("href", "#");
   aElem.setAttribute("id", pageLength);
   aElem.setAttribute("class", "list-group-item list-group-item-action");
-  let elemText = document.createTextNode("Page " + pageLength);
+  let elemText = document.createTextNode(translateTxt("Page")+' ' + pageLength);
   aElem.appendChild(elemText);
   //Create up and down icons to the element
-  createIcon(aElem, "bi bi-arrow-up icons", "Move the page up");
-  createIcon(aElem, "bi bi-arrow-down icons", "Move the page down");
+  createIcon(aElem, "bi bi-arrow-up icons", translateTxt("Move the page up"));
+  createIcon(aElem, "bi bi-arrow-down icons", translateTxt("Move the page down"));
   //add new page before the credit page
   pages.insertBefore(aElem, creditPage);
   return pageLength;
@@ -289,9 +288,9 @@ function fillData() {
   let page = $("#pageList .list-group-item.active");
   let pageId = $("#pageList .list-group-item.active").attr("id");
   let pageLabel = document.getElementById("contentBoxLabel");
-  pageLabel.innerText = page.text();
+  pageLabel.innerText = translateTxt(page.text());
   if (pageId != "cover" && pageId != "credit") {
-    createIcon(pageLabel, "bi bi-trash3-fill icons", "delete page", "deletePage");
+    createIcon(pageLabel, "bi bi-trash3-fill icons", translateTxt("delete page"), "deletePage");
   }
   $("#contentBox table").each(function () {
     let table = $(this);
@@ -309,7 +308,7 @@ function clearBody(tbl, pageID, sec) {
   let pageDetObj = parseSessionData("pageDetails");
   let tr = document.createElement("tr");
   let th = document.createElement("th");
-  th.appendChild(document.createTextNode("Image"));
+  th.appendChild(document.createTextNode(translateTxt("Image")));
   th.setAttribute("scope", "row");
   th.setAttribute("class", "header");
   tr.appendChild(th);
@@ -317,9 +316,9 @@ function clearBody(tbl, pageID, sec) {
   let imageInput = document.createElement("input");
   imageInput.setAttribute("type", "imageInput");
   imageInput.setAttribute("class", "form-control");
-  imageInput.setAttribute("alt", "Browse images and scripts button");
-  imageInput.setAttribute("placeholder", "Browse");
-  imageInput.setAttribute("title", "Browse xHTML image");
+  imageInput.setAttribute("alt", translateTxt("Browse images and scripts button"));
+  imageInput.setAttribute("placeholder", translateTxt("Browse"));
+  imageInput.setAttribute("title", translateTxt("Browse XHTML image"));
   if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0) {
     if (pageDetObj[pageID][sec].hasOwnProperty("Image") && pageDetObj[pageID][sec]["Image"] != undefined && pageDetObj[pageID][sec]["Image"] != "") {
       imageInput.value = pageDetObj[pageID][sec]["Image"];
@@ -359,7 +358,12 @@ function createTableBody(tbl, pageId, section) {
     }
     let tr = document.createElement("tr");
     let th = document.createElement("th");
-    th.appendChild(document.createTextNode(val));
+    if (val.indexOf(' ') != -1 && val.split(' ').length > 1){
+      let spVal = val.split(' ');
+      th.appendChild(document.createTextNode(translateTxt(spVal[0])+ ' '+ spVal[1]));
+    }else {
+      th.appendChild(document.createTextNode(translateTxt(val)));
+    }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
     tr.appendChild(th);
@@ -376,9 +380,9 @@ function createTableBody(tbl, pageId, section) {
       } else if (val != "Image") {
         let imageInput = document.createElement("input");
         imageInput.setAttribute("type", "imageInput");
-        imageInput.setAttribute("alt", "Browse images and scripts button");
-        imageInput.setAttribute("placeholder", "Browse");
-        imageInput.setAttribute("title", "XHTML page image");
+        imageInput.setAttribute("alt", translateTxt("Browse scripts button"));
+        imageInput.setAttribute("placeholder", translateTxt("Browse"));
+        imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
         imageInput.value = sliceName(pageDetObj[pageId][section][val]);
         imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
         imageInput.setAttribute("id", camelCaseStr(val));
@@ -426,9 +430,9 @@ function createLangRows(tbl, tbdy, pageId, section) {
       let narrInput = document.createElement("input");
       narrInput.setAttribute("type", "narrInput");
       narrInput.setAttribute("class", "form-control narrations");
-      narrInput.setAttribute("alt", "Browse narration button");
-      narrInput.setAttribute("placeholder", "Browse");
-      narrInput.setAttribute("title", "Browse xHTML image");
+      narrInput.setAttribute("alt", translateTxt("Browse narration button"));
+      narrInput.setAttribute("placeholder", translateTxt('Browse'));
+      narrInput.setAttribute("title", translateTxt("Browse narrations"));
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
@@ -462,7 +466,11 @@ function saveData() {
   $("#contentBox tbody tr").each(function () {
     let theadTxt = $(this).closest("table").children("thead").children("tr").children("th");
     let section = theadTxt.attr("name");
-    let attr = $(this).children("th").text();
+    let attr = TranslateToEN($(this).children("th").text());
+    if (attr.indexOf(' ') != -1 && attr.split(' ').length > 1){
+      let spAttr = attr.split(' ');
+      attr = TranslateToEN(spAttr[0])+ ' '+ spAttr[1];
+    }
     if (pageDetObj[pageId] == undefined) {
       pageDetObj[pageId] = {};
     }
@@ -474,6 +482,7 @@ function saveData() {
     if (section != "imagesScripts") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
     if ((section == "narration" || section == "imagesScripts") && $(this).children("td").children(0).attr("data-path") != undefined) {
       if (missingAttr == "1") {
+        if(pageDetObj[pageId][section]["missing"] == undefined) pageDetObj[pageId][section]["missing"] = {};
         pageDetObj[pageId][section]["missing"][attr] = $(this).children("td").children(0).attr("data-path");
       } else {
         pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr("data-path");
@@ -506,11 +515,11 @@ function updatePageName(detObj, pageID) {
       $("#pageList .list-group-item.active").text(detObj[pageID]["name"]);
       let pageLabel = document.getElementById("contentBoxLabel");
       pageLabel.innerText = detObj[pageID]["name"];
-      createIcon(pageLabel, "bi bi-trash3-fill icons", "delete page", "deletePage");
+      createIcon(pageLabel, "bi bi-trash3-fill icons", translateTxt("delete page"), "deletePage");
       //Create up and down icons to the element
       let pageElem = document.getElementById(pageID);
-      createIcon(pageElem, "bi bi-arrow-up icons", "Move the page up");
-      createIcon(pageElem, "bi bi-arrow-down icons", "Move the page down");
+      createIcon(pageElem, "bi bi-arrow-up icons", translateTxt("Move the page up"));
+      createIcon(pageElem, "bi bi-arrow-down icons", translateTxt("Move the page down"));
     }
   }
 }
@@ -561,20 +570,25 @@ function missingDependencies(tbl, tbdy, pageId) {
   for (let val in pageObj[pageId]["imagesScripts"]["missing"]) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
-    th.appendChild(document.createTextNode(val));
+    if (val.indexOf(' ') != -1 && val.split(' ').length > 1){
+      let spVal = val.split(' ');
+      th.appendChild(document.createTextNode(translateTxt(spVal[0])+ ' '+ spVal[1]));
+    }else {
+      th.appendChild(document.createTextNode(translateTxt(val)));
+    }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
     tr.appendChild(th);
     let td = document.createElement("td");
     let imageInput = document.createElement("input");
     imageInput.setAttribute("type", "imageInput");
-    imageInput.setAttribute("alt", "Browse images and scripts button");
+    imageInput.setAttribute("alt", translateTxt('Browse images and scripts button'));
     imageInput.setAttribute("class", "form-control otherFiles");
     imageInput.required = true;
     imageInput.setCustomValidity("Invalid");
     imageInput.setAttribute("data-missing", 1);
-    imageInput.setAttribute("placeholder", "Browse");
-    imageInput.setAttribute("title", "XHTML page image");
+    imageInput.setAttribute("placeholder", translateTxt('Browse'));
+    imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
     imageInput.setAttribute("id", camelCaseStr(val));
     imageInput.value = sliceName(pageObj[pageId]["imagesScripts"]["missing"][val]);
     imageInput.setAttribute("data-path", pageObj[pageId]["imagesScripts"]["missing"][val]);

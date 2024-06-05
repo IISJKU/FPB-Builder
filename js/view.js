@@ -8,13 +8,16 @@ function changeContent(event, controlledTab) {
 
   $("#tabTitle").text(tabTitle);
 
-  if (tabTitle == "Metadata") {
+  if (tabTitle == translateTxt("Metadata")) {
     $("#publicationLanguage").trigger("change");
     initializeMetadata();
   }
-  if (tabTitle == "Spine") {
+  if (tabTitle == translateTxt("Spine")) {
     $("#publicationLanguage").trigger("change");
     initializeSpine();
+  }
+  if (tabTitle == translateTxt("Fonts")) {
+    initializeFonts();
   }
   if ($("#listTab .tablinks").hasClass("active")) {
     let activeContentId = $("#listTab .tablinks.active").attr("aria-controls");
@@ -24,6 +27,11 @@ function changeContent(event, controlledTab) {
   document.getElementById(controlledTab).style.display = "contents";
   $(event).addClass("active");
 }
+
+// handle on change for the application language
+$(document).on("change", "#appLang", function (e) {
+  translate();
+});
 
 // create icon element with it's attributes
 function createIcon(appendElem, iconClass, alt, elemId) {
@@ -53,7 +61,12 @@ function getSessionElem(item, elem) {
 }
 
 function resetFields(){
-  sessionStorage.clear();
+  sessionStorage.removeItem("bookDetails");
+  sessionStorage.removeItem("pageDetails");
+  sessionStorage.removeItem("pubLang");
+  sessionStorage.removeItem("projectName");
+  sessionStorage.removeItem("selectedFonts");
+  sessionStorage.removeItem("options");
   document.getElementById('directory').value = '';
   document.getElementById('projName').value =  '';
   langOpt = document.getElementById('publicationLanguage');
@@ -158,9 +171,9 @@ function checkRequired(){
     let div = document.createElement("div");
     div.setAttribute("class", "col-md-12");
     let header = document.createElement("h4");
-    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode('Please fill all mandatory fields (highlighted in red)'));
+    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode(translateTxt('Please fill all mandatory fields (highlighted in red)')));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) header.appendChild(document.createElement("br"));
-    if (missDepSpine != 0) header.appendChild(document.createTextNode('Please resolve spine missing dependencies'));
+    if (missDepSpine != 0) header.appendChild(document.createTextNode(translateTxt('Please resolve spine missing dependencies')));
     div.appendChild(header);
     error.appendChild(div);
     $('#error').show();
@@ -171,6 +184,10 @@ function checkRequired(){
 
 //Initialize application tabs when the application finish load event
 function initializeTabs(){
+  translationArr();
+  let appLangOp = document.getElementById("appLang");
+  let appLanValue = appLangOp.options[appLangOp.selectedIndex].value;
+  sessionStorage.setItem("appLanguage", appLanValue);
   $("#publicationLanguage").trigger("change");
   initializeMetadata();
   initializeSpine();
@@ -216,7 +233,7 @@ function translationArr() {
   var lines = [];
   fetch("translation.csv")
   .then((res) => res.text())
-  .then((text) => {
+  .then(async (text) => {
     var allTextLines = text.split(/\r\n|\n/);
     var headers = allTextLines[0].split(';');
     for (var i=1; i<allTextLines.length; i++) {
@@ -228,16 +245,103 @@ function translationArr() {
           }
           lines.push(tarr);
       }
-    }})
+    }
+    await sessionStorage.setItem("translation", JSON.stringify(lines));
+    //translate(lines);
+  })
   .catch((e) => console.error(e));
+  
   return lines;
 }
 
 // search for value with a property in an array of objects  
-function arrObjSearch(value, prop, arr){
-  for (let i=0; i < myArray.length; i++) {
+function arrObjSearch(arr, prop, value){
+  for (let i=0; i < arr.length; i++) {
       if (arr[i][prop] === value) {
           return arr[i];
       }
   }
+}
+
+function translate(){
+  document.getElementById("directory").setAttribute("placeholder",translateTxt('Browse'));
+  document.getElementById("projName").setAttribute("placeholder",translateTxt('Project Name'));
+  transArr = parseSessionData('translation');
+  let appLangOp = document.getElementById("appLang");
+  let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
+  let currLang = sessionStorage.getItem("appLanguage");
+  $('.langTxt').each(function() {
+    let currTxt = $(this).text();
+    let childNd = "";
+    let selValue ="";
+    if ($(this)[0].localName == 'button' && $(this).children()[0]){
+      currTxt = $(this)[0].innerText.trim();
+      childNd = $(this).children();
+      selValue = arrObjSearch(transArr, currLang, currTxt);
+      let transTxt = document.createTextNode(selValue[appLanVal]);
+      $(this).html("");
+      $(this).append(childNd);
+      $(this).append(" ");
+      $(this).append(transTxt);
+      return;
+    } else if ($(this)[0].localName == 'p' && $(this).children()[0]){
+      childNd = $(this).children();
+      $(this).children().remove();
+      currTxt = $(this).text().trim();
+      selValue = arrObjSearch(transArr, currLang, currTxt);
+      let transTxt = document.createTextNode(selValue[appLanVal]);
+      $(this).html("");
+      $(this).append(transTxt);
+      $(this).append(" ");
+      $(this).append(childNd);
+      return;
+    }
+    selValue = arrObjSearch(transArr, currLang, currTxt);
+    if (selValue == undefined || selValue[appLanVal] == undefined) {
+      $(this).text(currTxt);
+    }else{
+      $(this).text(selValue[appLanVal]);
+    }
+    sessionStorage.setItem("appLanguage", appLanVal);
+  });
+}
+
+function translateTxt(currText){
+  if (sessionStorage.getItem("translation") != undefined){
+    transArr = parseSessionData('translation');
+  }else{
+    transArr = translationArr()
+  }
+  if (transArr == null || transArr.length == 0 ) return currText;
+  let appLangOp = document.getElementById("appLang");
+  let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
+  let childElement = '';
+  if (currText.indexOf('<a') != -1 && currText.split('<a').length > 1){
+    let spTxt = currText.split('<a');
+    currText = spTxt[0].trim();
+    childElement = '<a' + spTxt[1];
+  }
+  let result = arrSearch(transArr, currText);
+  if (result == undefined) return currText
+  if (childElement != '') return result[appLanVal]+ ' ' + childElement
+  return result[appLanVal]
+}
+
+// search for value in an array of objects  
+function arrSearch(arr, value){
+  for (let i=0; i < arr.length; i++) {
+    for (let val in  arr[i]) {
+      if (arr[i][val] === value) {
+        return arr[i];
+      }
+    }
+  }
+}
+
+function TranslateToEN(currTxt){
+  transArr = parseSessionData('translation');
+  let appLangOp = sessionStorage.getItem("appLanguage");
+  let res= arrObjSearch(transArr, appLangOp, currTxt)
+  if (res == undefined) return currTxt
+  return res['EN']
 }

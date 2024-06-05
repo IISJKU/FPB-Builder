@@ -58,7 +58,7 @@ class FrontendDataManager {
         break;
       case "Spine":
         break;
-      case "Review & Publish":
+      case "Publish":
         break;
     }
   }

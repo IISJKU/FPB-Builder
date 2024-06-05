@@ -51,7 +51,7 @@ class ipcMainManager {
           defaultPath: defPath,
           filters: [
             {
-              name: "Images",
+              name: "jpg/png/jpeg",
               extensions: ["jpg", "png", "jpeg"],
             },
           ],

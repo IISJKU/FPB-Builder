@@ -26,26 +26,12 @@ const fieldIntMap = {
 };
 
 let bookDetails = {
-  Title: {/*
-    EN: "Hello whats up, this is my incredibly cool book :)",
-    IT: "Cappuccetto Rosso",*/
-  },
-  Identifier: {/*
-    EN: "978-0-5490-2195-4",
-    IT: "978-0-5490-2196-4",*/
-  },
+  Title: {},
+  Identifier: {},
   SourceISBN: "",
   Description: {},
-  Author: {/*
-    1: "Vincentas Élisabeth",
-    2: "Agata Lia",*/
-  },
-  Contributor: {/*
-    1: "Viviano Pierpaolo",
-    2: "Maëlie Celestine",
-    3: "Vincentas Élisabeth",
-    4: "Agata Lia",*/
-  },
+  Author: {},
+  Contributor: {},
   Publisher: {},
   Copyright: "",
   AccessMode: {},
@@ -54,76 +40,80 @@ let bookDetails = {
   AccessibilityHazard: {},
   AccessibilitySummary: {},
   CertifiedBy: {},
-  ConformsTo: {/*
-    1: "Viviano Pierpaolo",
-    2: "Maëlie Celestine",*/
-  },
+  ConformsTo: {},
   PublishingDate: {},
 };
 
-let infoText = "More";
+let infoObj = {};
+
+function setInfoObj(infoText){
 //info panel content object
-let infoObj = {
-  Title:
-    "Represents an instance of a name for the EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
-  Identifier:
-    "Contains an identifier such as a UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
-  Contributor:
-    "Represent the name of a person, organization, etc. that played a secondary role in the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" +
+  return {
+    Title:
+      "Represents an instance of a name for the EPUB publication. <a class='langTxt' target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
+    Identifier:
+      "Contains an identifier such as a UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
+    Contributor:
+      "Represent the name of a person, organisation, etc. that played a secondary role in the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" +
     infoText +
-    "</a>",
-  Author:
-    "Represents the name of a person, organization, etc. responsible for the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-creator'>" +
-    infoText +
-    "</a>",
-  Publisher:
-    "Refer to a publishing company or organization, or to an individual who leads a publishing company. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcmes-optional-def'>" +
-    infoText +
-    "</a>",
-  PublishingDate:
-    "Defines the publication date of the EPUB publication. The publication date is not the same as the last modified date. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-date'>" +
-    infoText +
-    "</a>",
-  Subject:
-    "Identifies the subject of the EPUB publication. The value should be human-readable heading or label, but a code value may used if the subject taxonomy does not provide a separate descriptive label. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcsubject'>" +
-    infoText +
-    "</a>",
-  Type:
-    "Used to indicate that the EPUB publication is of a specialized type (e.g., annotations or a dictionary packaged in EPUB format). <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dctype'>" +
-    infoText +
-    "</a>",
-  AccessMode:
-    "A human sensory perceptual system or cognitive faculty necessary to process or perceive the content (e.g., textual, visual, auditory, tactile). <a target='_blank' href='https://schema.org/accessMode'>" +
-    infoText +
-    "</a>",
-  AccessibilityFeature:
-    "Features and adaptations that contribute to the overall accessibility of the content (e.g., alternative text, extended descriptions, captions). <a target='_blank' href='https://schema.org/accessibilityFeature'>" +
-    infoText +
-    "</a>",
-  AccessibilityHazard:
-    "Any potential hazards that the content presents (e.g., flashing, motion simulation, sound). <a target='_blank' href='https://schema.org/accessibilityHazard'>" +
-    infoText +
-    "</a>",
-  AccessibilitySummary:
-    "A human-readable summary of the accessibility that complements, but does not duplicate, the other discoverability metadata. It also describes any known deficiencies (e.g., lack of extended descriptions, specific hazards). <a target='_blank' href='https://schema.org/accessibilitySummary'>" +
-    infoText +
-    "</a>",
-  AccessModeSufficient:
-    "A set of one or more access modes sufficient to consume the content without significant loss of information. The publication can have more than one set of sufficient access modes for its consumption depending on the types of content it includes. <a target='_blank' href='https://schema.org/accessModeSufficient'>" +
-    infoText +
-    "</a>",
-  ConformsTo:
-    "Identify the accessibility requirements or guidelines the publication follows. <a target='_blank' href='https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/conformsTo/'>" +
-    infoText +
-    "</a>",
-  CertifiedBy:
-    "Identifies a party responsible for the testing and certification of the accessibility of an EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-a11y-11/#certifiedBy'>" +
-    infoText +
-    "</a>",
-};
+      "</a>",
+    Author:
+      "Represents the name of a person/organisation, responsible for the creation of the content. (Authors, Illustrators, etc..). <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-creator'>" +
+      infoText +
+      "</a>",
+    Publisher:
+      "Refers to a publishing company or organisation, or to an individual who leads a publishing company. <a class='langTxt' target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcmes-optional-def'>" +
+      infoText +
+      "</a>",
+    PublishingDate:
+      "Defines the publication date of the EPUB. The publication date is not the same as the last modified date. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-date'>" +
+      infoText +
+      "</a>",
+    Subject:
+      "Identifies the subject of the EPUB publication. The value should be human-readable heading or label, but a code value may used if the subject taxonomy does not provide a separate descriptive label. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcsubject'>" +
+      infoText +
+      "</a>",
+    Type:
+      "Used to indicate that the EPUB publication is of a specialized type (e.g., annotations or a dictionary packaged in EPUB format). <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dctype'>" +
+      infoText +
+      "</a>",
+    AccessMode:
+      "A human sensory perceptual system or cognitive faculty necessary to process or perceive the content (e.g. textual, visual, auditory, tactile). <a target='_blank' href='https://schema.org/accessMode'>" +
+      infoText +
+      "</a>",
+    AccessibilityFeature:
+      "Features and adaptations that contribute to the overall accessibility of the content (e.g. alternative text, extended descriptions, captions). <a target='_blank' href='https://schema.org/accessibilityFeature'>" +
+      infoText +
+      "</a>",
+    AccessibilityHazard:
+      "Any potential hazards that the content presents (e.g. flashing, motion simulation, sound). <a target='_blank' href='https://schema.org/accessibilityHazard'>" +
+      infoText +
+      "</a>",
+    AccessibilitySummary:
+      "A human-readable summary of accessibility that complements, but does not duplicate the other discoverabilty metadata. It also describes any know deficiencies (e.g. lack of extended descriptions, specific hazards). <a target='_blank' href='https://schema.org/accessibilitySummary'>" +
+      infoText +
+      "</a>",
+    AccessModeSufficient:
+      "A set of one or more access modes sufficient to consume the content without significant loss of information. The publication can have more than one set of sufficient access modes for its consumption depending on the types of content it includes. <a target='_blank' href='https://schema.org/accessModeSufficient'>" +
+      infoText +
+      "</a>",
+    ConformsTo:
+      "Identify the accessibility requirements or guidelines the publication follows. <a target='_blank' href='https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/conformsTo/'>" +
+      infoText +
+      "</a>",
+    CertifiedBy:
+      "Identifies a party responsible for the testing and certification of the accessibility of an EPUB publication. <a target='_blank' href='https://www.w3.org/TR/epub-a11y-11/#certifiedBy'>" +
+      infoText +
+      "</a>",
+  };
+}
 
 // initialize metadata screen data
 function initializeMetadata() {
+  if (sessionStorage.getItem("translation") != undefined){
+    moreTxt = translateTxt("More");
+    infoObj = setInfoObj(moreTxt);
+  }
   if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == "null" ){
     sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   }
@@ -176,8 +166,9 @@ function removeBtn() {
     let metadataText = $("#selectedBox #"+itemIntVal+'>table>thead').text();
     let optionElem = document.createElement("option");
     optionElem.setAttribute("value", itemIntVal);
+    optionElem.setAttribute("class", "langTxt");
     if (accessMeta.includes(itemIntVal)) {
-     optionElem.setAttribute("class", "bi bi-universal-access-circle");
+      optionElem.setAttribute("class", "bi bi-universal-access-circle langTxt");
       optionElem.setAttribute("data-tokens", metadataText);
     }
     optionElem.appendChild(document.createTextNode(metadataText));
@@ -277,8 +268,9 @@ function tableHeader(tbl, tableTitle, aElemVal) {
   let thdth = document.createElement("th");
   thdth.setAttribute("scope", "col");
   thdth.setAttribute("colspan", "2");
+  thdth.setAttribute("class", "langTxt");
   if (reqMeta.includes(aElemVal)) {
-    thdth.setAttribute("class", "required");
+    thdth.setAttribute("class", "required langTxt");
   }
   thdthText = document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
@@ -316,7 +308,7 @@ function liElement(tbl, tableVal, elemID) {
 
 // handle on click for the added metadata list elements
 $(document).on("click", "#selectedBox .list-group-item", function (e) {
-  document.getElementById("metadataInfo").innerHTML = infoObj[e.currentTarget.id];
+  document.getElementById("metadataInfo").innerHTML = translateTxt(infoObj[e.currentTarget.id]);
 });
 
 // handle on click for the trash icon
@@ -453,7 +445,7 @@ function updateInfo() {
   if (selectedOpts.length == 0) {
     return;
   }
-  document.getElementById("metadataInfo").innerHTML = infoObj[selectedOpts.val()];
+  document.getElementById("metadataInfo").innerHTML = translateTxt(infoObj[selectedOpts.val()]);
 }
 
   // add access summary and access mode sufficient to the required  and added meta list if they are not exist

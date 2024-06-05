@@ -3,35 +3,35 @@
     <div class="col-md-6" id="metadataColumn">
       <div class="row">
         <div class="col-md-8">
-          <label for="itemBox">Available metadata</label>
+          <label for="itemBox" class="langTxt">Available Metadata</label>
           <select onchange="updateInfo()" id="itemBox" multiple="multiple" class="form-control" size="13">
-            <option value="Contributor" data-tokens="contributor">Contributor</option>
-            <option value="Author" data-tokens="Author">Creator</option>
-            <option value="Publisher" data-tokens="Publisher">Publisher</option>
-            <option value="PublishingDate" data-tokens="Publishing date">Publishing Date</option>
-            <option class="bi bi-universal-access-circle" value="AccessMode" data-tokens="Mode">Mode</option>
-            <option class="bi bi-universal-access-circle" value="AccessibilityFeature" data-tokens="Feature">Feature</option>
-            <option class="bi bi-universal-access-circle" value="AccessibilityHazard" data-tokens="Hazard">Hazard</option>
-            <option class="bi bi-universal-access-circle" value="AccessibilitySummary" data-tokens="Summary">Summary</option>
-            <option class="bi bi-universal-access-circle" value="AccessModeSufficient" data-tokens="Mode Sufficient">Mode Sufficient</option>
-            <option class="bi bi-universal-access-circle" value="ConformsTo" data-tokens="Conforms to">Conforms To</option>
-            <option class="bi bi-universal-access-circle" value="CertifiedBy" data-tokens="Certified by">Certified By</option>
+            <option class="langTxt" value="Contributor" data-tokens="contributor">Contributor</option>
+            <option class="langTxt" value="Author" data-tokens="Author">Creator</option>
+            <option class="langTxt" value="Publisher" data-tokens="Publisher">Publisher</option>
+            <option class="langTxt" value="PublishingDate" data-tokens="Publishing date">Publishing Date</option>
+            <option class="bi bi-universal-access-circle langTxt" value="AccessMode" data-tokens="Mode">Mode</option>
+            <option class="bi bi-universal-access-circle langTxt" value="AccessibilityFeature" data-tokens="Feature">Feature</option>
+            <option class="bi bi-universal-access-circle langTxt" value="AccessibilityHazard" data-tokens="Hazard">Hazard</option>
+            <option class="bi bi-universal-access-circle langTxt" value="AccessibilitySummary" data-tokens="Summary">Summary</option>
+            <option class="bi bi-universal-access-circle langTxt" value="AccessModeSufficient" data-tokens="Mode Sufficient">Mode Sufficient</option>
+            <option class="bi bi-universal-access-circle langTxt" value="ConformsTo" data-tokens="Conforms to">Conforms To</option>
+            <option class="bi bi-universal-access-circle langTxt" value="CertifiedBy" data-tokens="Certified by">Certified By</option>
           </select>
         </div>
         <div class="col-md-4 btnColumn">
-          <button type="button" class="btn btn-block btn-primary" id="addBtn" onclick="window.addBtn()" alt="Add button">Add >> </button>
-          <button type="button" class="btn btn-block btn-primary" id="removeBtn" onclick="window.removeBtn()" alt="Remove button"><< Remove</button>
+          <button type="button" class="btn btn-block btn-primary langTxt" id="addBtn" onclick="window.addBtn()" alt="Add button">Add >> </button>
+          <button type="button" class="btn btn-block btn-primary langTxt" id="removeBtn" onclick="window.removeBtn()" alt="Remove button"><< Remove</button>
         </div>
         <div class="col-md-12">
           <div class="form-group mb-3">
-            <label for="metadataInfo">Info</label>
+            <label for="metadataInfo" class="langTxt">Info</label>
             <div class="form-control" id="metadataInfo" rows="3"></div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-6" id="selectedBoxColumn">
-      <label for="selectedBox">Added metadata</label>
+      <label class="langTxt" for="selectedBox">Added Metadata</label>
       <div class="list-group" id="selectedBox"></div>
     </div>
   </div>

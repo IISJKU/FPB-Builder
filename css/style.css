@@ -107,11 +107,6 @@ body {
   padding-left: 7px;
 }
 
-.summDet {
-  margin-left: 25px;
-  margin-bottom: 0px;
-}
-
 #saveDiv{
   padding-bottom: 10px;
   padding-top: 10px;
@@ -156,4 +151,9 @@ input:invalid:required {
 
 #appLang{
   text-align: center;
+}
+
+.tablinks{
+  padding-right: 0px;
+  padding-left: 10px;
 }
