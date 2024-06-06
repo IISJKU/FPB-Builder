@@ -117,8 +117,8 @@ function initializeMetadata() {
   if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == "null" ){
     sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   }
-  createTable("Title", "selectedBox", "Title");
-  createTable("Identifier", "selectedBox", "Identifier");
+  createTable(translateTxt("Title"), "selectedBox", "Title");
+  createTable(translateTxt("Identifier"), "selectedBox", "Identifier");
   displayMetadataContent()
   updateAddedList(0, 1);
 }
@@ -184,6 +184,9 @@ function removeBtn() {
 //langChange is a flag indicates that the function called from publication languages on change so we can update metadata that depends on the language change
 function createTable(tableTitle, elemID, itemVal, langChange) {
   let bookDetObj = parseSessionData("bookDetails");
+  if (bookDetObj == null){
+    initializeMetadata();
+  } 
   // check if the table is not exist and doesn't have values
   if (checkAddedList(itemVal) != 1 && Object.keys(bookDetObj[itemVal]).length == 0) {
     createNewTable(tableTitle, elemID, itemVal);
@@ -429,7 +432,7 @@ function updateAddedList(langChange, multipleUp) {
       }
       let elementId = $(this).closest("li").attr("id");
       $("#" + elementId).remove();
-      createTable(currtitle, "selectedBox", elementId, langChange);
+      createTable(translateTxt(currtitle), "selectedBox", elementId, langChange);
     }
   });
 }
@@ -468,8 +471,8 @@ function checkSelectedAccess(itemVal){
         accessExist = 1;
         return accessExist;
       }else{
-        enableReqAccess("AccessibilitySummary")
-        enableReqAccess("AccessModeSufficient")
+        enableReqAccess("AccessibilitySummary");
+        enableReqAccess("AccessModeSufficient");
       }
     }
   }
@@ -487,9 +490,9 @@ function removeArrayItem(arr, value) {
 
 // add checkbox to the element, remove it from required array and remove required attributes 
 function enableReqAccess(Item){
-  removeArrayItem(reqMeta, Item)
-  $("#selectedBox #"+Item+">table>tbody>tr>td>input").removeAttr('required')
-  $("#selectedBox #"+Item+">table>thead>tr>th").removeClass('required')
+  removeArrayItem(reqMeta, Item);
+  $("#selectedBox #"+Item+">table>tbody>tr>td>input").removeAttr('required');
+  $("#selectedBox #"+Item+">table>thead>tr>th").removeClass('required');
   let liInput = document.createElement("input");
   liInput.setAttribute("type", "checkbox");
   liInput.setAttribute("name", Item);

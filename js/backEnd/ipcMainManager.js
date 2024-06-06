@@ -187,6 +187,9 @@ class ipcMainManager {
           this.window.webContents.send("fontSet", value.filePaths[0]);
         });
     });
+    ipcMain.on("saveSettings", (event, lang) => {
+      shared.saveSettings(lang);
+    });
   }
 }
 

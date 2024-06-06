@@ -47,6 +47,9 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   setFontPath() {
     ipcRenderer.send("selectFont");
   },
+  saveSettings(lang) {
+    ipcRenderer.send("saveSettings", lang);
+  },
   onDirectorySet: (callback) => ipcRenderer.on("directorySet", (_event, value) => callback(value)),
   //openFile: () => ipcRenderer.invoke("dialog:openFile"),
   onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),
@@ -56,4 +59,5 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
   onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value, elementId) => callback(value, elementId)),
   onSetPath: (callback) => ipcRenderer.on("setPath", (_event, value, elementId) => callback(value, elementId)),
+  onSetAppSettings: (callback) => ipcRenderer.on("setAppSettings", (_event, value) => callback(value)),
 });

@@ -18,18 +18,29 @@ async function writeData(window, closeApp){
       return;
     }
   });
-  }
+}
   
 // get the project name value and save the data
 function saveData(window){
-    window.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
-      if (name == undefined || name == 'undefined' || name == ''){
-        return;
-      }else{
-        writeData(window)
-      }
-    });
+  window.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
+    if (name == undefined || name == 'undefined' || name == ''){
+      return;
+    }else{
+      writeData(window)
+    }
+  });
+}
+
+// write the application settings in a json file to "AppData\Roaming\fpb-builder\projects" path
+function saveSettings(selLang){
+  let settings = {appLanguage: selLang};
+  let dir = app.getPath("userData") + "\\projects\\";
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  fs.writeFileSync(dir + "appSettings.json", JSON.stringify(settings));    
 }
 
 exports.writeData = writeData;
 exports.saveData = saveData;
+exports.saveSettings = saveSettings;

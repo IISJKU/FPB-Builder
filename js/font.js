@@ -2,7 +2,9 @@ let selectedFonts = {}
 
 // initialize metadata screen data
 function initializeFonts() {
-    $("#selectAll").trigger('click');
+    if($("#selectAll").prop('checked') == false){
+        $("#selectAll").trigger('click');
+    }
 }
 
 $(document).on("click", "#selectAll", function (e) {

@@ -101,14 +101,16 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.webContents.on("did-finish-load", () => {
     //load recent projects list
     mainWindow.webContents.send("recentProjectsLoaded", loadRecentProjects());
     //clear session storage
-    mainWindow.webContents.executeJavaScript("sessionStorage.clear()", true);
+    mainWindow.webContents.executeJavaScript("rmSessionItem()", true);
     // initialize tabs
     mainWindow.webContents.executeJavaScript("initializeTabs()", true);
+    //load app settings
+    mainWindow.webContents.send("setAppSettings", loadAppSettings());
   });
 };
 
@@ -136,4 +138,15 @@ function loadRecentProjects() {
 
   //projects.toString()
   return loadedProjects;
+}
+
+function loadAppSettings() {
+  if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
+    fs.mkdirSync(app.getPath("userData") + "\\projects");
+  } 
+  if (!fs.existsSync(app.getPath("userData") + "\\projects\\appSettings.json")) {
+    return null;
+  }
+  let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\appSettings.json", { encoding: "utf8" }))
+  return appSett;
 }
