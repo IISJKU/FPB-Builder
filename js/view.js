@@ -16,10 +16,9 @@ function changeContent(event, controlledTab) {
     $("#publicationLanguage").trigger("change");
     initializeSpine();
   }
-  /*
   if (tabTitle == translateTxt("Fonts")) {
     initializeFonts();
-  }*/
+  }
   if ($("#listTab .tablinks").hasClass("active")) {
     let activeContentId = $("#listTab .tablinks.active").attr("aria-controls");
     document.getElementById(activeContentId).style.display = "none";
@@ -134,7 +133,6 @@ function objEqCheck(object1, object2) {
   if (keys1.length !== keys2.length) {
     return false;
   }
-
   for (const key of keys1) {
     const val1 = object1[key];
     const val2 = object2[key];
@@ -143,7 +141,6 @@ function objEqCheck(object1, object2) {
       return false;
     }
   }
-
   return true;
 }
 
@@ -174,8 +171,7 @@ function checkRequired() {
     let div = document.createElement("div");
     div.setAttribute("class", "col-md-12");
     let header = document.createElement("h4");
-    if (emptyProjFields != 0 || emptyMetaFields != 0)
-      header.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
+    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) header.appendChild(document.createElement("br"));
     if (missDepSpine != 0) header.appendChild(document.createTextNode(translateTxt("Please resolve spine missing dependencies")));
     div.appendChild(header);
@@ -226,13 +222,9 @@ function emptyFields(reqFields, listId) {
 // return the given string in a camel case form
 function camelCaseStr(str) {
   return str
-    .replace(/\s(.)/g, function ($1) {
-      return $1.toUpperCase();
-    })
+    .replace(/\s(.)/g, function ($1) {return $1.toUpperCase();})
     .replace(/\s/g, "")
-    .replace(/^(.)/, function ($1) {
-      return $1.toLowerCase();
-    });
+    .replace(/^(.)/, function ($1) { return $1.toLowerCase();});
 }
 
 // returns processed array of translation.csv file
@@ -257,7 +249,6 @@ function translationArr() {
       //translate(lines);
     })
     .catch((e) => console.error(e));
-
   return lines;
 }
 
