@@ -124,15 +124,26 @@ class FileImporter {
     //
     ////////////////////////////////////////
     //this.dependencyList.found(name);
+
     console.log(path);
-    this.missingDependencies.push(path);
-    this.dependencyMap.set(name, path);
+
+    if (!this.missingDependencies.includes(path)) {
+      this.missingDependencies.push(path);
+      this.dependencyMap.set(name, path);
+    }
   }
 
   importScriptsFromJSON(json) {
     this.missingDependencies = [];
-    let j = JSON.parse(json);
-    console.log(j);
+    let j = JSON.parse(json)["pages"];
+
+    for (let [key, value] of Object.entries(j)) {
+      for (let [key2, path] of Object.entries(value["imagesScripts"])) {
+        if (!this.missingDependencies.includes(path) && typeof path == "string") {
+          if (!path.includes(".xhtml")) this.missingDependencies.push(path);
+        }
+      }
+    }
   }
 
   /**
@@ -225,7 +236,6 @@ class FileImporter {
   import(pages, lang) {
     this.importedFiles = [];
     this.importedFiles = this.importedFiles.concat(this.missingDependencies);
-    //console.log(this.importedFiles);
 
     pages.forEach((page) => {
       if (page.title != ("credit" || "cover") && fs.existsSync(page.imagesScripts.Image)) {

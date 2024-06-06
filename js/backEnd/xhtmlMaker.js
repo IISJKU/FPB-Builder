@@ -7,7 +7,7 @@ const relativePaths = new Array();
 let fonts = new Array();
 
 const fs = require("fs");
-const { forEach } = require("jszip");
+const { forEach, file } = require("jszip");
 
 //this array contains every entry that is later going to be used in the "contents.opf" file
 let contents = [];
@@ -20,6 +20,7 @@ let pages = [];
 let cover;
 let credit;
 let options;
+let fontNames;
 
 let altText = new Map();
 
@@ -31,14 +32,18 @@ function setAltText(pages) {
   });
 }
 
-function initialize(metad, pag, opt) {
+function initialize(metad, pag, data) {
   spine = [];
   contents = [];
   pages = [];
   fonts = [];
   metadata = metad;
   pages = pag;
-  options = opt;
+  options = data.options;
+  fontNames = data.selectedFonts;
+
+  if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "js\\backEnd\\imports\\fonts\\Luciole-Regular.ttf";
+
   //remove cover and credit from datastructure ;o
   cover = pages[pages.length - 2];
   credit = pages[pages.length - 1];
@@ -71,7 +76,12 @@ function rewriteXHTMLFile(filePath) {
   fileSplit.forEach((line) => {
     let tempLine = line;
 
-    if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
+    let replacement = replaceOldFiles(tempLine);
+
+    //replace old code with new files!
+    if (replacement != "") {
+      tempLine = replacement;
+    } else if (line.includes("<link") || line.includes("<script") || line.includes("<source")) {
       let done = false;
       let index = 0;
 
@@ -122,7 +132,11 @@ function rewriteXHTMLFile(filePath) {
           newName = "../audio/" + newName;
         }
 
-        tempLine = firstPart + activeTag + '="' + newName + '"' + lastPart;
+        if (firstPart.trim() != "") {
+          tempLine = firstPart + activeTag + '="' + newName + '"' + lastPart;
+        } else {
+          tempLine = line;
+        }
 
         index = tempLine.indexOf(activeTag, index) + 1;
 
@@ -146,6 +160,16 @@ function rewriteXHTMLFile(filePath) {
 
     tempFile = tempFile + tempLine + "\n";
   });
+}
+
+function replaceOldFiles(s) {
+  if (s.includes('src="../Misc/ldqr.min.js"')) {
+    return '    <script type="text/javascript" src="../Misc/ldqr2.js" charset="utf-8"></script>';
+  } else if (s.includes('href="../Misc/ldqr.min.js"')) {
+    return '    <link rel="preload" href="../Misc/ldqr2.js" as="script" type="text/javascript" />';
+  }
+
+  return "";
 }
 
 function addAltText(elem) {}
@@ -194,12 +218,18 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
   if (options.includeBookSettings) {
     //make page 00
-    FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/xhtml/", "page00.xhtml", EPUBFileCreator.createPage00(pages[0].narration[language]));
+    FileSystemManager.makeFile(
+      path + "/" + newDirName + "/OEBPS/xhtml/",
+      "page00.xhtml",
+      EPUBFileCreator.createPage00(pages[0].narration[language], fontNames)
+    );
     spine.push("page00.xhtml");
   }
 
   fileArray.push(coverImage);
   fileArray.push(coverNarration);
+
+  fileArray = removeOldFiles(fileArray);
 
   fileArray.forEach((element) => {
     tempFile = "";
@@ -230,12 +260,23 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         spine.push(element.slice(i, element.length));
         //fs.copyFileSync(element, directory + "\\" + newDirName + "\\OEBPS\\xhtml" + PathUtilities.cutOutFilename(element));
       } else if (element.toLowerCase().includes(".css")) {
-        subFolder = "\\OEBPS\\css\\";
-        importFonts(element, path, newDirName);
-        rewritten = true;
-        contents.push("..\\OEBPS\\xhtml\\" + element);
+        if (!element.toLowerCase().includes("ldqr_main")) {
+          subFolder = "\\OEBPS\\css\\";
+          importFonts(element, path, newDirName);
+          rewritten = true;
+          contents.push("..\\OEBPS\\xhtml\\" + element);
+        } else {
+          subFolder = "\\OEBPS\\css\\";
+          addFonts(element);
+          contents.push("..\\OEBPS\\xhtml\\" + element);
+          rewritten = true;
+        }
       } else if (element.toLowerCase().includes(".js")) {
         subFolder = "\\OEBPS\\Misc\\";
+        if (element.includes("ldqr2")) {
+          rewriteFontSection(element);
+          rewritten = true;
+        }
         contents.push(element);
       } else if (element.toLowerCase().includes(".mp3") || element.toLowerCase().includes(".wav")) {
         subFolder = "\\OEBPS\\audio\\";
@@ -293,6 +334,110 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "content.opf", EPUBFileCreator.createContentFile(contents.concat(fonts), spine));
 
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "toc.ncx", EPUBFileCreator.createTOC());
+}
+
+function removeOldFiles(arr) {
+  let t = [];
+  arr.forEach((entr) => {
+    if (typeof entr == "string") {
+      if (entr.includes("\\") && entr.includes("ldqr_main.min.css")) {
+      } else {
+        t.push(entr);
+      }
+    } else {
+      t.push(entr);
+    }
+  });
+
+  return t;
+}
+
+function rewriteFontSection(element) {
+  tempFile = "";
+  let file = fs.readFileSync(element, "utf8");
+  let fileSplit = file.split("\n");
+  let t = "";
+  let open = true;
+  let tempOpen = true;
+  let inFunction = false;
+
+  fileSplit.forEach((line) => {
+    tempOpen = true;
+    if (line.includes("(ldqr.FONT_CSS_CLASS")) {
+      let t = "";
+      for (const [key, value] of Object.entries(fontNames)) {
+        t = t + '"ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '",';
+      }
+      t = t.substring(0, t.length - 1);
+      let tLine = line.substring(0, line.indexOf("[") + 1) + t + line.substring(line.indexOf("]"), line.length) + "\n";
+      tempFile = tempFile + tLine;
+      console.log("below : ");
+      console.log(tLine);
+      tempOpen = false;
+    }
+
+    if (line.includes("function choixFontName(e)")) {
+      inFunction = true;
+    }
+
+    if (open && tempOpen) {
+      tempFile = tempFile + line + "\n";
+    }
+    if (inFunction) {
+      if (line.includes("switch")) {
+        open = false;
+      }
+      if (line.includes("default:")) {
+        open = true;
+        for (const [key, value] of Object.entries(fontNames)) {
+          line = '      case "' + key + '":\n' + '        o = "ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '";\n' + "        break; \n" + line;
+        }
+        tempFile = tempFile + line + "\n";
+        inFunction = false;
+      }
+    }
+  });
+}
+
+function addFonts(element) {
+  let file = fs.readFileSync(element, "utf8");
+  let fileSplit = file.split("\n");
+  let open = false;
+  fileSplit.forEach((line) => {
+    let tLine = "";
+    if (line.includes("/* FONTS HERE */")) {
+      for (const [key, value] of Object.entries(fontNames)) {
+        let link = value.substring(value.lastIndexOf("/") + 1, value.length);
+        if (value.includes("\\")) {
+          link = value.substring(value.lastIndexOf("\\") + 1, value.length);
+        }
+
+        tLine =
+          tLine +
+          "@font-face {\n" +
+          '  font-family: "' +
+          key +
+          '";\n' +
+          "  font-weight: normal;\n" +
+          "  font-style: normal;\n" +
+          "  font-variant-numeric: normal;\n" +
+          '  src: url("../fonts/' +
+          link +
+          '") format("truetype");\n' +
+          "}\n";
+      }
+    } else if (line.includes('font-family: "";')) {
+      tLine = line.substring(0, line.indexOf('"') + 1) + Object.keys(fontNames)[0] + '";';
+    } else if (line.includes("/* FONTIDS */")) {
+      for (const [key, value] of Object.entries(fontNames)) {
+        tLine = tLine + ".ldqr-font-" + key.replaceAll(" ", "").toLowerCase() + "{\n" + '  font-family: "' + key + '", !important;\n' + " }\n";
+      }
+    } else {
+      tLine = line;
+    }
+    tempFile = tempFile + tLine + "\n";
+  });
+  tempfile = "";
 }
 
 //goes through css files line by line, looks for a font-face tag, ads fonts to array & changes location in file
@@ -361,21 +506,12 @@ function newFont(name) {
 }
 
 function pathsToFonts() {
-  return [
-    "./js/backEnd/imports/fonts/ariablk.ttf",
-    "./js/backEnd/imports/fonts/arial.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Bold-Italic.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Bold.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Regular-Italic.ttf",
-    "./js/backEnd/imports/fonts/Luciole-Regular.ttf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Bold.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-BoldItalic.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Italic.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexic-Regular.otf",
-    "./js/backEnd/imports/fonts/OpenDyslexicMono-Regular.otf",
-    "./js/backEnd/imports/fonts/verdana.ttf",
-    "./js/backEnd/imports/fonts/verdanab.ttf",
-  ];
+  let f = [];
+  for (const [key, value] of Object.entries(fontNames)) {
+    f.push(value);
+  }
+
+  return f;
 }
 
 function pathsToMenuDependencies() {
@@ -387,7 +523,7 @@ function pathsToMenuDependencies() {
     "./js/backEnd/imports/page00.min.js",
     "./js/backEnd/imports/radiobutton.js",
     "./js/backEnd/imports/radiogroup.js",
-    "./js/backEnd/imports/ldqr.min.js",
+    "./js/backEnd/imports/ldqr2.js",
     "./js/backEnd/imports/localforage.min.js",
     "./js/backEnd/imports/SVGPanZoom.min.js"
   );

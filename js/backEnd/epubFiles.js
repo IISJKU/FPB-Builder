@@ -1,6 +1,7 @@
 const path = require("path");
 
 let fs = require("fs");
+const { waitForDebugger } = require("inspector");
 
 let language;
 
@@ -18,6 +19,8 @@ let copyright = "";
 let description = "";
 let contributors = [];
 let options = [];
+
+let ids = [];
 
 let date = new Date().toISOString();
 let dateText = date.substring(0, date.indexOf(".")) + "Z";
@@ -303,6 +306,8 @@ function createContentFile(files, spineFiles) {
     }
   });
 
+  ids = [];
+
   spineFiles.forEach((filename) => {
     let line = "";
     let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
@@ -313,15 +318,14 @@ function createContentFile(files, spineFiles) {
 
     if (filename == "toc.xhtml") properties = "nav";
     if (filename == "cover.xhtml" || filename == "notice_toc.xhtml") properties = "scripted";
-    line =
-      '   <item id="' +
-      name.substring(0, name.indexOf(".")) +
-      '" href="xhtml/' +
-      name +
-      '" media-type="application/xhtml+xml" properties="' +
-      properties +
-      '" />';
-    spineContents = spineContents + '   <itemref idref="' + name.substring(0, name.indexOf(".")) + '"/>' + "\n";
+
+    name = pageID(name);
+
+    let pID = name.substring(name.lastIndexOf("\\") + 1, name.length);
+    pID = pID.replaceAll("(", "").replaceAll(")", "");
+
+    line = '   <item id="' + pID + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="' + properties + '" />';
+    spineContents = spineContents + '   <itemref idref="' + pID + '"/>' + "\n";
     importedItems = importedItems + line + "\n";
   });
 
@@ -338,15 +342,75 @@ function createContentFile(files, spineFiles) {
   return header + metaData + manifest + spine + endPackageTag;
 }
 
+function pageID(str) {
+  let tId = str.substring(0, str.indexOf("."));
+  if (!ids.includes(tId)) {
+    ids.push(tId);
+    return str;
+  }
+  let count = 0;
+
+  ids.forEach((id) => {
+    if (id.includes(tId)) count++;
+  });
+
+  let ending = str.substring(str.indexOf("."), str.length);
+  tId = tId + "(" + count + ")" + ending;
+
+  return tId;
+}
+
 //this reads page00 from a template,
-function createPage00(firstPageNarration) {
+//fills in the fonts according to what is specified in the frontend
+//prettier-ignore
+function createPage00(firstPageNarration, fontNames) {
   let str = "";
 
-  firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
+  if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
 
   str = fs.readFileSync("./js/backEnd/templates/" + language + "/page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
+
+  let fontText = "";
+
+  let positions = [85, 85, 95, 110];
+  let odd = false;
+  let checked = "true";
+
+  let count = 0;
+  let group = 0;
+  for (const [key, value] of Object.entries(fontNames)) {
+    if(count != 0) checked = "false";
+    
+
+    if (count % 2 == 0 || count == 0) {
+      fontText = fontText + '                <g id="group' + group + '" transform="translate(' + (group) * 160 + ',0)">\n';
+      group++;
+    }
+
+    let w = (150 + ((group-1)* 25));
+    let name = key.substring(0, key.indexOf(" ")) ;
+
+    let moveDown = 0;
+    if (count % 2 != 0) moveDown = 70;
+
+    if(name == "" || name == undefined) name = key;
+    fontText =
+      fontText +
+      '                   <g id="' + key +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown+ ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
+      '                       <rect x="10" y="50" width="'+ w +'" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
+      '                       <text alignment-baseline="middle" text-anchor="middle" x="' + positions[group] +'" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
+      "                   </g>\n";
+
+    if (count % 2 != 0) fontText = fontText + "                </g>\n";
+
+    count++;
+  }
+
+  if(count % 2 != 0) fontText = fontText + "                </g>\n";
+
+  str = str.replaceAll("{fonts}", fontText);
 
   return str;
 }
@@ -495,10 +559,12 @@ function createNoticeToc() {
 function createPageText(obj){
   let str = "";
 
+  console.log("elements");
+  console.log(obj.text);
+
   let text = obj.text[language];
   let audio = obj.narration[language];
   let title = obj.title;
-
 
   //parses text, and automatically adds propper html tags
   let processedText = "<p>";
@@ -526,12 +592,12 @@ function createPageText(obj){
   '  <head>\n' +
   '    <title>'+ title + '</title>\n' +
   '    <link rel="preload" href="../Misc/localforage.min.js" as="script" type="text/javascript" />\n' +
-  '    <link rel="preload" href="../Misc/ldqr.min.js" as="script" type="text/javascript" />\n' +
+  '    <link rel="preload" href="../Misc/ldqr2.js" as="script" type="text/javascript" />\n' +
   '    <link id="mainCss" href="../css/ldqr_main.min.css" rel="stylesheet" type="text/css" />\n' +
   '    <link href="../css/colorisation.css" rel="stylesheet" type="text/css" />\n' +
   '    <script type="text/javascript" src="../Misc/localforage.min.js"></script>\n' +
   '    <script type="text/javascript" src="../Misc/colorisation.min.js" charset="utf-8"></script>\n' +
-  '    <script type="text/javascript" src="../Misc/ldqr.min.js" charset="utf-8"></script>\n' +
+  '    <script type="text/javascript" src="../Misc/ldqr2.js" charset="utf-8"></script>\n' +
   '  </head>\n' +
   '\n' +
   '  <body class="body">\n' +
@@ -592,10 +658,10 @@ function createCover(title, cover, altText, audio){
   '<head>\n' +
   '  <title class="tslt_couverture">' + title + '</title>\n' +
   '  <link rel="preload" href="../Misc/localforage.min.js" as="script" type="text/javascript" />\n' +
-  '  <link rel="preload" href="../Misc/ldqr.min.js" as="script" type="text/javascript" />\n' +
+  '  <link rel="preload" href="../Misc/ldqr2.js" as="script" type="text/javascript" />\n' +
   '  <link id="mainCss" href="../css/ldqr_main.min.css" rel="stylesheet" type="text/css" />\n' +
   '  <script type="text/javascript" src="../Misc/localforage.min.js"></script>\n' +
-  '  <script type="text/javascript" src="../Misc/ldqr.min.js" charset="utf-8"></script>\n' +
+  '  <script type="text/javascript" src="../Misc/ldqr2.js" charset="utf-8"></script>\n' +
   '<style>\n' +
   '  body,html{\n' +
   '    height: 98vh;\n' +

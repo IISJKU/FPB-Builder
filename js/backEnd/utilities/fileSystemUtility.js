@@ -16,7 +16,14 @@ function makeFile(location, name, content) {
     while (fs.existsSync(location + name + "(" + count + ")")) {
       count = count + 1;
     }
-    dirName = dirName + "(" + count + ")";
+
+    if (dirName.includes(".")) {
+      dirName = dirName.substring(0, dirName.indexOf(".")) + "(" + count + ")" + dirName.substring(dirName.indexOf("."), dirName.length);
+    } else {
+      dirName = dirName + "(" + count + ")";
+    }
+
+    console.log(dirName);
   }
 
   if (content == null || content == undefined || content == "undefined") {

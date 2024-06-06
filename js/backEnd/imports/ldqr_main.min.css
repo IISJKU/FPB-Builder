@@ -2,94 +2,9 @@
 @namespace h "http://www.w3.org/1999/xhtml/";
 @namespace epub "http://www.idpf.org/2007/ops";
 @namespace svg "http://www.w3.org/2000/svg";
-/* Luciole */
-@font-face {
-  font-family: "Luciole";
-  font-weight: bold;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/Luciole-Bold.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Luciole";
-  font-weight: normal;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/Luciole-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Luciole";
-  font-weight: normal;
-  font-style: italic;
-  font-variant-numeric: normal;
-  src: url("../fonts/Luciole-Regular-Italic.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Luciole";
-  font-weight: bold;
-  font-style: italic;
-  font-variant-numeric: normal;
-  src: url("../fonts/Luciole-Bold-Italic.ttf") format("truetype");
-}
-/* Verdana */
-@font-face {
-  font-family: "Verdana";
-  font-weight: normal;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/verdana.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Verdana";
-  font-weight: bold;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/verdanab.ttf") format("truetype");
-}
-/* Arial */
-@font-face {
-  font-family: "Arial";
-  font-weight: normal;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/arial.ttf") format("truetype");
-}
-/* Arial Black */
-@font-face {
-  font-family: "Arial Black";
-  font-weight: normal;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/ariablk.ttf") format("truetype");
-}
-@font-face {
-  font-family: "OpenDyslexic";
-  font-weight: normal;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/OpenDyslexic-Regular.otf") format("truetype");
-}
-@font-face {
-  font-family: "OpenDyslexic";
-  font-weight: bold;
-  font-style: normal;
-  font-variant-numeric: normal;
-  src: url("../fonts/OpenDyslexic-Bold.otf") format("truetype");
-}
-@font-face {
-  font-family: "OpenDyslexic";
-  font-weight: normal;
-  font-style: italic;
-  font-variant-numeric: normal;
-  src: url("../fonts/OpenDyslexic-Italic.otf") format("truetype");
-}
-@font-face {
-  font-family: "OpenDyslexic";
-  font-weight: bold;
-  font-style: italic;
-  font-variant-numeric: normal;
-  src: url("../fonts/OpenDyslexic-BoldItalic.otf") format("truetype");
-}
+
+/* FONTS HERE */
+
 /*!
   Blitz — CSS framework for reflowable eBooks
   Version 1.5.2 by Jiminy Panoz
@@ -102,7 +17,7 @@ html {
   -ms-hyphens: none;
   -o-hyphens: none;
   hyphens: none;
-  font-family: "Arial Black";
+  font-family: "";
   line-height: 1.7em;
   font-size: 1.4em;
   color: #000;
@@ -256,24 +171,8 @@ h4 img {
   display: block;
   font-size: 0.7em !important;
 }
-.ldqr-font-luciole {
-  font-family: "Luciole", "sans-serif" !important;
-}
-.ldqr-font-arial-black {
-  font-family: "Arial Black", "sans-serif" !important;
-}
-.ldqr-font-arial {
-  font-family: "Arial", "sans-serif" !important;
-}
-.ldqr-font-verdana {
-  font-family: "Verdana", "sans-serif" !important;
-}
-.ldqr-font-dys {
-  font-family: "OpenDyslexic", "sans-serif" !important;
-}
-.ldqr-font-bold {
-  font-weight: 700 !important;
-}
+
+/* FONTIDS */
 .notDisplay {
   display: none !important;
 }
@@ -367,14 +266,14 @@ p {
 }
 .svg-bouton {
   cursor: pointer;
-  font-family: "Luciole";
+  font-family: "";
   font-size: 24pt !important;
   font-weight: normal !important;
 }
 .titre-menu {
   /* float: left; */
   display: block;
-  font-family: "Luciole";
+  font-family: "";
   margin-right: 1em;
 }
 .bouton-fond {
@@ -384,10 +283,6 @@ p {
   padding-top: 5px;
   padding-bottom: 5px;
   border-radius: 50px;
-  /* font-family: "Luciole"; */
-  /* display: table; */
-  /* width: 96%; */
-  /* height: 100%; */
   border-color: black;
   border-width: 1px;
   border-style: solid;

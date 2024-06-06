@@ -4,7 +4,7 @@
 <head>
   <title class="tslt_configuration">Configuration</title>
   <link type="text/javascript" href="../Misc/localforage.min.js" rel="preload" as="script" />
-  <link type="text/javascript" href="../Misc/ldqr.min.js" rel="preload" as="script" />
+  <link type="text/javascript" href="../Misc/ldqr2.js" rel="preload" as="script" />
   <link id="mainCss" type="text/css" href="../css/ldqr_main.min.css" rel="stylesheet" />
   <link id="couleurCssSvg" type="text/css" href="../css/page00_svg.css" rel="stylesheet" />
   <link type="text/css" href="../css/colorisation.css" rel="stylesheet" />
@@ -13,7 +13,7 @@
   <script src="../Misc/colorisation.min.js" type="text/javascript"></script>
   <script src="../Misc/radiobutton.js" type="text/javascript"></script>
   <script src="../Misc/radiogroup.js" type="text/javascript"></script>
-  <script src="../Misc/ldqr.min.js" type="text/javascript"></script>
+  <script src="../Misc/ldqr2.js" type="text/javascript"></script>
   <script src="../Misc/page00.min.js" type="text/javascript"></script>
   <style>
     .tslt_texte_exemple{
@@ -811,37 +811,7 @@
         <g class="notDisplay" id="configTexte">
           <g id="choixPolice" role="radiogroup" aria-labelledby="textePolice" transform="translate(0,60)">
             <text id="textePolice" class="titre-menu tslt_police" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt"> POLICE </text>
-            <g id="groupeLuciole">
-              <g id="choixLuciole" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="150" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="85" y="80" class="ldqr-font-luciole" font-size="24pt"> Luciole </text>
-              </g>
-              <g id="choixLucioleBold" aria-label="Luciole gras" role="radio" aria-checked="true" transform="translate(0,70)" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="150" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="85" y="80" class="ldqr-font-luciole ldqr-font-bold" font-size="24pt"> Luciole </text>
-              </g>
-            </g>
-            <g id="groupeVerdana" transform="translate(160,0)">
-              <g id="choixVerdana" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="170" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="95" y="80" class="ldqr-font-verdana" font-size="24pt"> Verdana </text>
-              </g>
-              <g id="choixVerdanaBold" aria-label="verdana gras" role="radio" aria-checked="false" transform="translate(0,70)" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="170" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="95" y="80" class="ldqr-font-verdana ldqr-font-bold" font-size="24pt"> Verdana </text>
-              </g>
-            </g>
-            <g id="groupeArialBlack" transform="translate(340,0)">
-              <g id="choixArialBlack" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="200" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-arial-black" font-size="24pt"> Arial Black</text>
-              </g>
-            </g>
-            <g id="groupeOpenDys" transform="translate(340,70)">
-              <g id="choixOpenDys" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-choix-police">
-                <rect x="10" y="50" width="200" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
-                <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-dys" font-size="24pt"> OpenDys</text>
-              </g>
+{fonts}
             </g>
           </g>
           <g id="choixCouleurFond" role="radiogroup" aria-labelledby="texteFond" transform="translate(0,130)">

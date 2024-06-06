@@ -8,7 +8,9 @@ $(document).ready(() => {
     //frontendData["pages"] = pageDetails;
     frontendData["pages"] = JSON.parse(sessionStorage.getItem("pageDetails"));
     frontendData["options"] = JSON.parse(sessionStorage.getItem("options"));
+    console.log(frontendData["options"]);
     frontendData["dirName"] = dirName;
+    frontendData["selectedFonts"] = getSelectedFonts();
 
     sessionStorage.setItem("frontendData", JSON.stringify(frontendData));
 

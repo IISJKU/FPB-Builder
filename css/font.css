@@ -1,78 +1,77 @@
-#fontList{
-    height: 93%;
-    max-height: 100%;
-    border: solid 0.5px #dee2e6;
-    border-radius: 0px;
-    overflow: scroll;
+#fontList {
+  height: 93%;
+  max-height: 100%;
+  border: solid 0.5px #dee2e6;
+  border-radius: 0px;
+  overflow: scroll;
 }
 
-#selectAllItem{
-    margin-right: 0px;
-    margin-left: 0px;
-    padding-left: 16px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
-@font-face {
-    font-family: 'arialBlk';
-    src: url('../js/backEnd/imports/fonts/ariablk.ttf');
+#selectAllItem {
+  margin-right: 0px;
+  margin-left: 0px;
+  padding-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 @font-face {
-    font-family: 'Luciole'; 
-    src: url('../js/backEnd/imports/fonts/Luciole-Regular.ttf');
+  font-family: "arialBlk";
+  src: url("../js/backEnd/imports/fonts/ariablk.ttf");
 }
 
 @font-face {
-    font-family: 'LucioleBold'; 
-    src: url('../js/backEnd/imports/fonts/Luciole-Bold.ttf');
+  font-family: "Luciole";
+  src: url("../js/backEnd/imports/fonts/Luciole-Regular.ttf");
 }
 
 @font-face {
-    font-family: 'opendyslexicMono'; 
-    src: url('../js/backEnd/imports/fonts/OpenDyslexicMono-Regular.otf');
+  font-family: "LucioleBold";
+  src: url("../js/backEnd/imports/fonts/Luciole-Bold.ttf");
 }
 
 @font-face {
-    font-family: 'verdana'; 
-    src: url('../js/backEnd/imports/fonts/verdana.ttf');
+  font-family: "opendyslexicMono";
+  src: url("../js/backEnd/imports/fonts/OpenDyslexicMono-Regular.otf");
 }
 
 @font-face {
-    font-family: 'verdanaBold'; 
-    src: url('../js/backEnd/imports/fonts/verdanab.ttf');
+  font-family: "verdana";
+  src: url("../js/backEnd/imports/fonts/verdana.ttf");
 }
 
-#arialBlkLbl{
-    font-family: 'arialBlk';
+@font-face {
+  font-family: "verdanaBold";
+  src: url("../js/backEnd/imports/fonts/verdanab.ttf");
 }
 
-#lucioleLbl{
-    font-family: 'Luciole'; 
-
+#arialBlkLbl {
+  font-family: "arialBlk";
 }
 
-#lucioleBldLbl{
-    font-family: 'LucioleBold';
+#lucioleLbl {
+  font-family: "Luciole";
 }
 
-#opDyslexLbl{
-    font-family: 'opendyslexicMono';
+#lucioleBldLbl {
+  font-family: "LucioleBold";
 }
 
-#verdanaLbl{
-    font-family: 'verdana';
+#opDyslexLbl {
+  font-family: "opendyslexicMono";
 }
 
-#verdanaBldLbl{
-    font-family: 'verdanaBold';
+#verdanaLbl {
+  font-family: "verdana";
 }
 
-#addFontDiv{
-    margin-top: 10px;
+#verdanaBldLbl {
+  font-family: "verdanaBold";
 }
 
-.fontLbl{
-    padding-left: 0.5%;
+#addFontDiv {
+  margin-top: 10px;
+}
+
+.fontLbl {
+  padding-left: 0.5%;
 }

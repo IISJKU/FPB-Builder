@@ -16,9 +16,10 @@ function changeContent(event, controlledTab) {
     $("#publicationLanguage").trigger("change");
     initializeSpine();
   }
+  /*
   if (tabTitle == translateTxt("Fonts")) {
     initializeFonts();
-  }
+  }*/
   if ($("#listTab .tablinks").hasClass("active")) {
     let activeContentId = $("#listTab .tablinks.active").attr("aria-controls");
     document.getElementById(activeContentId).style.display = "none";
@@ -60,67 +61,66 @@ function getSessionElem(item, elem) {
   return SessionDetObj[elem];
 }
 
-function resetFields(){
+function resetFields() {
   sessionStorage.removeItem("bookDetails");
   sessionStorage.removeItem("pageDetails");
   sessionStorage.removeItem("pubLang");
   sessionStorage.removeItem("projectName");
   sessionStorage.removeItem("selectedFonts");
   sessionStorage.removeItem("options");
-  document.getElementById('directory').value = '';
-  document.getElementById('projName').value =  '';
-  langOpt = document.getElementById('publicationLanguage');
+  document.getElementById("directory").value = "";
+  document.getElementById("projName").value = "";
+  langOpt = document.getElementById("publicationLanguage");
   for (let i = 0; i < langOpt.options.length; i++) {
-    if (langOpt.options[i].value == 'EN'){
+    if (langOpt.options[i].value == "EN") {
       langOpt.options[i].selected = true;
-    }else {
+    } else {
       langOpt.options[i].selected = false;
     }
   }
-  $('#otherSettings input:checked').each(function() {
-    $(this).prop('checked', false);
+  $("#otherSettings input:checked").each(function () {
+    $(this).prop("checked", false);
   });
 
-  $('#fontList input:checked').each(function() {
-    $(this).prop('checked', false);
+  $("#fontList input:checked").each(function () {
+    $(this).prop("checked", false);
   });
 }
 
 function compareData(data) {
   // set initial value as they are similar
   let checkStatus = 1;
-  if (data == "" || data == undefined || data == 'undefined') {
+  if (data == "" || data == undefined || data == "undefined") {
     checkStatus = 0;
     return checkStatus;
   }
-  if (document.getElementById('directory').value !=  data['directory']) checkStatus = 0;
-  if (document.getElementById('projName').value !=  data['name']) checkStatus = 0;
+  if (document.getElementById("directory").value != data["directory"]) checkStatus = 0;
+  if (document.getElementById("projName").value != data["name"]) checkStatus = 0;
   let bookDetObj = parseSessionData("bookDetails");
-  if (!objEqCheck(bookDetObj, data['metadata'])) checkStatus = 0;
+  if (!objEqCheck(bookDetObj, data["metadata"])) checkStatus = 0;
   let pageDetailsObj = parseSessionData("pageDetails");
-  if (!objEqCheck(pageDetailsObj, data['pages'])) checkStatus = 0;
-  langOpt = document.getElementById('publicationLanguage');
-  if (Object.keys(data['languages']).length != 0) {
-    langArr =[];
+  if (!objEqCheck(pageDetailsObj, data["pages"])) checkStatus = 0;
+  langOpt = document.getElementById("publicationLanguage");
+  if (Object.keys(data["languages"]).length != 0) {
+    langArr = [];
     for (let i in langOpt.selectedOptions) {
-     if(langOpt.selectedOptions[i].value != undefined) langArr.push(langOpt.selectedOptions[i].value)
+      if (langOpt.selectedOptions[i].value != undefined) langArr.push(langOpt.selectedOptions[i].value);
     }
   }
-  if (!arrEq(langArr, data['languages'])) checkStatus = 0;
-  if (Object.keys(data['settings']).length != 0) {
-    if (!arrEq(getOthSettings(), data['settings'])) checkStatus = 0;
+  if (!arrEq(langArr, data["languages"])) checkStatus = 0;
+  if (Object.keys(data["settings"]).length != 0) {
+    if (!arrEq(getOthSettings(), data["settings"])) checkStatus = 0;
   }
-  if (Object.keys(data['fonts']).length != 0) {
-    if (!arrEq(getSelectedFonts(), data['fonts'])) checkStatus = 0;
+  if (Object.keys(data["fonts"]).length != 0) {
+    if (!arrEq(getSelectedFonts(), data["fonts"])) checkStatus = 0;
   }
   return checkStatus;
-};
+}
 
 //compare and check arrays
-const arrEq = (arr1, arr2) =>
-arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
+const arrEq = (arr1, arr2) => arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
 
-//check object equality 
+//check object equality
 function objEqCheck(object1, object2) {
   const keys1 = Object.keys(object1);
   const keys2 = Object.keys(object2);
@@ -133,10 +133,7 @@ function objEqCheck(object1, object2) {
     const val1 = object1[key];
     const val2 = object2[key];
     const areObjects = isObject(val1) && isObject(val2);
-    if (
-      areObjects && !objEqCheck(val1, val2) ||
-      !areObjects && val1 !== val2
-    ) {
+    if ((areObjects && !objEqCheck(val1, val2)) || (!areObjects && val1 !== val2)) {
       return false;
     }
   }
@@ -146,44 +143,45 @@ function objEqCheck(object1, object2) {
 
 //helper function to check the type of the object
 function isObject(object) {
-  return object != null && typeof object === 'object';
+  return object != null && typeof object === "object";
 }
 
-//save data button function 
-function saveDataBtn(){
+//save data button function
+function saveDataBtn() {
   if (checkRequired() == true) BRIDGE.saveDataBtn();
 }
 
 //check required fields before pressing save button or closing the application
-function checkRequired(){
+function checkRequired() {
   initializeReqFocus();
-  var emptyProjFields = formFilter('ProjectForm');
-  var emptyMetaFields = formFilter('metaForm');
-  var missDepSpine = $('#spineForm input:required:invalid').length;
+  var emptyProjFields = formFilter("ProjectForm");
+  var emptyMetaFields = formFilter("metaForm");
+  var missDepSpine = $("#spineForm input:required:invalid").length;
 
-  emptyFields(emptyProjFields, 'project-list');
-  emptyFields(emptyMetaFields, 'metadata-list');
-  emptyFields(missDepSpine, 'spine-list');
-  
+  emptyFields(emptyProjFields, "project-list");
+  emptyFields(emptyMetaFields, "metadata-list");
+  emptyFields(missDepSpine, "spine-list");
+
   if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) {
     error = document.getElementById("error");
-    error.innerHTML = '';
+    error.innerHTML = "";
     let div = document.createElement("div");
     div.setAttribute("class", "col-md-12");
     let header = document.createElement("h4");
-    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode(translateTxt('Please fill all mandatory fields (highlighted in red)')));
+    if (emptyProjFields != 0 || emptyMetaFields != 0)
+      header.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) header.appendChild(document.createElement("br"));
-    if (missDepSpine != 0) header.appendChild(document.createTextNode(translateTxt('Please resolve spine missing dependencies')));
+    if (missDepSpine != 0) header.appendChild(document.createTextNode(translateTxt("Please resolve spine missing dependencies")));
     div.appendChild(header);
     error.appendChild(div);
-    $('#error').show();
+    $("#error").show();
     return false;
   }
   return true;
 }
 
 //Initialize application tabs when the application finish load event
-function initializeTabs(){
+function initializeTabs() {
   translationArr();
   let appLangOp = document.getElementById("appLang");
   let appLanValue = appLangOp.options[appLangOp.selectedIndex].value;
@@ -195,86 +193,90 @@ function initializeTabs(){
 }
 
 // initiate on focus out event for all required input
-function initializeReqFocus(){
+function initializeReqFocus() {
   $(document).on("focusout", "input[required]", function (e) {
     checkRequired();
   });
 }
 
 // return count of null required input fields
-function formFilter(formId){
-  let reqFields= $('#'+formId+' input:required:invalid').filter(function() {
+function formFilter(formId) {
+  let reqFields = $("#" + formId + " input:required:invalid").filter(function () {
     return $(this).val() === "";
   }).length;
   return reqFields;
 }
 
 // check if the required fields has empty required input and add exclamation triangle icon else hide error panel and remove the icon
-function emptyFields(reqFields, listId){
+function emptyFields(reqFields, listId) {
   if (reqFields != 0) {
     let metaList = document.getElementById(listId);
-    if($('#'+listId+' .bi-exclamation-triangle-fill').length == 0) createIcon(metaList, "bi bi-exclamation-triangle-fill", "error");
-  }else{
-    $('#error').hide();
-    $('#'+listId+' i.bi-exclamation-triangle-fill').remove();
+    if ($("#" + listId + " .bi-exclamation-triangle-fill").length == 0) createIcon(metaList, "bi bi-exclamation-triangle-fill", "error");
+  } else {
+    $("#error").hide();
+    $("#" + listId + " i.bi-exclamation-triangle-fill").remove();
   }
 }
 
 // return the given string in a camel case form
 function camelCaseStr(str) {
   return str
-      .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
-      .replace(/\s/g, '')
-      .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+    .replace(/\s(.)/g, function ($1) {
+      return $1.toUpperCase();
+    })
+    .replace(/\s/g, "")
+    .replace(/^(.)/, function ($1) {
+      return $1.toLowerCase();
+    });
 }
 
 // returns processed array of translation.csv file
 function translationArr() {
   var lines = [];
   fetch("translation.csv")
-  .then((res) => res.text())
-  .then(async (text) => {
-    var allTextLines = text.split(/\r\n|\n/);
-    var headers = allTextLines[0].split(';');
-    for (var i=1; i<allTextLines.length; i++) {
-      var data = allTextLines[i].split(';');
-      if (data.length == headers.length) {
+    .then((res) => res.text())
+    .then(async (text) => {
+      var allTextLines = text.split(/\r\n|\n/);
+      var headers = allTextLines[0].split(";");
+      for (var i = 1; i < allTextLines.length; i++) {
+        var data = allTextLines[i].split(";");
+        if (data.length == headers.length) {
           var tarr = {};
-          for (var j=0; j<headers.length; j++) {
-              tarr[headers[j]]= data[j]
+          for (var j = 0; j < headers.length; j++) {
+            tarr[headers[j]] = data[j];
           }
           lines.push(tarr);
+        }
       }
-    }
-    await sessionStorage.setItem("translation", JSON.stringify(lines));
-    //translate(lines);
-  })
-  .catch((e) => console.error(e));
-  
+      await sessionStorage.setItem("translation", JSON.stringify(lines));
+      //translate(lines);
+    })
+    .catch((e) => console.error(e));
+
   return lines;
 }
 
-// search for value with a property in an array of objects  
-function arrObjSearch(arr, prop, value){
-  for (let i=0; i < arr.length; i++) {
-      if (arr[i][prop] === value) {
-          return arr[i];
-      }
+// search for value with a property in an array of objects
+function arrObjSearch(arr, prop, value) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i][prop] === value) {
+      return arr[i];
+    }
   }
 }
 
-function translate(){
-  document.getElementById("directory").setAttribute("placeholder",translateTxt('Browse'));
-  document.getElementById("projName").setAttribute("placeholder",translateTxt('Project Name'));
-  transArr = parseSessionData('translation');
+function translate() {
+  document.getElementById("directory").setAttribute("placeholder", translateTxt("Browse"));
+  document.getElementById("projName").setAttribute("placeholder", translateTxt("Project Name"));
+  transArr = parseSessionData("translation");
   let appLangOp = document.getElementById("appLang");
   let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
   let currLang = sessionStorage.getItem("appLanguage");
-  $('.langTxt').each(function() {
+  $(".langTxt").each(function () {
     let currTxt = $(this).text();
     let childNd = "";
-    let selValue ="";
-    if ($(this)[0].localName == 'button' && $(this).children()[0]){
+    let selValue = "";
+    if ($(this)[0].localName == "button" && $(this).children()[0]) {
       currTxt = $(this)[0].innerText.trim();
       childNd = $(this).children();
       selValue = arrObjSearch(transArr, currLang, currTxt);
@@ -284,7 +286,7 @@ function translate(){
       $(this).append(" ");
       $(this).append(transTxt);
       return;
-    } else if ($(this)[0].localName == 'p' && $(this).children()[0]){
+    } else if ($(this)[0].localName == "p" && $(this).children()[0]) {
       childNd = $(this).children();
       $(this).children().remove();
       currTxt = $(this).text().trim();
@@ -299,38 +301,38 @@ function translate(){
     selValue = arrObjSearch(transArr, currLang, currTxt);
     if (selValue == undefined || selValue[appLanVal] == undefined) {
       $(this).text(currTxt);
-    }else{
+    } else {
       $(this).text(selValue[appLanVal]);
     }
     sessionStorage.setItem("appLanguage", appLanVal);
   });
 }
 
-function translateTxt(currText){
-  if (sessionStorage.getItem("translation") != undefined){
-    transArr = parseSessionData('translation');
-  }else{
-    transArr = translationArr()
+function translateTxt(currText) {
+  if (sessionStorage.getItem("translation") != undefined) {
+    transArr = parseSessionData("translation");
+  } else {
+    transArr = translationArr();
   }
-  if (transArr == null || transArr.length == 0 ) return currText;
+  if (transArr == null || transArr.length == 0) return currText;
   let appLangOp = document.getElementById("appLang");
   let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
-  let childElement = '';
-  if (currText.indexOf('<a') != -1 && currText.split('<a').length > 1){
-    let spTxt = currText.split('<a');
+  let childElement = "";
+  if (currText.indexOf("<a") != -1 && currText.split("<a").length > 1) {
+    let spTxt = currText.split("<a");
     currText = spTxt[0].trim();
-    childElement = '<a' + spTxt[1];
+    childElement = "<a" + spTxt[1];
   }
   let result = arrSearch(transArr, currText);
-  if (result == undefined) return currText
-  if (childElement != '') return result[appLanVal]+ ' ' + childElement
-  return result[appLanVal]
+  if (result == undefined) return currText;
+  if (childElement != "") return result[appLanVal] + " " + childElement;
+  return result[appLanVal];
 }
 
-// search for value in an array of objects  
-function arrSearch(arr, value){
-  for (let i=0; i < arr.length; i++) {
-    for (let val in  arr[i]) {
+// search for value in an array of objects
+function arrSearch(arr, value) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let val in arr[i]) {
       if (arr[i][val] === value) {
         return arr[i];
       }
@@ -338,10 +340,10 @@ function arrSearch(arr, value){
   }
 }
 
-function TranslateToEN(currTxt){
-  transArr = parseSessionData('translation');
+function TranslateToEN(currTxt) {
+  transArr = parseSessionData("translation");
   let appLangOp = sessionStorage.getItem("appLanguage");
-  let res= arrObjSearch(transArr, appLangOp, currTxt)
-  if (res == undefined) return currTxt
-  return res['EN']
+  let res = arrObjSearch(transArr, appLangOp, currTxt);
+  if (res == undefined) return currTxt;
+  return res["EN"];
 }

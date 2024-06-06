@@ -40,9 +40,7 @@ function fetchFromFrontend(window, callback) {
 }
 
 function make(metadata, pages, data) {
-  options = data.options;
-
-  XHTMLMaker.initialize(metadata, pages, options);
+  XHTMLMaker.initialize(metadata, pages, data);
 
   fileImporter.setFiles();
 
