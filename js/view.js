@@ -31,6 +31,8 @@ function changeContent(event, controlledTab) {
 // handle on change for the application language
 $(document).on("change", "#appLang", function (e) {
   translate();
+  sessionStorage.setItem("appLanguage", $(this).val());
+  BRIDGE.saveSettings($(this).val());
 });
 
 // create icon element with it's attributes
@@ -61,12 +63,7 @@ function getSessionElem(item, elem) {
 }
 
 function resetFields(){
-  sessionStorage.removeItem("bookDetails");
-  sessionStorage.removeItem("pageDetails");
-  sessionStorage.removeItem("pubLang");
-  sessionStorage.removeItem("projectName");
-  sessionStorage.removeItem("selectedFonts");
-  sessionStorage.removeItem("options");
+  rmSessionItem();
   document.getElementById('directory').value = '';
   document.getElementById('projName').value =  '';
   langOpt = document.getElementById('publicationLanguage');
@@ -84,6 +81,15 @@ function resetFields(){
   $('#fontList input:checked').each(function() {
     $(this).prop('checked', false);
   });
+}
+
+function rmSessionItem(){
+  sessionStorage.removeItem("bookDetails");
+  sessionStorage.removeItem("pageDetails");
+  sessionStorage.removeItem("pubLang");
+  sessionStorage.removeItem("projectName");
+  sessionStorage.removeItem("selectedFonts");
+  sessionStorage.removeItem("options");
 }
 
 function compareData(data) {
@@ -184,10 +190,9 @@ function checkRequired(){
 
 //Initialize application tabs when the application finish load event
 function initializeTabs(){
-  translationArr();
-  let appLangOp = document.getElementById("appLang");
-  let appLanValue = appLangOp.options[appLangOp.selectedIndex].value;
-  sessionStorage.setItem("appLanguage", appLanValue);
+  if (sessionStorage.getItem("translation") == undefined){
+    translationArr();
+  }
   $("#publicationLanguage").trigger("change");
   initializeMetadata();
   initializeSpine();
@@ -256,6 +261,7 @@ function translationArr() {
 
 // search for value with a property in an array of objects  
 function arrObjSearch(arr, prop, value){
+  if(arr == null ) return null;
   for (let i=0; i < arr.length; i++) {
       if (arr[i][prop] === value) {
           return arr[i];
@@ -263,13 +269,14 @@ function arrObjSearch(arr, prop, value){
   }
 }
 
+// translate the UI to the selected language
 function translate(){
   document.getElementById("directory").setAttribute("placeholder",translateTxt('Browse'));
   document.getElementById("projName").setAttribute("placeholder",translateTxt('Project Name'));
   transArr = parseSessionData('translation');
   let appLangOp = document.getElementById("appLang");
   let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
-  let currLang = sessionStorage.getItem("appLanguage");
+  //let currLang = sessionStorage.getItem("appLanguage");
   $('.langTxt').each(function() {
     let currTxt = $(this).text();
     let childNd = "";
@@ -277,7 +284,7 @@ function translate(){
     if ($(this)[0].localName == 'button' && $(this).children()[0]){
       currTxt = $(this)[0].innerText.trim();
       childNd = $(this).children();
-      selValue = arrObjSearch(transArr, currLang, currTxt);
+      selValue = arrSearch(transArr, currTxt);
       let transTxt = document.createTextNode(selValue[appLanVal]);
       $(this).html("");
       $(this).append(childNd);
@@ -288,7 +295,7 @@ function translate(){
       childNd = $(this).children();
       $(this).children().remove();
       currTxt = $(this).text().trim();
-      selValue = arrObjSearch(transArr, currLang, currTxt);
+      selValue = arrSearch(transArr, currTxt);
       let transTxt = document.createTextNode(selValue[appLanVal]);
       $(this).html("");
       $(this).append(transTxt);
@@ -296,16 +303,16 @@ function translate(){
       $(this).append(childNd);
       return;
     }
-    selValue = arrObjSearch(transArr, currLang, currTxt);
+    selValue = arrSearch(transArr, currTxt);
     if (selValue == undefined || selValue[appLanVal] == undefined) {
       $(this).text(currTxt);
     }else{
       $(this).text(selValue[appLanVal]);
     }
-    sessionStorage.setItem("appLanguage", appLanVal);
   });
 }
 
+// translate the given text to the selected language
 function translateTxt(currText){
   if (sessionStorage.getItem("translation") != undefined){
     transArr = parseSessionData('translation');
@@ -329,6 +336,7 @@ function translateTxt(currText){
 
 // search for value in an array of objects  
 function arrSearch(arr, value){
+  if(arr == null ) return null;
   for (let i=0; i < arr.length; i++) {
     for (let val in  arr[i]) {
       if (arr[i][val] === value) {
@@ -338,10 +346,27 @@ function arrSearch(arr, value){
   }
 }
 
+// translate the given text to english
 function TranslateToEN(currTxt){
   transArr = parseSessionData('translation');
   let appLangOp = sessionStorage.getItem("appLanguage");
-  let res= arrObjSearch(transArr, appLangOp, currTxt)
-  if (res == undefined) return currTxt
-  return res['EN']
+  let res= arrObjSearch(transArr, appLangOp, currTxt);
+  if (res == undefined) return currTxt;
+  return res['EN'];
 }
+
+// handle application settings json file values callback
+window.BRIDGE.onSetAppSettings((value) => {
+  if (value == null) return;
+  let appLangOp = document.getElementById("appLang");
+  if (value.hasOwnProperty('appLanguage')){
+    appLangOp.value = value['appLanguage'];
+    sessionStorage.setItem("appLanguage", value['appLanguage']);
+    $('#appLang').trigger('change');
+    //initializeTabs();
+  }else{
+    let appLanValue = appLangOp.options[appLangOp.selectedIndex].value;
+    sessionStorage.setItem("appLanguage", appLanValue);
+    BRIDGE.saveSettings(appLanValue);
+  }
+});
