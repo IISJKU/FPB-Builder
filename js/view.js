@@ -151,7 +151,18 @@ function isObject(object) {
 
 //save data button function
 function saveDataBtn() {
-  if (checkRequired() == true) BRIDGE.saveDataBtn();
+  if (checkRequired() == true) {
+    BRIDGE.saveDataBtn();
+    let msg = document.getElementById("toastBody");
+    msg.innerHTML = "";
+    let msgIcon = document.getElementById("toastIcon");
+    msgIcon.setAttribute("class", "bi bi-check-square-fill");
+    let msgText = document.getElementById("toastText");
+    msgText.innerText=''
+    msgText.appendChild(document.createTextNode(translateTxt('Confirmation')))
+    msg.appendChild(document.createTextNode(translateTxt("Your project has been saved successfully.")));
+    $("#toastMessage").show().delay(5000).fadeOut(4000);
+  } 
 }
 
 //check required fields before pressing save button or closing the application
@@ -166,19 +177,20 @@ function checkRequired() {
   emptyFields(missDepSpine, "spine-list");
 
   if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) {
-    error = document.getElementById("error");
+    error = document.getElementById("toastBody");
     error.innerHTML = "";
-    let div = document.createElement("div");
-    div.setAttribute("class", "col-md-12");
-    let header = document.createElement("h4");
-    if (emptyProjFields != 0 || emptyMetaFields != 0) header.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
-    if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) header.appendChild(document.createElement("br"));
-    if (missDepSpine != 0) header.appendChild(document.createTextNode(translateTxt("Please resolve spine missing dependencies")));
-    div.appendChild(header);
-    error.appendChild(div);
-    $("#error").show();
+    let exIcon = document.getElementById("toastIcon");
+    exIcon.setAttribute("class", "bi bi-exclamation-triangle-fill");
+    let errText = document.getElementById("toastText");
+    errText.innerText=''
+    errText.appendChild(document.createTextNode(translateTxt('Error')))
+    if (emptyProjFields != 0 || emptyMetaFields != 0) error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
+    if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) error.appendChild(document.createElement("br"));
+    if (missDepSpine != 0) error.appendChild(document.createTextNode(translateTxt("Please resolve spine missing dependencies")));
+    $("#toastMessage").show();
     return false;
   }
+  if ($("#toastIcon").hasClass("bi-exclamation-triangle-fill")) $("#toastMessage").hide();
   return true;
 }
 
@@ -214,7 +226,7 @@ function emptyFields(reqFields, listId) {
     let metaList = document.getElementById(listId);
     if ($("#" + listId + " .bi-exclamation-triangle-fill").length == 0) createIcon(metaList, "bi bi-exclamation-triangle-fill", "error");
   } else {
-    $("#error").hide();
+    if ($("#toastIcon").hasClass("bi-exclamation-triangle-fill")) $("#toastMessage").hide();
     $("#" + listId + " i.bi-exclamation-triangle-fill").remove();
   }
 }

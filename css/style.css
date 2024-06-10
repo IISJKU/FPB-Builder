@@ -122,15 +122,18 @@ input:invalid:required {
   border: 1px dashed red;
 }
 
-#error{
-  text-align: center;
+.error{
   color: red;
 }
 
 .bi-exclamation-triangle-fill{
-  float: right;
   color: red;
 }
+
+.bi-check-square-fill{
+  color: green;
+}
+
 
 .blink {
   animation: blinker 1s linear infinite;

@@ -18,12 +18,22 @@
   </head>
   <body>
     <div class="container" id="pageContainer">
+      <div aria-live="assertive" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+        <div class="toast-container top-0 end-0 p-3">
+          <div id="toastMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header" id="toastHeader">
+             <strong id="toastIcon">&nbsp;</strong><strong id="toastText" class="me-auto langTxt"></strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="$('#toastMessage').hide()"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row" id="">
         <div class="col-md-12">
           <h2 id="tabTitle" class="langTxt">Project</h2>
         </div>
-      </div>
-      <div class="row blink" id="error">
       </div>
       <div class="row" id="mainRow">
         <div class="col-md-2" id="navColumn" role="navigation">
@@ -133,6 +143,7 @@
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script href="./node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
     <script href="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script href="./node_modules/bootstrap/js/dist/toast.js"></script>
     <script src="./renderer.js"></script>
     <script src="./js/frontendDataManager.js"></script>
     <script src="./js/view.js"></script>
