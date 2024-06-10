@@ -214,7 +214,7 @@ function initializeReqFocus() {
 
 // return count of null required input fields
 function formFilter(formId) {
-  let reqFields = $("#" + formId + " input:required:invalid").filter(function () {
+  let reqFields = $("#" + formId + " input:required").filter(function () {
     return $(this).val() === "";
   }).length;
   return reqFields;
