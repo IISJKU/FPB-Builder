@@ -2,7 +2,7 @@
 Save;Speichern;Sauver;Salva;Išsaugoti
 Project;Projekt;Projet;Progetto;Projektas
 Metadata;Metadaten;Métadonnées;Metadati;Metaduomenys
-Spine;Buchrücken;Dos du livre;Dorsale;Stuburas
+Spine;Buchrücken;Arborescence;Sommario;Stuburas
 Fonts;Schriftarten;Polices de caractères;Font;Šriftai
 Publish;Veröffentlichen;Publier;Pubblicare;Paskelbti
 About;Über;À propos de;Informazioni su;Apie
@@ -57,7 +57,7 @@ Added Metadata;Hinzugefügte Metadaten;Métadonnées ajoutées;Metadati aggiunti
 Page;Seite;Page;Pagina;Puslapis
 Pages;Seiten;Pages;Pagine;Puslapiai
 Cover;Buchdeckel;Couverture;Copertina;Viršelis
-Credit;Credit;Crédit;Credito;Kreditas
+Credit;Credit;Crédit;Ringraziamenti;Kreditas
 Text;Text;Texte;Testo;Tekstas
 Narrations;Narrationen;Narrations;Narrazioni;Pasakojimai
 Image and Scripts;Bilder und Skripte;Images et scripts;Immagini e script;Vaizdas ir scenarijai
@@ -66,7 +66,7 @@ Image;Bild;Image;Immagine;Vaizdas
 Font List;Schriftarten-Liste;Liste des polices;Elenco dei font;Šriftų sąrašas
 Select All;Alle Auswählen;Sélectionner tout;Seleziona tutto;Pasirinkti visus
 File name;Dateiname;Nom du fichier;Nome del file;Failo pavadinimas
-Launch published E-Book;Starte fertiges EBook;Démarre l'EBook terminé;Iniziare l'EBook finito;Pradėti baigtą EBook
+Launch published E-Book;Starte fertiges EBook;Publié le livre électronique;Avvia l'Ebook pubblicato;Pradėti baigtą EBook
 Publish;Export;Publier;Pubblicare;Paskelbti
 Flex Picture eBook;Flex Picture eBook;Livre électronique Flex Picture;Flex Picture eBook;Lanksti paveikslėlių elektroninė knyga
 The European Flex Picture Ebook project is the fruit of collaborative work between 7 European organisations specialising in visual, hearing and cognitive impairment, as well as digital accessibility and a publishing specialist.;Das Flex Picture EBook Projekt ist das Ergebnis der kollaborativen Arbeit von 7 Europäischen Organisationen, die sich auf Barriefreiheit, sowohl in der Physischen als auch der Digitalen Welt spezialisieren.;Le projet européen Flex Picture Ebook est le fruit d'une collaboration entre 7 organisations européennes spécialisées dans les déficiences visuelles, auditives et cognitives, ainsi que dans l'accessibilité numérique et un spécialiste de l'édition.;Il progetto europeo Flex Picture Ebook è il frutto della collaborazione tra 7 organizzazioni europee specializzate in disabilità visive, uditive e cognitive, nonché in accessibilità digitale e uno specialista dell'editoria.;Europos Flex Picture Ebook projektas - tai 7 Europos organizacijų, besispecializuojančių regos, klausos ir kognityvinių sutrikimų, taip pat skaitmeninio prieinamumo ir leidybos specialistų bendradarbiavimo rezultatas.
@@ -74,7 +74,7 @@ To the website;Zur Webseite;Vers le site web;Al sito web;Į svetainę
 Institut Integriert Studieren (IIS);Institut Integriert Studieren (IIS);Institut Integriert Studieren (IIS);Istituto Studi Integrati (IIS);Integruotų studijų institutas (IIS)
 is a student support and research institute focusing on social integration, e-accessibility and inclusive education. It supports over 100 disabled students and conducts research projects at local and international level. It is also the main promoter of the International Conference on Computers Assisting People with Disabilities (ICCHP), which is a world leader in the field of digital inclusion.;ist ein Institut der Johannes Kepler Universität Linz (JKU LINZ), dass sowohl Studenten unterstützt, als auch Forschung betreibt. Mit einem Fokus auf sozialer Integration, e-Accessibilty und inklusivem Unterricht, betreut das Institut über 100 behinderte Studenten. Es beteiligt sich an Forschungsprojekten auf lokaler und internationaler Ebene und ist einere der Hauptveranstalter der "International Conference on Computers Assisting People with Disabilities" (ICCHP), einer der wichtigsten Stimmen im Feld der Digitalen Inklusion.;est un institut d'aide aux étudiants et de recherche qui se concentre sur l'intégration sociale, l'accessibilité électronique et l'éducation inclusive. Il soutient plus de 100 étudiants handicapés et mène des projets de recherche au niveau local et international. Il est également le principal promoteur de la Conférence internationale sur les ordinateurs au service des personnes handicapées (ICCHP), qui est un leader mondial dans le domaine de l'inclusion numérique.;L'Università Johannes Kepler di Linz (JKU LINZ) si occupa di ricerca e di supporto agli studenti, con un'attenzione particolare all'integrazione sociale, all'accessibilità digitale e all'istruzione inclusiva. L'Istituto sostiene oltre 100 studenti con disabilità. Partecipa a progetti di ricerca a livello nazionale e internazionale. È uno dei principali organizzatori della “Conferenza internazionale sui computer che assistono le persone con disabilità”. (ICCHP), una delle voci più autorevoli sul tema dell'inclusione digitale.;yra paramos studentams ir mokslinių tyrimų institutas, daugiausia dėmesio skiriantis socialinei integracijai, e. prieinamumui ir įtraukiajam švietimui. Jis remia daugiau kaip 100 neįgalių studentų ir vykdo mokslinių tyrimų projektus vietos ir tarptautiniu lygmeniu. Jis taip pat yra pagrindinis Tarptautinės konferencijos apie kompiuterius, padedančius neįgaliesiems (ICCHP), kuri yra pasaulinė lyderė skaitmeninės įtraukties srityje, organizatorius.
 Development Team;Entwickler-Team;Équipe de développement;Team di sviluppo;Plėtros komanda
-Repository:;Repository:;Dépôt:;Repository:;Saugykla:
+Repository:;Repository:;Repository:;Repository:;Repository:
 FPB-Builder;FPB-Builder;FPB-Builder;Costruttore FPB;FPB-Builder
 Flex Picture eBook has received funding from the European Commission’s and the Agency Erasmus+ France through the action Cooperation partnerships in school education. Grant Agreement No.: 2022-1-FR01-KA220-SCH-000088072.;Das Flex Picture eBook Projekt wird gefördert von der Europäischen Kommission und dem Erasmus+ Program, durch die Kooperation mit Partnern tätig in der Schulischen Ausbildung. Finanzvereinbarung: No.: 2022-1-FR01-KA220-SCH-000088072.;Flex Picture eBook a reçu un financement de la Commission européenne et de l'Agence Erasmus+ France dans le cadre de l'action Partenariats de coopération dans l'enseignement scolaire. Convention de subvention n° : 2022-1-FR01-KA220-SCH-000088072.;Il progetto Flex Picture eBook è finanziato dalla Commissione Europea e dal programma Programma Erasmus+, attraverso la cooperazione con partner attivi nell'istruzione scolastica. Accordo di sovvenzione n.: 2022-1-FR01-KA220-SCH-000088072.;„Flex Picture eBook“ gavo finansavimą iš Europos Komisijos ir agentūros „Erasmus+ Prancūzija“ pagal veiksmą „Bendradarbiavimo partnerystės“. mokyklinio ugdymo srityje. Dotacijos sutarties Nr. 2022-1-FR01-KA220-SCH-000088072“ .
 Open Project;Projekt Öffnen;Projet ouvert;Progetto aperto;Atviras projektas
