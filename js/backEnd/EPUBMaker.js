@@ -25,6 +25,7 @@ let language = "";
 let fileImporter = new FileImporter();
 
 let options = [];
+let window;
 
 //elements belonging in the spine shall be here
 let spine = [];
@@ -33,7 +34,8 @@ function setDirectory(d) {
   directory = d;
 }
 
-function fetchFromFrontend(window, callback) {
+function fetchFromFrontend(w, callback) {
+  window = w;
   window.webContents.executeJavaScript('sessionStorage.getItem("frontendData")', true).then((result) => {
     callback(result);
   });
@@ -86,6 +88,7 @@ function makeEPUB(n) {
         // List all the filenames after renaming
         console.log("\nFile Renamed\n");
         console.log(n);
+        window.webContents.send("publishSuccessful");
       }
     });
   });

@@ -60,4 +60,5 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value, elementId) => callback(value, elementId)),
   onSetPath: (callback) => ipcRenderer.on("setPath", (_event, value, elementId) => callback(value, elementId)),
   onSetAppSettings: (callback) => ipcRenderer.on("setAppSettings", (_event, value) => callback(value)),
+  onPublishSuccessful: (callback) => ipcRenderer.on("publishSuccessful", (_event, value) => callback(value)),
 });

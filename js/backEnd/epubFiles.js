@@ -374,7 +374,7 @@ function createPage00(firstPageNarration, fontNames) {
 
   let fontText = "";
 
-  let positions = [85, 85, 95, 110];
+  let positions = [100, 100, 100, 100];
   let odd = false;
   let checked = "true";
 
@@ -385,11 +385,11 @@ function createPage00(firstPageNarration, fontNames) {
     
 
     if (count % 2 == 0 || count == 0) {
-      fontText = fontText + '                <g id="group' + group + '" transform="translate(' + (group) * 160 + ',0)">\n';
+      fontText = fontText + '                <g id="group' + group + '" transform="translate(' + (group) * 180 + ',0)">\n';
       group++;
     }
 
-    let w = (150 + ((group-1)* 25));
+    let w = (150 + ((group-1)* 50));
     let name = key.substring(0, key.indexOf(" ")) ;
 
     let moveDown = 0;
@@ -398,8 +398,8 @@ function createPage00(firstPageNarration, fontNames) {
     if(name == "" || name == undefined) name = key;
     fontText =
       fontText +
-      '                   <g id="' + key +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown+ ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
-      '                       <rect x="10" y="50" width="'+ w +'" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
+      '                   <g id="' + key +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
+      '                       <rect x="10" y="50" width="175" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
       '                       <text alignment-baseline="middle" text-anchor="middle" x="' + positions[group] +'" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
       "                   </g>\n";
 

@@ -22,6 +22,6 @@ $(document).on("change", "#pubFileName", function (e) {
   dirName = $("#pubFileName").val();
 });
 
-window.BRIDGE.onPublishUpdate((value) => {
-  console.log(value);
+window.BRIDGE.onPublishSuccessful(() => {
+  console.log("asdadasdf");
 });
