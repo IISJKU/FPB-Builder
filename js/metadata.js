@@ -52,7 +52,7 @@ function setInfoObj(infoText){
     Title:
       "Represents an instance of a name for the EPUB publication. <a class='langTxt' target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
     Identifier:
-      "Contains an identifier such as a UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
+      "Contains an identifier such as UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
     Contributor:
       "Represent the name of a person, organisation, etc. that played a secondary role in the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" +
     infoText +
@@ -311,6 +311,10 @@ function liElement(tbl, tableVal, elemID) {
 
 // handle on click for the added metadata list elements
 $(document).on("click", "#selectedBox .list-group-item", function (e) {
+  if (sessionStorage.getItem("translation") != undefined){
+    moreTxt = translateTxt("More");
+    infoObj = setInfoObj(moreTxt);
+  }
   document.getElementById("metadataInfo").innerHTML = translateTxt(infoObj[e.currentTarget.id]);
 });
 
@@ -447,6 +451,10 @@ function updateInfo() {
   let selectedOpts = $("#itemBox option:selected");
   if (selectedOpts.length == 0) {
     return;
+  }
+  if (sessionStorage.getItem("translation") != undefined){
+    moreTxt = translateTxt("More");
+    infoObj = setInfoObj(moreTxt);
   }
   document.getElementById("metadataInfo").innerHTML = translateTxt(infoObj[selectedOpts.val()]);
 }

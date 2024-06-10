@@ -25,7 +25,7 @@ Info;Info;Informations;Informazioni;Informacija
 More;Mehr;Plus d'informations;Altro;Daugiau
 Available Metadata;Verfügbare Metadaten;Métadonnées disponibles;Metadati disponibili;Galimi metaduomenys
 Title;Titel;Titre;Titolo;Pavadinimas
-Represents an instance of a name for the EPUB publication;Diese Einstellung steht für den Namen der EPUB-Publikation;Représente une instance de nom pour la publication EPUB;Rappresenta un'istanza di nome per la pubblicazione EPUB.;Atstovauja EPUB leidinio pavadinimo egzempliorių
+Represents an instance of a name for the EPUB publication.;Diese Einstellung steht für den Namen der EPUB-Publikation.;Représente une instance de nom pour la publication EPUB.;Rappresenta un'istanza di nome per la pubblicazione EPUB.;Atstovauja EPUB leidinio pavadinimo egzempliorių.
 Identifier;Identifikator;Identifiant;Identificatore;Identifikatorius
 Contains an identifier such as UUID, DOI or ISBN.;Enthält einen Identifikator wie UUID, DOI, oder ISBN;Contient un identifiant tel que UUID, DOI ou ISBN.;Contiene un identificatore come UUID, DOI o ISBN.;Pateikiamas identifikatorius, pavyzdžiui, UUID, DOI arba ISBN.
 Contributor;Mitwirkende;Contributeur;Collaboratore;Pateikėjas
