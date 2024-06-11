@@ -14,6 +14,7 @@ $(document).on("click", "#selectAll", function (e) {
 
 $(document).on("click", "#addFont", function (e) {
     BRIDGE.setFontPath();
+    $("#selectAll").prop('checked', false);
 });
 
 window.BRIDGE.onFontSet((value) => {
@@ -56,6 +57,20 @@ function getSelectedFonts(){
 
 // handle on change event for the font items checkbox elements
 $(document).on("change", ".fontItem", function (e) {
+    if ($('.fontItem:checked').length >= 6){
+        $("#selectAll").prop('checked', false);
+        $(this).prop('checked', false);
+        let msg = document.getElementById("toastBody");
+        msg.innerHTML = "";
+        let msgIcon = document.getElementById("toastIcon");
+        msgIcon.setAttribute("class", "bi bi-info-square-fill");
+        let msgText = document.getElementById("toastText");
+        msgText.innerText=''
+        msgText.appendChild(document.createTextNode(translateTxt('Info')))
+        msg.appendChild(document.createTextNode(translateTxt("Maximum 6 fonts can be selected.")));
+        $("#toastMessage").show().delay(5000).fadeOut(4000);
+        return;
+    }
     getSelectedFonts();
    if ($(this).is(':checked') == false && $("#selectAll").prop('checked') == true){
         $("#selectAll").prop('checked', false);
