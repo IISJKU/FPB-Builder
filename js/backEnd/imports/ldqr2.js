@@ -156,6 +156,7 @@ function ldqrBoutonController(e) {
       (ldqr.FONT_SIZE_CSS_CLASS = ["ldqr-font-size-26", "ldqr-font-size-24", "ldqr-font-size-20"]),
       (ldqr.FONT_INTERLIGNE_CSS_CLASS = ["ldqr-interligne-1", "ldqr-interligne-2", "ldqr-interligne-3"]),
       (ldqr.FONT_SPACE_WORD_CSS_CLASS = ["ldqr-space-word-1", "ldqr-space-word-2", "ldqr-space-word-3"]),
+      (ldqr.FONT_CASSE_CSS_CLASS = ["ldqr-font-majuscule", "ldqr-font-minuscule"]),
       (ldqr.FONT_SPACE_CAR_CSS_CLASS = ["ldqr-space-car-1", "ldqr-space-car-2", "ldqr-space-car-3"]),
       (ldqr.FONT_SPACE_LINE_CSS_CLASS = ["ldqr-space-line-1", "ldqr-space-line-2", "ldqr-space-line-3"]),
       (ldqr.DEFERRED_EVENT_DELAY = 1e3);
@@ -167,9 +168,16 @@ function ldqrBoutonController(e) {
     ldqr.DATA_LOCAL_FORAGE.getItem("font-name").then(function (e) {
       new choixFontName((e = e || "choixLucioleBold"));
     }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("couleur-fond").then(function (e) {
-        new choixCouleurFond((e = e || ldqr.COULEURS_FOND_CSS_CLASS[0]));
-      }),
+      // applique la casse
+      ldqr.DATA_LOCAL_FORAGE.getItem("font-casse").then(function (d) {
+        d = d || "activerMinuscule";
+        console.log(d);
+        new activerMajuscule(d);
+      });
+
+    ldqr.DATA_LOCAL_FORAGE.getItem("couleur-fond").then(function (e) {
+      new choixCouleurFond((e = e || ldqr.COULEURS_FOND_CSS_CLASS[0]));
+    }),
       ldqr.DATA_LOCAL_FORAGE.getItem("texte-image").then(function (e) {
         e = e || "texteImage";
       }),
@@ -266,51 +274,63 @@ function ldqrSvgController(e, t) {
     this.xTap && this.yTap && (e.preventDefault(), e.stopPropagation(), this.setLocalForage());
 }),
   (ldqrBoutonController.prototype.setLocalForage = function (e) {
-    var t = this.el,
-      o = t.getAttribute("id"),
-      a = document.getElementById("monTexteAudio");
-    if (t.hasClassName("bouton-choix-police")) new choixFontName(o);
-    else if (t.hasClassName("font-size")) ldqr.DATA_LOCAL_FORAGE.setItem("font-size", o).then(function (e) {});
-    else if (t.hasClassName("space-word")) ldqr.DATA_LOCAL_FORAGE.setItem("space-word", o).then(function (e) {});
-    else if (t.hasClassName("space-car")) ldqr.DATA_LOCAL_FORAGE.setItem("space-car", o).then(function (e) {});
-    else if (t.hasClassName("space-line")) ldqr.DATA_LOCAL_FORAGE.setItem("space-line", o).then(function (e) {});
-    else if (t.hasClassName("couleur-fond")) new choixCouleurFond(o);
-    else if (t.hasClassName("texte-image")) ldqr.DATA_LOCAL_FORAGE.setItem("texte-image", o).then(function (e) {});
-    else if (t.hasClassName("couleur-image")) new choixCouleurImage(o), choixVersionImage00();
-    else if (t.hasClassName("def-image")) new choixVersionImage(o), choixVersionImage00();
-    else if (t.hasClassName("affiche-texte"))
-      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-texte", o).then(function (e) {
+    var elt = this.el;
+
+    var eltId = elt.getAttribute("id");
+
+    var monAudioPage0 = document.getElementById("monTexteAudio");
+    if (elt.hasClassName("bouton-choix-police")) new choixFontName(eltId);
+    else if (elt.hasClassName("font-size")) ldqr.DATA_LOCAL_FORAGE.setItem("font-size", eltId).then(function (e) {});
+    else if (elt.hasClassName("space-word")) ldqr.DATA_LOCAL_FORAGE.setItem("space-word", eltId).then(function (e) {});
+    else if (elt.hasClassName("space-car")) ldqr.DATA_LOCAL_FORAGE.setItem("space-car", eltId).then(function (e) {});
+    else if (elt.hasClassName("space-line")) ldqr.DATA_LOCAL_FORAGE.setItem("space-line", eltId).then(function (e) {});
+    else if (elt.hasClassName("couleur-fond")) new choixCouleurFond(eltId);
+    else if (elt.hasClassName("texte-image")) ldqr.DATA_LOCAL_FORAGE.setItem("texte-image", eltId).then(function (e) {});
+    else if (elt.hasClassName("couleur-image")) new choixCouleurImage(eltId), choixVersionImage00();
+    else if (elt.hasClassName("def-image")) new choixVersionImage(eltId), choixVersionImage00();
+    else if (elt.hasClassName("affiche-texte"))
+      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-texte", eltId).then(function (e) {
         new affichageTexte(e);
       });
-    else if (t.hasClassName("affiche-image"))
-      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-image", o).then(function (e) {
+    else if (elt.hasClassName("affiche-image"))
+      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-image", eltId).then(function (e) {
         new affichageImage(e);
       });
-    else if ("boutonBW" === o || "boutonCouleur" === o) new choixCouleurImage(o), new choixVersionImage00();
-    else if ("boutonVersion" === o) {
+    else if ("boutonBW" === eltId || "boutonCouleur" === eltId) new choixCouleurImage(eltId), new choixVersionImage00();
+    else if ("boutonVersion" === eltId) {
       var n = document.getElementById("menuBas"),
         s = document.getElementById("boutonsAllVersion");
       n.hasClassName("haut")
         ? (n.removeClassName("haut"), n.addClassName("bas"), s.removeClassName("displayInLine"), s.addClassName("notDisplay"))
         : (n.removeClassName("bas"), n.addClassName("haut"), s.removeClassName("notDisplay"), s.addClassName("displayInLine"));
-    } else if (t.hasClassName("bouton-version-active")) new activerDesactiverBoutonVersion(o);
-    else if ("desactiverCouleurImage" === o || "activerCouleurImage" === o) new activerDesactiverBoutonCouleur(o);
-    else if ("desactiverDYS" === o || "activerDYS" === o) new activerDesactiverBoutonDYS(o);
-    else if ("audioPlus" === o || "audioMoins" === o)
-      (ldqr.VITESSE_SON_VOIX = "audioPlus" === o ? ldqr.VITESSE_SON_VOIX + 0.2 : ldqr.VITESSE_SON_VOIX - 0.2),
+    } else if (elt.hasClassName("bouton-version-active")) new activerDesactiverBoutonVersion(eltId);
+    else if (eltId === "activerMajuscule" || eltId === "activerMinuscule") {
+      new activerMajuscule(eltId);
+      // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-dys-active", eltId).then(function (d) {
+      //   new activerDesactiverBoutonDYS(eltId);
+      // });
+    } else if ("desactiverCouleurImage" === eltId || "activerCouleurImage" === eltId) new activerDesactiverBoutonCouleur(eltId);
+    else if ("desactiverDYS" === eltId || "activerDYS" === eltId) new activerDesactiverBoutonDYS(eltId);
+    else if ("audioPlus" === eltId || "audioMoins" === eltId)
+      (ldqr.VITESSE_SON_VOIX = "audioPlus" === eltId ? ldqr.VITESSE_SON_VOIX + 0.2 : ldqr.VITESSE_SON_VOIX - 0.2),
         ldqr.VITESSE_SON_VOIX < 0.2 && (ldqr.VITESSE_SON_VOIX = 0.2),
         ldqr.VITESSE_SON_VOIX > 4 && (ldqr.VITESSE_SON_VOIX = 4),
         ldqr.DATA_LOCAL_FORAGE.setItem("vitesse-audio-voix", Math.round(100 * ldqr.VITESSE_SON_VOIX) / 100).then(function (e) {
-          (document.getElementById("vitesseAudioVal").querySelector("text").innerHTML = e), (a.currentTime = 0), (a.playbackRate = e), a.play();
+          (document.getElementById("vitesseAudioVal").querySelector("text").innerHTML = e),
+            (monAudioPage0.currentTime = 0),
+            (monAudioPage0.playbackRate = e),
+            monAudioPage0.play();
         });
-    else if ("desactiverAudio" === o || "activerAudio" === o)
-      ldqr.DATA_LOCAL_FORAGE.setItem("bouton-audio-active", o).then(function (e) {
-        new activerDesactiverBoutonAudio(o);
+    else if ("desactiverAudio" === eltId || "activerAudio" === eltId)
+      ldqr.DATA_LOCAL_FORAGE.setItem("bouton-audio-active", eltId).then(function (e) {
+        new activerDesactiverBoutonAudio(eltId);
       });
-    else if ("gras" === o || "italique" === o || "souligne" === o || "muet" === o) {
-      t.hasClassName("checked") ? (t.addClassName("unchecked"), t.removeClassName("checked")) : (t.addClassName("checked"), t.removeClassName("unchecked")),
+    else if ("gras" === eltId || "italique" === eltId || "souligne" === eltId || "muet" === eltId) {
+      elt.hasClassName("checked")
+        ? (elt.addClassName("unchecked"), elt.removeClassName("checked"))
+        : (elt.addClassName("checked"), elt.removeClassName("unchecked")),
         new activerDesactiverBoutonDYSchoix(returnTabChoix(".bouton-dys-choix"));
-    } else t.hasClassName("pa-menu-bouton") && new affichagePageMenu(o);
+    } else elt.hasClassName("pa-menu-bouton") && new affichagePageMenu(eltId);
   }),
   (ldqrBoutonController.prototype.handleEvent = function (e) {
     switch ((e.stopPropagation(), e.preventDefault(), e.type)) {
@@ -536,6 +556,28 @@ function activerDesactiverBoutonDYS(e) {
     }
   }
 }
+function activerMajuscule(d) {
+  var elt = document.getElementById(d);
+  if (elt) {
+    appliqueChecked(elt, ".bouton-majuscule-active");
+  }
+
+  var texte = document.querySelectorAll("#monTexte,text");
+  if (!texte) return;
+  var className = "ldqr-font-minuscule";
+  if (d === "activerMajuscule") {
+    className = "ldqr-font-majuscule";
+  }
+
+  // new removeClassNameAll(document.body, ldqr.FONT_CSS_CLASS);
+  for (var i = 0; i !== texte.length; i++) {
+    new removeClassNameAll(texte[i], ldqr.FONT_CASSE_CSS_CLASS);
+    if (texte[i].getAttribute("id") !== "txt_minuscule") {
+      texte[i].classList.add(className);
+    }
+  }
+}
+
 function activerDesactiverBoutonAudio(e) {
   var t = document.getElementById(e),
     o = document.getElementById("monAudioPlay");

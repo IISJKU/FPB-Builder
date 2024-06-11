@@ -171,6 +171,9 @@ h4 img {
   display: block;
   font-size: 0.7em !important;
 }
+.ldqr-font-majuscule {
+  text-transform: uppercase;
+}
 
 /* FONTIDS */
 .notDisplay {

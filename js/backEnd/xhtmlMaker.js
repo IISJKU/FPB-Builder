@@ -430,7 +430,7 @@ function addFonts(element) {
       tLine = line.substring(0, line.indexOf('"') + 1) + Object.keys(fontNames)[0] + '";';
     } else if (line.includes("/* FONTIDS */")) {
       for (const [key, value] of Object.entries(fontNames)) {
-        tLine = tLine + ".ldqr-font-" + key.replaceAll(" ", "").toLowerCase() + "{\n" + '  font-family: "' + key + '", !important;\n' + " }\n";
+        tLine = tLine + ".ldqr-font-" + key.replaceAll(" ", "").toLowerCase() + "{\n" + '  font-family: "' + key + '", "sans-serif" !important;\n' + " }\n";
       }
     } else {
       tLine = line;
