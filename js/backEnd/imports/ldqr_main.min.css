@@ -176,6 +176,9 @@ h4 img {
 }
 
 /* FONTIDS */
+.ldqr-font-bold {
+  font-weight: 700 !important;
+}
 .notDisplay {
   display: none !important;
 }
@@ -332,13 +335,11 @@ p {
 }
 .checked .fond-bouton-version,
 g.checked rect {
-  fill: #d1ffd7 !important;
   stroke-width: 4px !important;
 }
 .checked,
 .checked div {
-  background-color: #d1ffd7 !important;
-  border-width: 3px !important;
+  border-width: 4px !important;
 }
 .opacity02 {
   opacity: 0.2;
