@@ -64,6 +64,14 @@ const createWindow = () => {
   //application on close event check if there is any changes on the data before closing the app
   mainWindow.on("close", async function (event) {
     event.preventDefault();
+    let yesBtn, noBtn, msgTitle, msg = '';
+    mainWindow.webContents.executeJavaScript('document.getElementById("appLang").value', true).then( (lang) => {
+      transArr = jsTranslate(lang,["Yes", "No", "Confirmation", "You have unsaved changes. Save before quitting?"]);
+      yesBtn = transArr[0];
+      noBtn = transArr[1];
+      msgTitle = transArr[2];
+      msg = transArr[3];
+    });
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
       fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8",  (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
@@ -84,9 +92,9 @@ const createWindow = () => {
           }
           const choice = dialog.showMessageBoxSync(this, {
             type: "warning",
-            buttons: ["Yes", "No"],
-            title: "Confirm",
-            message: "You have unsaved changes. Save before quitting?",
+            buttons: [yesBtn, noBtn],
+            title: msgTitle,
+            message: msg,
           });
           // if the user choose to save the data of the book
           if (choice === 0) {
@@ -136,7 +144,6 @@ function loadRecentProjects() {
     });
   }
 
-  //projects.toString()
   return loadedProjects;
 }
 
@@ -149,4 +156,46 @@ function loadAppSettings() {
   }
   let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\appSettings.json", { encoding: "utf8" }))
   return appSett;
+}
+
+function jsTranslate(lang, paramArr){
+  let retArr = [];
+  let transArr = getTranslationCsv();
+  for (let j = 0; j < paramArr.length; j++) {
+    let result = transSrch(transArr, paramArr[j]);
+    if (result == undefined) return paramArr[j];
+    retArr.push(result[lang]);
+  }
+  return retArr;
+}
+
+// returns processed array of translation.csv file
+function getTranslationCsv() {
+// read csv into string
+let data = fs.readFileSync("translation.csv").toLocaleString();
+let lines = [];
+// string to array
+let rows = data.split("\n"); // split rows
+rows.forEach((row) => {
+    let headers = rows[0].split(";");
+    columns = row.split(";"); //split columns
+    let tarr = {};
+      for (let j = 0; j < headers.length; j++) {
+        tarr[headers[j]] = columns[j];
+      }
+    lines.push(tarr);
+})
+  return lines;
+}
+
+// search for value in an array of objects
+function transSrch(arr, value) {
+  if (arr == null) return null;
+  for (let i = 0; i < arr.length; i++) {
+    for (let val in arr[i]) {
+      if (arr[i][val] === value) {
+        return arr[i];
+      }
+    }
+  }
 }

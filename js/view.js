@@ -241,24 +241,23 @@ function camelCaseStr(str) {
 
 // returns processed array of translation.csv file
 function translationArr() {
-  var lines = [];
+  let lines = [];
   fetch("translation.csv")
     .then((res) => res.text())
     .then(async (text) => {
-      var allTextLines = text.split(/\r\n|\n/);
-      var headers = allTextLines[0].split(";");
-      for (var i = 1; i < allTextLines.length; i++) {
-        var data = allTextLines[i].split(";");
+      let allTextLines = text.split(/\r\n|\n/);
+      let headers = allTextLines[0].split(";");
+      for (let i = 1; i < allTextLines.length; i++) {
+        let data = allTextLines[i].split(";");
         if (data.length == headers.length) {
-          var tarr = {};
-          for (var j = 0; j < headers.length; j++) {
+          let tarr = {};
+          for (let j = 0; j < headers.length; j++) {
             tarr[headers[j]] = data[j];
           }
           lines.push(tarr);
         }
       }
       await sessionStorage.setItem("translation", JSON.stringify(lines));
-      //translate(lines);
     })
     .catch((e) => console.error(e));
   return lines;
