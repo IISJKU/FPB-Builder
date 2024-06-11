@@ -165,49 +165,104 @@ function ldqrBoutonController(e) {
     (this.boutonsChoix = new ldqrBoutonBaseController()), (this.boutonsSurprise = new ldqrBoutonBaseSurprise()), (this.svgAction = new ldqrSvgBaseController());
   }),
   (ldqrBaseController.prototype.appliqueLocalForage = function () {
-    ldqr.DATA_LOCAL_FORAGE.getItem("font-name").then(function (e) {
-      new choixFontName((e = e || "choixLucioleBold"));
-    }),
-      // applique la casse
-      ldqr.DATA_LOCAL_FORAGE.getItem("font-casse").then(function (d) {
-        d = d || "activerMinuscule";
-        console.log(d);
-        new activerMajuscule(d);
-      });
+    ldqr.DATA_LOCAL_FORAGE.getItem("font-name").then(function (d) {
+      d = d || "choixLucioleBold";
+      console.log(d);
+      new choixFontName(d);
+    });
 
-    ldqr.DATA_LOCAL_FORAGE.getItem("couleur-fond").then(function (e) {
-      new choixCouleurFond((e = e || ldqr.COULEURS_FOND_CSS_CLASS[0]));
-    }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("texte-image").then(function (e) {
-        e = e || "texteImage";
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("def-image").then(function (e) {
-        new choixVersionImage((e = e || "version01")), new choixVersionImage00();
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("couleur-image").then(function (e) {
-        new choixCouleurImage((e = e || "boutonCouleur")), new choixVersionImage00();
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("bouton-version-active").then(function (e) {
-        new activerDesactiverBoutonVersion((e = e || "activerImageVersion"));
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("bouton-couleur-active").then(function (e) {
-        new activerDesactiverBoutonCouleur((e = e || "activerCouleurImage"));
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-active").then(function (e) {
-        new activerDesactiverBoutonDYS((e = e || "desactiverDYS"));
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("bouton-audio-active").then(function (e) {
-        new activerDesactiverBoutonAudio((e = e || "activerAudio"));
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-choix").then(function (e) {
-        new activerDesactiverBoutonDYSchoix((e = e || [!1, !1, !1, !1]));
-      }),
-      ldqr.DATA_LOCAL_FORAGE.getItem("vitesse-audio-voix").then(function (e) {
-        (e = e || 1), (ldqr.VITESSE_SON_VOIX = e);
-        var t = document.getElementById("vitesseAudioVal"),
-          o = t && t.querySelector("text");
-        o && (o.innerHTML = e);
-      });
+    // applique la casse
+    ldqr.DATA_LOCAL_FORAGE.getItem("font-casse").then(function (d) {
+      d = d || "activerMinuscule";
+      console.log("APPLY");
+      console.log(d);
+      new activerMajuscule(d);
+    });
+
+    // // applique la taille de la police
+    // ldqr.DATA_LOCAL_FORAGE.getItem("font-size").then(function (d) {
+    //   d = d || ldqr.FONT_SIZE_CSS_CLASS[0];
+    //   new choixFontSize(d);
+    // });
+    // // applique l'espacement des mots
+    // ldqr.DATA_LOCAL_FORAGE.getItem("space-word").then(function (d) {
+    //   d = d || ldqr.FONT_SPACE_WORD_CSS_CLASS[0];
+    //   // new choixSpaceWord(d);
+    // });
+    // // applique l'espacement des caractères
+    // ldqr.DATA_LOCAL_FORAGE.getItem("space-car").then(function (d) {
+    //   d = d || ldqr.FONT_SPACE_CAR_CSS_CLASS[0];
+    //   // new choixSpaceCar(d);
+    // });
+    // // applique l'espacement des lignes
+    // ldqr.DATA_LOCAL_FORAGE.getItem("space-line").then(function (d) {
+    //   d = d || ldqr.FONT_SPACE_LINE_CSS_CLASS[0];
+    //   // new choixSpaceLine(d);
+    // });
+    // applique la couleur de fond
+    ldqr.DATA_LOCAL_FORAGE.getItem("couleur-fond").then(function (d) {
+      d = d || ldqr.COULEURS_FOND_CSS_CLASS[0];
+      new choixCouleurFond(d);
+    });
+    // applique texte
+    ldqr.DATA_LOCAL_FORAGE.getItem("texte-image").then(function (d) {
+      d = d || "texteImage";
+      // new choixTexteImage(d);
+    });
+    // applique les degrés
+    // new versionImage();
+    ldqr.DATA_LOCAL_FORAGE.getItem("def-image").then(function (d) {
+      d = d || "version01";
+      new choixVersionImage(d);
+      new choixVersionImage00();
+    });
+
+    //applique noir et blanc
+    ldqr.DATA_LOCAL_FORAGE.getItem("couleur-image").then(function (d) {
+      d = d || "boutonCouleur";
+      new choixCouleurImage(d);
+      new choixVersionImage00();
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("bouton-version-active").then(function (d) {
+      d = d || "activerImageVersion";
+      console.log(d);
+      new activerDesactiverBoutonVersion(d);
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("bouton-couleur-active").then(function (d) {
+      d = d || "activerCouleurImage";
+      console.log(d);
+      new activerDesactiverBoutonCouleur(d);
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-active").then(function (d) {
+      d = d || "desactiverDYS";
+      console.log(d);
+      new activerDesactiverBoutonDYS(d);
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("bouton-audio-active").then(function (d) {
+      d = d || "activerAudio";
+      console.log(d);
+      new activerDesactiverBoutonAudio(d);
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-choix").then(function (d) {
+      d = d || [false, false, false, false];
+      new activerDesactiverBoutonDYSchoix(d);
+    });
+    ldqr.DATA_LOCAL_FORAGE.getItem("vitesse-audio-voix").then(function (d) {
+      d = d || 1;
+      ldqr.VITESSE_SON_VOIX = d;
+      var vitesseVal = document.getElementById("vitesseAudioVal");
+      var txtVitesse = vitesseVal && vitesseVal.querySelector("text");
+      txtVitesse && (txtVitesse.innerHTML = d);
+    });
+    // ldqr.DATA_LOCAL_FORAGE.getItem("vitesse-double-tape").then(function (d) {
+    //   d = d || 0.5;
+    //   console.log("dbleTape",d);
+    //   ldqr.VITESSE_DOUBLE_TAPE= d;
+    //   var vitesseVal = document.getElementById("dblTapeVal");
+    //   var txtVitesse = vitesseVal && vitesseVal.querySelector("text");
+    //   console.log(txtVitesse);
+    //   txtVitesse && (txtVitesse.innerHTML = d);
+    // });
   }),
   (ldqrBoutonController.prototype.touchStart = function (e) {
     switch ((e.preventDefault(), e.stopPropagation(), e.type)) {
@@ -273,64 +328,159 @@ function ldqrSvgController(e, t) {
     (this.yTap = Math.abs(this.startY - o) < ldqr.TAP_THRESHOLD),
     this.xTap && this.yTap && (e.preventDefault(), e.stopPropagation(), this.setLocalForage());
 }),
-  (ldqrBoutonController.prototype.setLocalForage = function (e) {
+  (ldqrBoutonController.prototype.setLocalForage = function (event) {
     var elt = this.el;
-
     var eltId = elt.getAttribute("id");
-
+    var ldqrBoutonController = this;
     var monAudioPage0 = document.getElementById("monTexteAudio");
-    if (elt.hasClassName("bouton-choix-police")) new choixFontName(eltId);
-    else if (elt.hasClassName("font-size")) ldqr.DATA_LOCAL_FORAGE.setItem("font-size", eltId).then(function (e) {});
-    else if (elt.hasClassName("space-word")) ldqr.DATA_LOCAL_FORAGE.setItem("space-word", eltId).then(function (e) {});
-    else if (elt.hasClassName("space-car")) ldqr.DATA_LOCAL_FORAGE.setItem("space-car", eltId).then(function (e) {});
-    else if (elt.hasClassName("space-line")) ldqr.DATA_LOCAL_FORAGE.setItem("space-line", eltId).then(function (e) {});
-    else if (elt.hasClassName("couleur-fond")) new choixCouleurFond(eltId);
-    else if (elt.hasClassName("texte-image")) ldqr.DATA_LOCAL_FORAGE.setItem("texte-image", eltId).then(function (e) {});
-    else if (elt.hasClassName("couleur-image")) new choixCouleurImage(eltId), choixVersionImage00();
-    else if (elt.hasClassName("def-image")) new choixVersionImage(eltId), choixVersionImage00();
-    else if (elt.hasClassName("affiche-texte"))
-      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-texte", eltId).then(function (e) {
-        new affichageTexte(e);
+    console.log(elt);
+    if (elt.classList.contains("bouton-choix-police")) {
+      new choixFontName(eltId);
+      // ldqr.DATA_LOCAL_FORAGE.setItem("font-name", eltId).then(function (d) {
+      // // new choixFontName(d);
+      //   // ldqrBoutonController.setPositionTriangleBulle();
+      // });
+    } else if (elt.classList.contains("font-size")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("font-size", eltId).then(function (d) {
+        // new choixFontSize(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
       });
-    else if (elt.hasClassName("affiche-image"))
-      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-image", eltId).then(function (e) {
-        new affichageImage(e);
+    } else if (elt.classList.contains("space-word")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("space-word", eltId).then(function (d) {
+        // new choixSpaceWord(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
       });
-    else if ("boutonBW" === eltId || "boutonCouleur" === eltId) new choixCouleurImage(eltId), new choixVersionImage00();
-    else if ("boutonVersion" === eltId) {
-      var n = document.getElementById("menuBas"),
-        s = document.getElementById("boutonsAllVersion");
-      n.hasClassName("haut")
-        ? (n.removeClassName("haut"), n.addClassName("bas"), s.removeClassName("displayInLine"), s.addClassName("notDisplay"))
-        : (n.removeClassName("bas"), n.addClassName("haut"), s.removeClassName("notDisplay"), s.addClassName("displayInLine"));
-    } else if (elt.hasClassName("bouton-version-active")) new activerDesactiverBoutonVersion(eltId);
-    else if (eltId === "activerMajuscule" || eltId === "activerMinuscule") {
+    } else if (elt.classList.contains("space-car")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("space-car", eltId).then(function (d) {
+        // new choixSpaceCar(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
+      });
+    } else if (elt.classList.contains("space-line")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("space-line", eltId).then(function (d) {
+        // new choixSpaceLine(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
+      });
+    } else if (elt.classList.contains("couleur-fond")) {
+      new choixCouleurFond(eltId);
+
+      // ldqr.DATA_LOCAL_FORAGE.setItem("couleur-fond", eltId).then(function (d) {
+      //   new choixCouleurFond(d);
+      // });
+    } else if (elt.classList.contains("texte-image")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("texte-image", eltId).then(function (d) {
+        // ldqrLocalForage.initVersion();
+        // new choixTexteImage(d);
+      });
+    } else if (elt.classList.contains("couleur-image")) {
+      new choixCouleurImage(eltId);
+      choixVersionImage00();
+
+      // ldqr.DATA_LOCAL_FORAGE.setItem("couleur-image", eltId).then(function (d) {
+      //   // ldqrLocalForage.initVersion();
+      //   new choixCouleurImage(d);
+      // });
+    } else if (elt.classList.contains("def-image")) {
+      new choixVersionImage(eltId);
+      choixVersionImage00();
+      // ldqr.DATA_LOCAL_FORAGE.setItem("def-image", eltId).then(function (d) {
+
+      // });
+    } else if (elt.classList.contains("affiche-texte")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-texte", eltId).then(function (d) {
+        // new choixFontSize(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
+        new affichageTexte(d);
+      });
+    } else if (elt.classList.contains("affiche-image")) {
+      ldqr.DATA_LOCAL_FORAGE.setItem("affiche-image", eltId).then(function (d) {
+        // new choixFontSize(d);
+        // ldqrBoutonController.setPositionTriangleBulle();
+        new affichageImage(d);
+      });
+    } else if (eltId === "boutonBW" || eltId === "boutonCouleur") {
+      new choixCouleurImage(eltId);
+      new choixVersionImage00();
+      // ldqr.DATA_LOCAL_FORAGE.setItem("couleur-image", eltId).then(function (d) {
+      //   // ldqrLocalForage.initVersion();
+
+      // });
+    } else if (eltId === "boutonVersion") {
+      var menuBas = document.getElementById("menuBas");
+      var allVersion = document.getElementById("boutonsAllVersion");
+      if (menuBas.classList.contains("haut")) {
+        menuBas.classList.remove("haut");
+        menuBas.classList.add("bas");
+        allVersion.classList.remove("displayInLine");
+        allVersion.classList.add("notDisplay");
+      } else {
+        menuBas.classList.remove("bas");
+        menuBas.classList.add("haut");
+        allVersion.classList.remove("notDisplay");
+        allVersion.classList.add("displayInLine");
+      }
+    } else if (elt.classList.contains("bouton-version-active")) {
+      new activerDesactiverBoutonVersion(eltId);
+
+      // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-version-active", eltId).then(function (d) {
+      //   new activerDesactiverBoutonVersion(eltId);
+      // });
+    } else if (eltId === "activerMajuscule" || eltId === "activerMinuscule") {
       new activerMajuscule(eltId);
       // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-dys-active", eltId).then(function (d) {
       //   new activerDesactiverBoutonDYS(eltId);
       // });
-    } else if ("desactiverCouleurImage" === eltId || "activerCouleurImage" === eltId) new activerDesactiverBoutonCouleur(eltId);
-    else if ("desactiverDYS" === eltId || "activerDYS" === eltId) new activerDesactiverBoutonDYS(eltId);
-    else if ("audioPlus" === eltId || "audioMoins" === eltId)
-      (ldqr.VITESSE_SON_VOIX = "audioPlus" === eltId ? ldqr.VITESSE_SON_VOIX + 0.2 : ldqr.VITESSE_SON_VOIX - 0.2),
-        ldqr.VITESSE_SON_VOIX < 0.2 && (ldqr.VITESSE_SON_VOIX = 0.2),
-        ldqr.VITESSE_SON_VOIX > 4 && (ldqr.VITESSE_SON_VOIX = 4),
-        ldqr.DATA_LOCAL_FORAGE.setItem("vitesse-audio-voix", Math.round(100 * ldqr.VITESSE_SON_VOIX) / 100).then(function (e) {
-          (document.getElementById("vitesseAudioVal").querySelector("text").innerHTML = e),
-            (monAudioPage0.currentTime = 0),
-            (monAudioPage0.playbackRate = e),
-            monAudioPage0.play();
-        });
-    else if ("desactiverAudio" === eltId || "activerAudio" === eltId)
-      ldqr.DATA_LOCAL_FORAGE.setItem("bouton-audio-active", eltId).then(function (e) {
+    } else if (eltId === "desactiverCouleurImage" || eltId === "activerCouleurImage") {
+      new activerDesactiverBoutonCouleur(eltId);
+      // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-couleur-active", eltId).then(function (d) {
+      //   new activerDesactiverBoutonCouleur(eltId);
+      // });
+    } else if (eltId === "desactiverDYS" || eltId === "activerDYS") {
+      new activerDesactiverBoutonDYS(eltId);
+      // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-dys-active", eltId).then(function (d) {
+      //   new activerDesactiverBoutonDYS(eltId);
+      // });
+    } else if (eltId === "audioPlus" || eltId === "audioMoins") {
+      if (eltId === "audioPlus") {
+        ldqr.VITESSE_SON_VOIX = ldqr.VITESSE_SON_VOIX + 0.2;
+      } else {
+        ldqr.VITESSE_SON_VOIX = ldqr.VITESSE_SON_VOIX - 0.2;
+      }
+      if (ldqr.VITESSE_SON_VOIX < 0.2) {
+        ldqr.VITESSE_SON_VOIX = 0.2;
+      }
+      if (ldqr.VITESSE_SON_VOIX > 4) {
+        ldqr.VITESSE_SON_VOIX = 4;
+      }
+
+      ldqr.DATA_LOCAL_FORAGE.setItem("vitesse-audio-voix", Math.round(ldqr.VITESSE_SON_VOIX * 100) / 100).then(function (d) {
+        var vitesseVal = document.getElementById("vitesseAudioVal").querySelector("text");
+        vitesseVal.innerHTML = d;
+        monAudioPage0.currentTime = 0;
+        monAudioPage0.playbackRate = d;
+        monAudioPage0.play();
+      });
+    } else if (eltId === "desactiverAudio" || eltId === "activerAudio") {
+      ldqr.DATA_LOCAL_FORAGE.setItem("bouton-audio-active", eltId).then(function (d) {
         new activerDesactiverBoutonAudio(eltId);
       });
-    else if ("gras" === eltId || "italique" === eltId || "souligne" === eltId || "muet" === eltId) {
-      elt.hasClassName("checked")
-        ? (elt.addClassName("unchecked"), elt.removeClassName("checked"))
-        : (elt.addClassName("checked"), elt.removeClassName("unchecked")),
-        new activerDesactiverBoutonDYSchoix(returnTabChoix(".bouton-dys-choix"));
-    } else elt.hasClassName("pa-menu-bouton") && new affichagePageMenu(eltId);
+    } else if (eltId === "gras" || eltId === "italique" || eltId === "souligne" || eltId === "muet") {
+      console.log(eltId);
+      if (elt.classList.contains("checked")) {
+        elt.classList.add("unchecked");
+        elt.classList.remove("checked");
+      } else {
+        elt.classList.add("checked");
+        elt.classList.remove("unchecked");
+      }
+      var val = returnTabChoix(".bouton-dys-choix");
+      new activerDesactiverBoutonDYSchoix(val);
+      // ldqr.DATA_LOCAL_FORAGE.setItem("bouton-dys-choix", val).then(function (d) {
+      //   d = d || [false, false, false, false];
+      //   new activerDesactiverBoutonDYSchoix(d);
+      // });
+    } else if (elt.classList.contains("pa-menu-bouton")) {
+      new affichagePageMenu(eltId);
+    }
   }),
   (ldqrBoutonController.prototype.handleEvent = function (e) {
     switch ((e.stopPropagation(), e.preventDefault(), e.type)) {
@@ -466,16 +616,23 @@ function removeClassNameAll(e, t) {
     a = t.length;
   for (o = 0; o !== a; o++) e.removeClassName(t[o]);
 }
-function appliqueChecked(e, t) {
-  var o = document.querySelector(".bouton-choix-police"),
-    a = document.querySelector(".couleur-fond");
-  if (o && a) {
-    var n,
-      s = document.querySelectorAll(t),
-      i = s.length;
-    for (n = 0; n !== i; n++) s[n].setAttribute("aria-checked", "false"), s[n].addClassName("unchecked"), s[n].removeClassName("checked");
-    e.setAttribute("aria-checked", "true"), e.addClassName("checked"), e.removeClassName("unchecked");
+function appliqueChecked(el, ensemble) {
+  var bouton1 = document.querySelector(".bouton-choix-police");
+  var bouton2 = document.querySelector(".couleur-fond");
+  if (!bouton1) return;
+  if (!bouton2) return;
+  var mesBoutons = document.querySelectorAll(ensemble),
+    mesBoutonsLength = mesBoutons.length,
+    i;
+  for (i = 0; i !== mesBoutonsLength; i++) {
+    mesBoutons[i].setAttribute("aria-checked", "false");
+    mesBoutons[i].classList.add("unchecked");
+    mesBoutons[i].classList.remove("checked");
+    // mesBoutons[i].tabIndex = -1;
   }
+  el.setAttribute("aria-checked", "true");
+  el.classList.add("checked");
+  el.classList.remove("unchecked");
 }
 function choixVersionImage(e) {
   if (document.querySelector(".def-image")) {
@@ -516,15 +673,23 @@ function choixVersionImage00() {
         e || "nb" !== s || n !== l || t[o].addClassName("notDisplay");
   }
 }
-function activerDesactiverBoutonVersion(e) {
-  appliqueChecked(document.getElementById(e), ".bouton-version-active");
-  var t = document.getElementById("fondBlancBoutonVersion"),
-    o = document.getElementById("boutonVersion");
-  t &&
-    ("desactiverImageVersion" === e
-      ? (t.addClassName("notDisplay"), o.addClassName("notDisplay"))
-      : (t.removeClassName("notDisplay"), o.removeClassName("notDisplay")),
-    menuBasTest());
+function activerDesactiverBoutonVersion(d) {
+  var elt = document.getElementById(d);
+
+  appliqueChecked(elt, ".bouton-version-active");
+  var fondBlanc = document.getElementById("fondBlancBoutonVersion");
+  var bouton = document.getElementById("boutonVersion");
+  if (!fondBlanc) return;
+  console.log(d);
+
+  if (d === "desactiverImageVersion") {
+    fondBlanc.classList.add("notDisplay");
+    bouton.classList.add("notDisplay");
+  } else {
+    fondBlanc.classList.remove("notDisplay");
+    bouton.classList.remove("notDisplay");
+  }
+  menuBasTest();
 }
 function activerDesactiverBoutonCouleur(e) {
   appliqueChecked(document.getElementById(e), ".bouton-couleur-active");
@@ -557,7 +722,10 @@ function activerDesactiverBoutonDYS(e) {
   }
 }
 function activerMajuscule(d) {
+  console.log("activier!");
+  console.log(d);
   var elt = document.getElementById(d);
+  console.log(elt);
   if (elt) {
     appliqueChecked(elt, ".bouton-majuscule-active");
   }
