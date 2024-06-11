@@ -23,5 +23,13 @@ $(document).on("change", "#pubFileName", function (e) {
 });
 
 window.BRIDGE.onPublishSuccessful(() => {
-  console.log("asdadasdf");
+  let msg = document.getElementById("toastBody");
+  msg.innerHTML = "";
+  let msgIcon = document.getElementById("toastIcon");
+  msgIcon.setAttribute("class", "bi bi-info-square-fill");
+  let msgText = document.getElementById("toastText");
+  msgText.innerText='';
+  msgText.appendChild(document.createTextNode(translateTxt('Info')));
+  msg.appendChild(document.createTextNode(translateTxt("The book has been successfully published.")));
+  $("#toastMessage").show().delay(5000).fadeOut(4000);
 });
