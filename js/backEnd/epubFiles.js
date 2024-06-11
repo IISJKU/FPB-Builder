@@ -374,7 +374,7 @@ function createPage00(firstPageNarration, fontNames) {
 
   let fontText = "";
 
-  let positions = [100, 100, 100, 100];
+  //let positions = [100, 100, 100, 100];
   let odd = false;
   let checked = "true";
 
@@ -385,7 +385,7 @@ function createPage00(firstPageNarration, fontNames) {
     
 
     if (count % 2 == 0 || count == 0) {
-      fontText = fontText + '                <g id="group' + group + '" transform="translate(' + (group) * 180 + ',0)">\n';
+      fontText = fontText + '                <g id="group' + group + '" transform="translate(' + (group) * 200 + ',0)">\n';
       group++;
     }
 
@@ -399,8 +399,8 @@ function createPage00(firstPageNarration, fontNames) {
     fontText =
       fontText +
       '                   <g id="' + key +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
-      '                       <rect x="10" y="50" width="175" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
-      '                       <text alignment-baseline="middle" text-anchor="middle" x="' + positions[group] +'" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
+      '                       <rect x="10" y="50" width="195" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
+      '                       <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
       "                   </g>\n";
 
     if (count % 2 != 0) fontText = fontText + "                </g>\n";
@@ -535,6 +535,17 @@ function createCredits(creditPage) {
     count = count + 1;
   });
 
+  if (!options.includeBookSettings) {
+    /*
+    let tString = '<g class="st1 svg-bouton bouton-accueil">';
+    let hiddenStr = '<g hidden="true" class="st1 svg-bouton bouton-accueil">'; */
+
+    let tString = "<div>";
+    let hiddenStr = '<div hidden="hidden">';
+
+    str = str.replaceAll(tString, hiddenStr);
+  }
+
   str = str.replaceAll("{credits}", text);
 
   return str;
@@ -603,33 +614,38 @@ function createPageText(obj){
   '  <body class="body">\n' +
   '    <section class="page" epub:type="chapter" role="doc-chapter">\n';
   
-  
-  if(options.includeNarrations) 
+
+  let a = audio.substring(audio.lastIndexOf("\\")+1, audio.length);
+
+  if(options.includeNarrations && a != "" && a != " " ) {
     str = str + 
-  '    <svg id="monAudioPlay" version="1.1" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMinYMin meet" viewBox="0 0 50 66" width="100%" height="50" xml:space="preserve">\n' +
-  '      <g id="menuHaut" transform="translate(100,29)">\n' +
-  '        <g>\n' +
-  '          <line x1="-250" y1="0" x2="750" y2="0"/>\n' +
-  '          <circle fill="white" stroke="black" cx="0" cy="0" r="35"/>\n' +
-  '          <rect width="1000" height="45" x="-250" y="-45" fill="white" stroke="none"/>\n' +
-  '        </g>\n' +
-  '        <g id="playAudio" role="button" aria-label="Lancer l animation" class="bouton-surprise">\n' +
-  '          <circle fill="black" stroke="black" cx="0" cy="0" r="25"/>\n' +
-  '          <g transform="translate(-26,-26)" fill="white" stroke="none">\n' +
-  '            <path d="m24.2,1.1c-1.4.1-2.8.4-4.1.7.4.3.6.6.5,1.2,0,.5,0,1,0,1.4-.3,2.2.3,4.1,1.6,5.8,1.8,2.5,3.6,5,5.3,7.5,1.1,1.5.3,3.3-1.4,3.6-.7.2-1.5.3-2.2.5-.9.2-1.1.7-.9,1.6.2.7.4,1.4.6,2.2.4,1.6,0,2.5-1.5,3.2-1.1.6-3.7,1.1-3.5,1.7s1.1.6,1.6.8c.5.3,1,.5,1.5.8,1.2.8,1.4,2.3.5,3.6-.4.7-.6,1.3-.5,2.1.2.9,0,1.7-.5,2.5-.7,1.2-1.9,1.7-3.2,1.8-2.2.2-4.3.3-6.5.5-.9,0-1.5.5-1.8,1.4,0,.1,0,.3-.1.4,5,4.5,11.7,7.1,19,6.4,13.7-1.2,23.9-13.3,22.7-27.1S37.9,0,24.2,1.1Zm5.9,32.7c-.3.4-.7.5-1.2.4-1-.2-1.5-1.3-.9-2.1.4-.6.7-1.2.8-1.9,0-1.1-.3-2-1.2-2.8-.4-.4-.6-.9-.4-1.5.2-.5.6-.8,1.3-.9.2,0,.5.1.8.3,2.5,1.9,2.9,6.2.7,8.5Zm3.9,4.1c-.5-.2-.9-.8-.8-1.4,0-.3.3-.7.5-1,1.5-1.9,2.1-4.1,1.9-6.4-.2-2.5-1.3-4.6-3.1-6.2-.7-.6-.8-1.4-.2-2,.5-.6,1.4-.6,2,0,2.4,2.1,3.7,4.8,4.1,8.4,0,.5,0,1.3-.1,2.2-.3,2.3-1.2,4.3-2.6,6.1-.4.5-1,.7-1.6.4Zm7,3.2c-.5.6-1.3.7-1.9.2-.6-.5-.7-1.3-.2-1.9.1-.1.2-.3.3-.4,3-3.9,3.8-8.3,2.6-13.1-.8-3-2.4-5.4-4.7-7.5-.7-.6-.8-1.4-.2-2,.5-.6,1.4-.6,2,0,3.6,3.1,5.6,7.1,6.1,11.4.2,2.4,0,4.3-.4,6.1-.6,2.7-1.8,5-3.6,7.1Z"/>' +
-  '          </g>\n' +
-  '          <circle fill="none" stroke="black" cx="0" cy="0" r="25"/>\n' +
-  '        </g>\n' +
-  '        <g id="pauseAudio" role="button" aria-label="Mettre sur pause" class="bouton-surprise notDisplay" aria-hidden="true">\n' +
-  '          <circle fill="white" stroke="black" cx="0" cy="0" r="25"/>\n' +
-  '          <rect width="10" height="30" x="-15" y="-15" fill="black" stroke="none"/>\n' +
-  '          <rect width="10" height="30" x="5" y="-15" fill="black" stroke="none"/>\n' +
-  '        </g>\n' +
-  '      </g>\n' +
-  '    </svg>\n'+
-  '    <audio preload="auto" id="monTexteAudio">\n' +
-  '      <source src="../audio/' + audio.substring(audio.lastIndexOf("\\")+1, audio.length) + '" type="audio/mpeg" />\n' +
-  '    </audio>\n';
+    '    <svg id="monAudioPlay" version="1.1" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMinYMin meet" viewBox="0 0 50 66" width="100%" height="50" xml:space="preserve">\n' +
+    '      <g id="menuHaut" transform="translate(100,29)">\n' +
+    '        <g>\n' +
+    '          <line x1="-250" y1="0" x2="750" y2="0"/>\n' +
+    '          <circle fill="white" stroke="black" cx="0" cy="0" r="35"/>\n' +
+    '          <rect width="1000" height="45" x="-250" y="-45" fill="white" stroke="none"/>\n' +
+    '        </g>\n' +
+    '        <g id="playAudio" role="button" aria-label="Lancer l animation" class="bouton-surprise">\n' +
+    '          <circle fill="black" stroke="black" cx="0" cy="0" r="25"/>\n' +
+    '          <g transform="translate(-26,-26)" fill="white" stroke="none">\n' +
+    '            <path d="m24.2,1.1c-1.4.1-2.8.4-4.1.7.4.3.6.6.5,1.2,0,.5,0,1,0,1.4-.3,2.2.3,4.1,1.6,5.8,1.8,2.5,3.6,5,5.3,7.5,1.1,1.5.3,3.3-1.4,3.6-.7.2-1.5.3-2.2.5-.9.2-1.1.7-.9,1.6.2.7.4,1.4.6,2.2.4,1.6,0,2.5-1.5,3.2-1.1.6-3.7,1.1-3.5,1.7s1.1.6,1.6.8c.5.3,1,.5,1.5.8,1.2.8,1.4,2.3.5,3.6-.4.7-.6,1.3-.5,2.1.2.9,0,1.7-.5,2.5-.7,1.2-1.9,1.7-3.2,1.8-2.2.2-4.3.3-6.5.5-.9,0-1.5.5-1.8,1.4,0,.1,0,.3-.1.4,5,4.5,11.7,7.1,19,6.4,13.7-1.2,23.9-13.3,22.7-27.1S37.9,0,24.2,1.1Zm5.9,32.7c-.3.4-.7.5-1.2.4-1-.2-1.5-1.3-.9-2.1.4-.6.7-1.2.8-1.9,0-1.1-.3-2-1.2-2.8-.4-.4-.6-.9-.4-1.5.2-.5.6-.8,1.3-.9.2,0,.5.1.8.3,2.5,1.9,2.9,6.2.7,8.5Zm3.9,4.1c-.5-.2-.9-.8-.8-1.4,0-.3.3-.7.5-1,1.5-1.9,2.1-4.1,1.9-6.4-.2-2.5-1.3-4.6-3.1-6.2-.7-.6-.8-1.4-.2-2,.5-.6,1.4-.6,2,0,2.4,2.1,3.7,4.8,4.1,8.4,0,.5,0,1.3-.1,2.2-.3,2.3-1.2,4.3-2.6,6.1-.4.5-1,.7-1.6.4Zm7,3.2c-.5.6-1.3.7-1.9.2-.6-.5-.7-1.3-.2-1.9.1-.1.2-.3.3-.4,3-3.9,3.8-8.3,2.6-13.1-.8-3-2.4-5.4-4.7-7.5-.7-.6-.8-1.4-.2-2,.5-.6,1.4-.6,2,0,3.6,3.1,5.6,7.1,6.1,11.4.2,2.4,0,4.3-.4,6.1-.6,2.7-1.8,5-3.6,7.1Z"/>' +
+    '          </g>\n' +
+    '          <circle fill="none" stroke="black" cx="0" cy="0" r="25"/>\n' +
+    '        </g>\n' +
+    '        <g id="pauseAudio" role="button" aria-label="Mettre sur pause" class="bouton-surprise notDisplay" aria-hidden="true">\n' +
+    '          <circle fill="white" stroke="black" cx="0" cy="0" r="25"/>\n' +
+    '          <rect width="10" height="30" x="-15" y="-15" fill="black" stroke="none"/>\n' +
+    '          <rect width="10" height="30" x="5" y="-15" fill="black" stroke="none"/>\n' +
+    '        </g>\n' +
+    '      </g>\n' +
+    '    </svg>\n' +
+    '    <audio preload="auto" id="monTexteAudio">\n' +
+    '      <source src="../audio/' + a + '" type="audio/mpeg" />\n' +
+    '    </audio>\n';
+  
+  }
+    
 
   str = str +
   '      <section id="monTexte" class="section-texte ldqr-font-luciole ldqr-font-bold">\n' +
