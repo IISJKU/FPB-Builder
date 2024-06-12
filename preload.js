@@ -50,6 +50,9 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   saveSettings(lang) {
     ipcRenderer.send("saveSettings", lang);
   },
+  reloadRecentProj() {
+    ipcRenderer.send("reloadRecentProjects");
+  },
   onDirectorySet: (callback) => ipcRenderer.on("directorySet", (_event, value) => callback(value)),
   //openFile: () => ipcRenderer.invoke("dialog:openFile"),
   onRecentProjectsLoaded: (callback) => ipcRenderer.on("recentProjectsLoaded", (_event, value) => callback(value)),

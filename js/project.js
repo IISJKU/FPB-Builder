@@ -12,7 +12,6 @@ let o = {
 
 sessionStorage.setItem("options", o);
 
-//prettier-ignore
 function loadProject(name) {
   let project;
 
@@ -27,19 +26,23 @@ function loadProject(name) {
 
 window.BRIDGE.onRecentProjectsLoaded((value) => {
   let projList = document.getElementById("projectList");
+  projList.innerHTML = '';
   if (Array.isArray(value)) {
     value.forEach((project) => {
       let aElement = document.createElement("a");
       aElement.setAttribute("class", "list-group-item list-group-item-action");
       aElement.setAttribute("id", project.name);
+      aElement.setAttribute("aria-label", translateTxt('press enter + shift to open')+' '+ project.name +' '+ translateTxt('project that exist in')+' '+project.directory);
       aElement.setAttribute("onclick", "loadProject(this.id)");
       aElement.setAttribute("tabindex", "0");
       let divElement = document.createElement("div");
       divElement.setAttribute("class", "d-flex w-100 justify-content-between");
       let headerElement = document.createElement("h6");
       headerElement.setAttribute("class", "mb-1");
+      headerElement.setAttribute("aria-label", project.name +' '+ translateTxt('project'));
       headerElement.appendChild(document.createTextNode(project.name));
       let smallElement = document.createElement("small");
+      smallElement.setAttribute("aria-label", translateTxt('directory path'));
       smallElement.appendChild(document.createTextNode(project.directory));
       divElement.appendChild(headerElement);
       divElement.appendChild(smallElement);

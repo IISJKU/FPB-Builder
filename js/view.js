@@ -33,13 +33,14 @@ $(document).on("change", "#appLang", function (e) {
   translate();
   sessionStorage.setItem("appLanguage", $(this).val());
   BRIDGE.saveSettings($(this).val());
+  BRIDGE.reloadRecentProj();
 });
 
 // create icon element with it's attributes
-function createIcon(appendElem, iconClass, alt, elemId) {
+function createIcon(appendElem, iconClass, aria, elemId) {
   let icon = document.createElement("i");
   icon.setAttribute("class", iconClass);
-  icon.setAttribute("alt", alt);
+  icon.setAttribute("aria-label", aria);
   icon.setAttribute("tabindex", "0");
   if (elemId != "" && elemId != undefined) {
     icon.setAttribute("id", elemId);
@@ -274,10 +275,15 @@ function arrObjSearch(arr, prop, value) {
 }
 
 // translate the UI to the selected language
-function translate() {
+async function translate() {
+  if (sessionStorage.getItem("translation") != undefined) {
+    transArr = parseSessionData("translation");
+  } else {
+    transArr = translationArr();
+  }
   document.getElementById("directory").setAttribute("placeholder", translateTxt("Browse"));
   document.getElementById("projName").setAttribute("placeholder", translateTxt("Project Name"));
-  transArr = parseSessionData("translation");
+  translateAriaLbls();
   let appLangOp = document.getElementById("appLang");
   let appLanVal = appLangOp.options[appLangOp.selectedIndex].value;
   //let currLang = sessionStorage.getItem("appLanguage");
@@ -374,3 +380,13 @@ window.BRIDGE.onSetAppSettings((value) => {
     BRIDGE.saveSettings(appLanValue);
   }
 });
+
+// translate all application aria labels
+function translateAriaLbls(){
+  let labels = document.querySelectorAll("*[aria-label]");
+
+  for (let i = 0; i < labels.length; i++) {
+    let labelText = labels[i].getAttribute('aria-label');
+    labels[i].setAttribute('aria-label',translateTxt(labelText));
+  }
+}

@@ -190,6 +190,21 @@ class ipcMainManager {
     ipcMain.on("saveSettings", (event, lang) => {
       shared.saveSettings(lang);
     });
+    ipcMain.on("reloadRecentProjects", (event, arg) => {
+      if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
+        fs.mkdirSync(app.getPath("userData") + "\\projects");
+      } 
+      let projects = fs.readdirSync(app.getPath("userData") + "\\projects\\");
+      let loadedProjects = new Array();
+    
+      if (Array.isArray(projects)) {
+        projects.forEach((project) => {
+          loadedProjects.push(JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\" + project, { encoding: "utf8" })));
+        });
+      }
+      this.window.webContents.send("recentProjectsLoaded", loadedProjects);
+    });
+
   }
 }
 

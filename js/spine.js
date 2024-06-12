@@ -318,14 +318,15 @@ function clearBody(tbl, pageID, sec) {
   th.appendChild(document.createTextNode(translateTxt("Image")));
   th.setAttribute("scope", "row");
   th.setAttribute("class", "header");
+  tr.setAttribute("tabindex", "0");
   tr.appendChild(th);
   let td = document.createElement("td");
   let imageInput = document.createElement("input");
   imageInput.setAttribute("type", "imageInput");
   imageInput.setAttribute("class", "form-control");
-  imageInput.setAttribute("alt", translateTxt("Browse images and scripts button"));
+  imageInput.setAttribute("aria-label", translateTxt("Browse images and scripts button"));
   imageInput.setAttribute("placeholder", translateTxt("Browse"));
-  imageInput.setAttribute("title", translateTxt("Browse XHTML image"));
+  //imageInput.setAttribute("title", translateTxt("Browse XHTML image"));
   if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0) {
     if (pageDetObj[pageID][sec].hasOwnProperty("Image") && pageDetObj[pageID][sec]["Image"] != undefined && pageDetObj[pageID][sec]["Image"] != "") {
       imageInput.value = pageDetObj[pageID][sec]["Image"];
@@ -373,6 +374,7 @@ function createTableBody(tbl, pageId, section) {
     }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
     if (section == "imagesScripts") {
@@ -387,9 +389,9 @@ function createTableBody(tbl, pageId, section) {
       } else if (val != "Image") {
         let imageInput = document.createElement("input");
         imageInput.setAttribute("type", "imageInput");
-        imageInput.setAttribute("alt", translateTxt("Browse scripts button"));
+        imageInput.setAttribute("aria-label", translateTxt("Browse scripts button"));
         imageInput.setAttribute("placeholder", translateTxt("Browse"));
-        imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
+        //imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
         imageInput.value = sliceName(pageDetObj[pageId][section][val]);
         imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
         imageInput.setAttribute("id", camelCaseStr(val));
@@ -418,6 +420,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
     let pageDetObj = parseSessionData("pageDetails");
@@ -430,6 +433,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     if (section == "alt") {
       textElem = document.createElement("input");
       textElem.setAttribute("type", "text");
+      textElem.setAttribute("aria-label", langs[i]+' '+ translateTxt("language image alt text"));
       textElem.setAttribute("class", "form-control");
       textElem.value = colVal;
       td.appendChild(textElem);
@@ -437,9 +441,9 @@ function createLangRows(tbl, tbdy, pageId, section) {
       let narrInput = document.createElement("input");
       narrInput.setAttribute("type", "narrInput");
       narrInput.setAttribute("class", "form-control narrations");
-      narrInput.setAttribute("alt", translateTxt("Browse narration button"));
+      narrInput.setAttribute("aria-label", translateTxt("Browse narration button"));
       narrInput.setAttribute("placeholder", translateTxt("Browse"));
-      narrInput.setAttribute("title", translateTxt("Browse narrations"));
+      //narrInput.setAttribute("title", translateTxt("Browse narrations"));
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
@@ -447,6 +451,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     } else {
       textElem = document.createElement("textarea");
       textElem.setAttribute("class", "form-control");
+      textElem.setAttribute("aria-label", langs[i] +' '+ translateTxt("language text"));
       textElem.value = colVal;
       td.appendChild(textElem);
     }
@@ -585,17 +590,18 @@ function missingDependencies(tbl, tbdy, pageId) {
     }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
     let imageInput = document.createElement("input");
     imageInput.setAttribute("type", "imageInput");
-    imageInput.setAttribute("alt", translateTxt("Browse images and scripts button"));
+    imageInput.setAttribute("aria-label", translateTxt("Browse images and scripts button"));
     imageInput.setAttribute("class", "form-control otherFiles");
     imageInput.required = true;
     imageInput.setCustomValidity("Invalid");
     imageInput.setAttribute("data-missing", 1);
     imageInput.setAttribute("placeholder", translateTxt("Browse"));
-    imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
+    //imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
     imageInput.setAttribute("id", camelCaseStr(val));
     imageInput.value = sliceName(pageObj[pageId]["imagesScripts"]["missing"][val]);
     imageInput.setAttribute("data-path", pageObj[pageId]["imagesScripts"]["missing"][val]);

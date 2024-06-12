@@ -102,3 +102,30 @@ Your file has been saved successfully.;Ihre Datei wurde erfolgreich gespeichert.
 Maximum 6 fonts can be selected.;Es können maximal 6 Schriftarten ausgewählt werden.;6 polices au maximum peuvent être sélectionnées;È possibile selezionare un massimo di 6 font.;Galima pasirinkti ne daugiau kaip 6 šriftus.
 The book has been successfully published.;Das Buch ist erfolgreich veröffentlicht worden.;Le livre a été publié avec succès.;Il libro è stato pubblicato con successo.;Knyga sėkmingai išleista.
 You have unsaved changes. Save before quitting?;Sie haben nicht gespeicherte Änderungen. Vor dem Beenden speichern?;Vous avez des modifications non enregistrées. Sauvegarder avant de quitter?;Le modifiche non sono state salvate. Salvare prima di uscire?;Neišsaugoti pakeitimai. Išsaugoti prieš baigiant darbą?
+Modify publication file name;Name der Veröffentlichungsdatei ändern;Modifier le nom du fichier de publication;Modificare il nome del file di pubblicazione;Pakeisti leidinio failo pavadinimą
+Close;Schließen Sie;Fermer;Chiudere;Uždaryti
+Open project directory;Projektverzeichnis öffnen;Ouvrir le répertoire du projet;Aprire la directory del progetto;Atidarykite projekto katalogą
+Project name and can be modifiable;Projektname und kann geändert werden;Nom du projet et peut être modifié;Nome del progetto e modificabile;Projekto pavadinimas, kurį galima keisti
+select multiple Publication languages;mehrere Publikationssprachen auswählen;sélectionner plusieurs langues de publication;selezionare più lingue di pubblicazione;pasirinkti kelias leidinių kalbas
+Check if project contains audio Narrations;Prüfen Sie, ob das Projekt Audiokommentare enthält;Vérifier si le projet contient des narrations audio;Controllare se il progetto contiene narrazioni audio;Patikrinkite, ar projekte yra garso įrašų
+Check if project include instructions;Prüfen Sie, ob das Projekt Anweisungen enthält;Vérifier si le projet contient des narrations audio;Controllare se il progetto include le istruzioni;Patikrinkite, ar į projektą įtrauktos instrukcijos
+Check if project settings within the book;Prüfen Sie, ob die Projekteinstellungen im Buch;Vérifier si les paramètres du projet sont conformes au livre;Controllare se le impostazioni del progetto all'interno del libro;Patikrinkite, ar projekto nustatymai knygoje
+project;Projekt;projet;progetto;projektas
+press enter + shift to open;zum Öffnen Enter + Shift drücken;appuyer sur entrée + shift pour ouvrir;premere invio + shift per aprire;paspauskite Enter + Shift, kad atidarytumėte
+project that exist in;Projekt, das in;qui existent dans les pays de l'UE;progetto che esistono in;projektą, kuris egzistuoja
+directory path;Verzeichnispfad;chemin d'accès au répertoire;percorso della directory;katalogo kelias
+Add a new page;Eine neue Seite hinzufügen;Ajouter une nouvelle page;Aggiungere una nuova pagina;Pridėti naują puslapį
+language text;Sprachtext;texte linguistique;testo in lingua;kalbos tekstas
+language image alt text;Sprache Bild-Alt-Text;langue image alt text;lingua testo alt dell'immagine;kalbos paveikslėlio alt tekstas
+select all fonts;alle Schriftarten auswählen;sélectionner toutes les polices;selezionare tutti i font;pasirinkti visus šriftus
+arial black font;Schriftart arial black;police arial black;carattere arial nero;arial black šriftas
+luciole font;Schriftart luciole;police arial black;font luciole;luciole šriftas
+luciole bold font;Schriftart luciole bold;luciole bold font;carattere luciole bold;luciole bold šriftas
+open dyslexic monospace font;open dyslexic monospace Schriftart;open dyslexic monospace font;carattere aperto dislessico monospace;atviras disleksinis monospace šriftas
+verdana font;Schriftart Verdana;police verdana;carattere verdana;verdana šriftas
+verdana bold font;verdana bold Schriftart;police verdana bold;carattere verdana bold;verdana paryškintas šriftas
+select item;Element auswählen;sélectionner un élément;selezionare la voce;pasirinkite elementą
+select;Wählen Sie;sélectionner;selezionare;pasirinkite
+item;Artikel;article;articolo;elementas
+delete entry;Eintrag löschen;supprimer l'entrée;eliminare la voce;ištrinti įrašą
+Add new entry;Neuen Eintrag hinzufügen;Ajouter une nouvelle entrée;Aggiungi una nuova voce;Pridėti naują įrašą

@@ -30,7 +30,7 @@ window.BRIDGE.onFontSet((value) => {
     liInput.setAttribute("type", "checkbox");
     liInput.setAttribute("id",camelCaseStr(fontText));
     liInput.setAttribute("name",camelCaseStr(fontText));
-    liInput.setAttribute("aria-label", "select item");
+    liInput.setAttribute("aria-label", translateTxt("select item"));
     liInput.setAttribute("data-path", value);
     let inputLabel = document.createElement("label");
     inputLabel.setAttribute("class", "custom-control-label fontLbl");

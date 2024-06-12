@@ -217,7 +217,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     input.setAttribute("class", "form-control");
     input.value = bookDetObj[itemVal][val];
     if (!reqMeta.includes(itemVal)) {
-      createIcon(td, "bi bi-trash3-fill", "delete entry");
+      createIcon(td, "bi bi-trash3-fill", translateTxt("delete entry"));
     }else{
       input.required = true;
     }
@@ -281,10 +281,10 @@ function tableHeader(tbl, tableTitle, aElemVal) {
     if (aElemVal == "PublishingDate") {
       // check if the property is there
       if (Object.keys(getSessionElem("bookDetails","PublishingDate")).length < 1) {
-        createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
+        createIcon(thdth, "bi bi-plus-square-fill", translateTxt("Add new entry"), "");
       }
     } else {
-      createIcon(thdth, "bi bi-plus-square-fill", "Add new entry", "");
+      createIcon(thdth, "bi bi-plus-square-fill", translateTxt("Add new entry"), "");
     }
   }
   thdtr.appendChild(thdth);
@@ -302,7 +302,7 @@ function liElement(tbl, tableVal, elemID) {
     let liInput = document.createElement("input");
     liInput.setAttribute("type", "checkbox");
     liInput.setAttribute("name", tableVal);
-    liInput.setAttribute("aria-label", "select "+ tbl.children[0].textContent +' item');
+    liInput.setAttribute("aria-label", translateTxt("select")+' '+ tbl.children[0].textContent +' '+ translateTxt('item'));
     liElement.appendChild(liInput);
   }
   liElement.appendChild(tbl);
@@ -400,7 +400,7 @@ function addNewRow(tableTitle) {
   input.setAttribute("class", "form-control");
   input.value = "";
   if (!reqMeta.includes(elementTitle)) {
-    createIcon(td, "bi bi-trash3-fill", "delete entry");
+    createIcon(td, "bi bi-trash3-fill", translateTxt("delete entry"));
   }else{
     input.required = true;
   }
@@ -420,6 +420,11 @@ function updateBookData(tableItemVal, key, mode, val) {
       bookDetObj[tableItemVal] = {};
     }
     bookDetObj[tableItemVal][key] = val;
+  }
+  let currLang = document.getElementById("appLang").value;
+  // set the publishing file name if we the title of the book has been updated
+  if (tableItemVal == 'Title' && bookDetObj[tableItemVal].hasOwnProperty(currLang) && bookDetObj[tableItemVal][currLang] != undefined){
+    $("#pubFileName").val(val.replace(/ /g,"_"));
   }
   sessionStorage.setItem("bookDetails", JSON.stringify(bookDetObj));
 }
@@ -504,6 +509,6 @@ function enableReqAccess(Item){
   let liInput = document.createElement("input");
   liInput.setAttribute("type", "checkbox");
   liInput.setAttribute("name", Item);
-  liInput.setAttribute("aria-label", "select "+ Item +' item');
+  liInput.setAttribute("aria-label", translateTxt('select')+' '+ Item +' '+translateTxt('item'));
   $("#selectedBox #"+ Item).append(liInput);
 }
