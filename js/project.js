@@ -29,6 +29,7 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
   projList.innerHTML = '';
   if (Array.isArray(value)) {
     value.forEach((project) => {
+      if (project.name == undefined) return;
       let aElement = document.createElement("a");
       aElement.setAttribute("class", "list-group-item list-group-item-action");
       aElement.setAttribute("id", project.name);
