@@ -102,6 +102,7 @@ $(document).on("click", "#deletePage", function (e) {
     $("#pageList .list-group-item.active").prev("a").addClass("active");
     //delete the page element
     $("#pageList #" + elem).remove();
+    $('#contentBox').find("#iframePreview").html("");
     $("#contentBox table").each(function () {
       $(this).find("tbody").html("");
     });
@@ -169,6 +170,7 @@ window.BRIDGE.onSetPath((value, elemId) => {
   if (value.hasOwnProperty("type") && value["type"] == "cover") {
     $("#coverImage").val(imgName);
     $("#coverImage").attr("data-path", value["filePaths"][0]);
+    addImageiframe(value["filePaths"][0], imgName);
   } else {
     $("#" + elemId).val(imgName);
     $("#" + elemId).attr("data-path", value["filePaths"][0]);
@@ -236,6 +238,7 @@ window.BRIDGE.onImageLoaded((value) => {
     let table = $("#contentBox #imagesScripts table");
     createTableBody(table, pageID, "imagesScripts");
     if (value["missingFiles"]) addMissScripts(value["missingFiles"], pageID);
+    addImageiframe(value["imageFile"], imgName);
   }
 });
 
@@ -280,7 +283,7 @@ function createPage(id) {
   aElem.setAttribute("href", "#");
   aElem.setAttribute("id", pageLength);
   aElem.setAttribute("class", "list-group-item list-group-item-action");
-  let elemText = document.createTextNode(translateTxt("Page") + " " + pageLength);
+  let elemText = initPagesName(id, pageLength);
   aElem.appendChild(elemText);
   //Create up and down icons to the element
   createIcon(aElem, "bi bi-arrow-up icons", translateTxt("Move the page up"));
@@ -299,6 +302,7 @@ function fillData() {
   if (pageId != "cover" && pageId != "credit") {
     createIcon(pageLabel, "bi bi-trash3-fill icons", translateTxt("delete page"), "deletePage");
   }
+  $('#contentBox').find("#iframePreview").html("");
   $("#contentBox table").each(function () {
     let table = $(this);
     let theadTxt = $(this).children("thead").children("tr").children("th");
@@ -381,10 +385,13 @@ function createTableBody(tbl, pageId, section) {
       if (pageId == "cover" && val == "Image") {
         let coverImg = document.getElementById("coverImage");
         coverImg.value = sliceName(pageDetObj[pageId][section][val]);
+        addImageiframe(pageDetObj[pageId][section][val],coverImg.value);
         continue;
       } else if (val == "Image") {
         let importImg = document.getElementById("importImage");
         importImg.value = sliceName(pageDetObj[pageId][section][val]);
+        addImageiframe(pageDetObj[pageId][section][val],importImg.value);
+        updatePageName(pageId, pageDetObj);
         continue;
       } else if (val != "Image") {
         let imageInput = document.createElement("input");
@@ -521,7 +528,8 @@ function sliceName(value) {
 }
 
 //after the user choose the xhtml image the page name and the page title in the content box
-function updatePageName(detObj, pageID) {
+function updatePageName(pageID, detObj) {
+  if (detObj == undefined) detObj = parseSessionData("pageDetails");
   if (pageID != "cover" && pageID != "credit") {
     if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       $("#pageList .list-group-item.active").text(detObj[pageID]["name"]);
@@ -534,6 +542,20 @@ function updatePageName(detObj, pageID) {
       createIcon(pageElem, "bi bi-arrow-down icons", translateTxt("Move the page down"));
     }
   }
+}
+
+//after the user choose the xhtml image the page name and the page title in the content box
+function initPagesName(pageID, pagelength) {
+  let detObj = parseSessionData("pageDetails");
+  let pageText ='';
+  if (pageID != "cover" && pageID != "credit") {
+    if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
+      pageText = document.createTextNode(detObj[pageID]["name"]);
+    } else {
+      pageText = document.createTextNode(translateTxt("Page") + " " + pagelength);
+    } 
+  }
+  return pageText;
 }
 
 //sort the given array based on the element extension
@@ -632,4 +654,23 @@ function pageSorting() {
     dtailsObj[i] = oldObj[oldId];
   }
   sessionStorage.setItem("pageDetails", JSON.stringify(dtailsObj));
+}
+
+// add ifram of the selected XHTML image
+function addImageiframe(src, title){
+  $('#contentBox').find("#iframePreview").html("");
+  let iframeDiv = document.getElementById('iframePreview');
+  let iframeElem = document.createElement("iframe");
+  iframeElem.setAttribute("src", src);
+  iframeElem.setAttribute("title", title);
+  iframeElem.setAttribute("id", "xhtmlIframe");
+  iframeElem.setAttribute("onload", "onloadiframe()");
+  iframeDiv.appendChild(iframeElem);
+}
+
+//handle iframe onload event
+function onloadiframe(){
+  $("#xhtmlIframe").contents().find("#monAudioPlay").attr("style", "display: none !important");
+  $("#xhtmlIframe").contents().find(".svg-content").attr("style", "transform: scale(1.2); margin-top: 5%;");
+  $("#xhtmlIframe").contents().find("img").attr("style", "margin-left: 35%; height: 97%;");
 }
