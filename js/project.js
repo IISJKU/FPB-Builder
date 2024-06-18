@@ -37,7 +37,7 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
       aElement.setAttribute("onclick", "loadProject(this.id)");
       aElement.setAttribute("tabindex", "0");
       let divElement = document.createElement("div");
-      divElement.setAttribute("class", "d-flex w-100 justify-content-between");
+      divElement.setAttribute("class", "w-100 justify-content-between");
       let headerElement = document.createElement("h6");
       headerElement.setAttribute("class", "mb-1");
       headerElement.setAttribute("aria-label", project.name +' '+ translateTxt('project'));
@@ -45,8 +45,10 @@ window.BRIDGE.onRecentProjectsLoaded((value) => {
       let smallElement = document.createElement("small");
       smallElement.setAttribute("aria-label", translateTxt('directory path'));
       smallElement.appendChild(document.createTextNode(project.directory));
+      let textDivElem = document.createElement("div");
+      textDivElem.appendChild(smallElement);
       divElement.appendChild(headerElement);
-      divElement.appendChild(smallElement);
+      divElement.appendChild(textDivElem);
       aElement.appendChild(divElement);
       projList.appendChild(aElement);
     });
