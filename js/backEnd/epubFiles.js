@@ -43,6 +43,7 @@ function setOptions(opt) {
 }
 
 function setCover(cover) {
+  if (typeof(cover) !='string' || cover == undefined) return ''; 
   coverImage = "images/" + cover.substring(cover.lastIndexOf("\\") + 1, cover.length);
 }
 

@@ -118,7 +118,7 @@ function compareData(data) {
     if (!arrEq(getOthSettings(), data["settings"])) checkStatus = 0;
   }
   if (Object.keys(data["fonts"]).length != 0) {
-    if (!arrEq(getSelectedFonts(), data["fonts"])) checkStatus = 0;
+    if (!objEqCheck(getSelectedFonts(), data["fonts"])) checkStatus = 0;
   }
   return checkStatus;
 }

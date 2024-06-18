@@ -129,6 +129,10 @@ window.BRIDGE.onProjectData((value) => {
   document.getElementById("projName").value = projData["name"];
   sessionStorage.setItem("projectName", projData["name"]);
   sessionStorage.setItem("bookDetails", JSON.stringify(projData["metadata"]));
+  let appLanguage = document.getElementById("appLang").value;
+  if (projData["metadata"]['Title'].hasOwnProperty(appLanguage) && projData["metadata"]['Title'][appLanguage] != undefined){
+    $("#pubFileName").val(projData["metadata"]['Title'][appLanguage].replace(/ /g,"_"));
+  } 
   sessionStorage.setItem("pubLang", JSON.stringify(projData["languages"]));
 
   let settOptions = {
@@ -152,10 +156,6 @@ window.BRIDGE.onProjectData((value) => {
       document.getElementById(projData["settings"][j]).checked = true;
     }
   }
-  if (Object.keys(projData["fonts"]).length != 0) {
-    for (let k = 0; k < projData["fonts"].length; k++) {
-      document.getElementById(projData["fonts"][k]).checked = true;
-    }
-  }
   sessionStorage.setItem("selectedFonts", JSON.stringify(projData["fonts"]));
+  initializeTabs();
 });

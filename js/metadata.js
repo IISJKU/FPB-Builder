@@ -114,7 +114,7 @@ function initializeMetadata() {
     moreTxt = translateTxt("More");
     infoObj = setInfoObj(moreTxt);
   }
-  if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == "null" ){
+  if (sessionStorage.getItem("bookDetails") == null || sessionStorage.getItem("bookDetails") == undefined ){
     sessionStorage.setItem("bookDetails", JSON.stringify(bookDetails));
   }
   createTable(translateTxt("Title"), "selectedBox", "Title");
@@ -255,6 +255,10 @@ function langMetaAttr(tbl, tbdy, itIntVal, elemId) {
     }
     if (reqMeta.includes(itIntVal)) {
       input.required = true;
+    }
+    let currLang = document.getElementById("appLang").value;
+    if (itIntVal == 'Title' && bookDetObj[itIntVal].hasOwnProperty(currLang) && bookDetObj[itIntVal][currLang] != undefined){
+      $("#pubFileName").val(input.value.replace(/ /g,"_"));
     }
     td.appendChild(input);
     tr.appendChild(td);
