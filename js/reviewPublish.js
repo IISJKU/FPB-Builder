@@ -1,19 +1,19 @@
-let dirName = "FPB";
-
 $(document).on("click", "#publishBtn", function (e) {
+  if (checkRequired() == false) return;
+  saveDataBtn();
   let frontendData = {};
   frontendData["languages"] = JSON.parse(sessionStorage.getItem("pubLang"));
   frontendData["bookDetails"] = JSON.parse(sessionStorage.getItem("bookDetails"));
   frontendData["pages"] = JSON.parse(sessionStorage.getItem("pageDetails"));
   frontendData["options"] = JSON.parse(sessionStorage.getItem("options"));
-  frontendData["dirName"] = dirName;
+  frontendData["dirName"] = $("#pubFileName").val();
   frontendData["selectedFonts"] = getSelectedFonts();
+  frontendData["launch"] = $('#launchCheck').prop('checked');
   sessionStorage.setItem("frontendData", JSON.stringify(frontendData));
   window.BRIDGE.generateEpub();
 });
 
 $(document).on("change", "#pubFileName", function (e) {
-  dirName = $("#pubFileName").val();
 });
 
 window.BRIDGE.onPublishSuccessful(() => {

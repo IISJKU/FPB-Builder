@@ -9,6 +9,7 @@ const Language = require("./classes/Languages.js");
 
 let fs = require("fs");
 const { fileURLToPath } = require("url");
+const { shell } = require('electron');
 const Metadata = require("./classes/Metadata.js");
 
 //set this to null to let the user pick for themselves
@@ -67,28 +68,28 @@ function make(metadata, pages, data) {
 
     XHTMLMaker.setLanguage(language);
     XHTMLMaker.createXHTMLFiles(files, directory, dirName);
-    makeEPUB(dirName);
+    makeEPUB(dirName, data.launch);
   });
 }
 
 /**
  * Creates the epub file
  *
- * @param {*} n name of the file
+ * @param {*} fileName name of the file
  */
-function makeEPUB(n) {
-  ZipHandler.makeEPUB(directory + "\\" + n + "\\").then(() => {
-    fs.rename(directory + "\\" + n + ".zip", directory + "\\" + n + ".epub", (error) => {
+function makeEPUB(fileName, launchCheck) {
+  ZipHandler.makeEPUB(directory + "\\" + fileName + "\\").then(() => {
+    fs.rename(directory + "\\" + fileName + ".zip", directory + "\\" + fileName + ".epub", (error) => {
       if (error) {
         // Show the error
         console.log("An Error occured:");
-        console.log(n);
         console.log(error);
       } else {
         // List all the filenames after renaming
         console.log("\nFile Renamed\n");
-        console.log(n);
+        console.log(fileName);
         window.webContents.send("publishSuccessful");
+        if (launchCheck == true) shell.openPath(directory + "\\" + fileName + ".epub");
       }
     });
   });
