@@ -549,7 +549,7 @@ function initPagesName(pageID, pagelength) {
   let detObj = parseSessionData("pageDetails");
   let pageText ='';
   if (pageID != "cover" && pageID != "credit") {
-    if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
+    if (detObj.hasOwnProperty(pageID) &&  detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       pageText = document.createTextNode(detObj[pageID]["name"]);
     } else {
       pageText = document.createTextNode(translateTxt("Page") + " " + pagelength);
