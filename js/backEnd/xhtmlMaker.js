@@ -371,8 +371,7 @@ function rewriteFontSection(element) {
       t = t.substring(0, t.length - 1);
       let tLine = line.substring(0, line.indexOf("[") + 1) + t + line.substring(line.indexOf("]"), line.length) + "\n";
       tempFile = tempFile + tLine;
-      console.log("below : ");
-      console.log(tLine);
+
       tempOpen = false;
     }
 

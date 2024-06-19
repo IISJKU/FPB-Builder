@@ -571,9 +571,6 @@ function createNoticeToc() {
 function createPageText(obj){
   let str = "";
 
-  console.log("elements");
-  console.log(obj.text);
-
   let text = obj.text[language];
   let audio = obj.narration[language];
   let title = obj.title;

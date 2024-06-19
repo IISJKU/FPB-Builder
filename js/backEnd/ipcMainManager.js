@@ -155,7 +155,6 @@ class ipcMainManager {
 
     //manually import dependency
     ipcMain.on("importDependency", (event, arg) => {
-      //console.log(JSON.parse(storage.getSync("dependencies")));
       dialog
         .showOpenDialog({
           properties: ["openFile"],
@@ -167,7 +166,6 @@ class ipcMainManager {
 
     //manually import dependency with arguments
     ipcMain.on("importDependency2", (event, arg) => {
-      //console.log(JSON.parse(storage.getSync("dependencies")));
 
       EPUBMaker.manuallySelectDependency2(arg);
     });

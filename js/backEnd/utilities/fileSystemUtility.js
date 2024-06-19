@@ -23,7 +23,6 @@ function makeFile(location, name, content) {
       dirName = dirName + "(" + count + ")";
     }
 
-    console.log(dirName);
   }
 
   if (content == null || content == undefined || content == "undefined") {

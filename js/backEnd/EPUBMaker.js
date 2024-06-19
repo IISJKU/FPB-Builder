@@ -87,7 +87,6 @@ function makeEPUB(fileName, launchCheck) {
       } else {
         // List all the filenames after renaming
         console.log("\nFile Renamed\n");
-        console.log(fileName);
         window.webContents.send("publishSuccessful");
         if (launchCheck == true) shell.openPath(directory + "\\" + fileName + ".epub");
       }

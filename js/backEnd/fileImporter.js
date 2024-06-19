@@ -20,8 +20,6 @@ class FileImporter {
 
   setFiles() {
     this.oldFiles = this.importedFiles;
-    console.log("SET FILES");
-    console.log(this.oldFiles);
   }
 
   //checks if xhtml file is an image
@@ -71,14 +69,12 @@ class FileImporter {
           let t = PathUtilities.getAbsolutePath(src, filename);
           //check if the file was already imported!
           if (round == 1) {
-            console.log(t);
           }
 
           if (this.importedFiles.includes(t)) {
             //
             // TODO: Inform user that the file was included in a previous try
             //
-            //console.log("file already contained " + t);
           } else {
             //if it exists, add it to imported files, if not:
             //let the user manually select it.
@@ -202,7 +198,6 @@ class FileImporter {
                 this.dependencyMap.set(shortName, t);
                 dependencyList.found(t);
               } else {
-                console.log("didnt find: " + shortName);
                 dependencyList.missing(t);
                 //prompt user to select it here!
               }
@@ -259,9 +254,6 @@ class FileImporter {
         }
       }
     });
-
-    console.log(this.importedFiles.length);
-
     return this.importedFiles;
   }
 }

@@ -7,8 +7,6 @@ function makeEPUB(path) {
   const archive = archiver("zip", { zlib: { level: 0 } });
   const stream = fs.createWriteStream(path.substring(0, path.lastIndexOf("\\")) + ".zip");
 
-  console.log(path.substring(0, path.lastIndexOf("\\")));
-
   return new Promise((resolve, reject) => {
     archive
       .append("application/epub+zip", { name: "mimetype" })
