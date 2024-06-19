@@ -253,7 +253,6 @@ window.BRIDGE.onNarrationLoaded((value, elemId) => {
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID].narration[activeLang] = value[0];
-  console.log(pageDetailsObj);
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
@@ -322,6 +321,7 @@ function clearBody(tbl, pageID, sec) {
   th.appendChild(document.createTextNode(translateTxt("Image")));
   th.setAttribute("scope", "row");
   th.setAttribute("class", "header");
+  if (pageID == "cover") th.setAttribute("class", "header required");
   tr.setAttribute("tabindex", "0");
   tr.appendChild(th);
   let td = document.createElement("td");
@@ -330,7 +330,6 @@ function clearBody(tbl, pageID, sec) {
   imageInput.setAttribute("class", "form-control");
   imageInput.setAttribute("aria-label", translateTxt("Browse images and scripts button"));
   imageInput.setAttribute("placeholder", translateTxt("Browse"));
-  //imageInput.setAttribute("title", translateTxt("Browse XHTML image"));
   if (pageDetObj.hasOwnProperty(pageID) && Object.keys(pageDetObj[pageID][sec]) != 0) {
     if (pageDetObj[pageID][sec].hasOwnProperty("Image") && pageDetObj[pageID][sec]["Image"] != undefined && pageDetObj[pageID][sec]["Image"] != "") {
       imageInput.value = pageDetObj[pageID][sec]["Image"];
@@ -338,6 +337,7 @@ function clearBody(tbl, pageID, sec) {
   }
   if (pageID == "cover") {
     imageInput.setAttribute("id", "coverImage");
+    imageInput.setAttribute("required", "true");
   } else {
     imageInput.setAttribute("id", "importImage");
   }
@@ -378,6 +378,7 @@ function createTableBody(tbl, pageId, section) {
     }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    if (pageId == "cover" && val == "Image") th.setAttribute("class", "header required");
     tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
@@ -385,6 +386,7 @@ function createTableBody(tbl, pageId, section) {
       if (pageId == "cover" && val == "Image") {
         let coverImg = document.getElementById("coverImage");
         coverImg.value = sliceName(pageDetObj[pageId][section][val]);
+        coverImg.required = true;
         addImageiframe(pageDetObj[pageId][section][val],coverImg.value);
         continue;
       } else if (val == "Image") {
@@ -472,7 +474,9 @@ function createLangRows(tbl, tbdy, pageId, section) {
 function newImagesScripts(pageID) {
   let imageInput = document.getElementById("importImage");
   if (pageID == "cover" && document.getElementById("coverImage") == undefined) {
+    imageInput.closest('tr').children[0].classList.add('required');
     imageInput.setAttribute("id", "coverImage");
+    imageInput.setAttribute("required", "true");
   } else if (pageID != "cover" && pageID != "credit" && document.getElementById("importImage") == undefined) {
     imageInput = document.getElementById("coverImage");
     imageInput.setAttribute("id", "importImage");

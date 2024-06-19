@@ -187,7 +187,7 @@ function checkRequired() {
     errText.appendChild(document.createTextNode(translateTxt('Error')))
     if (emptyProjFields != 0 || emptyMetaFields != 0) error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) error.appendChild(document.createElement("br"));
-    if (missDepSpine != 0) error.appendChild(document.createTextNode(translateTxt("Please resolve spine missing dependencies")));
+    if (missDepSpine != 0) error.appendChild(document.createTextNode(checkSpineForm()));
     $("#toastMessage").show();
     return false;
   }
@@ -219,6 +219,20 @@ function formFilter(formId) {
     return $(this).val() === "";
   }).length;
   return reqFields;
+}
+
+// check the invalid input field error and return the apropriate error text
+function checkSpineForm(){
+  let errorText = translateTxt("Please resolve spine missing dependencies");
+  let pageId = $("#pageList .list-group-item.active").attr("id");
+  var invalidInput = $("#spineForm input:required:invalid");
+  for (let i = 0; i < invalidInput.length; i++) {
+    let closeTr = invalidInput[i].closest('tr').children[0];
+    if (closeTr.innerText == 'Image' && pageId == 'cover'){
+      errorText = translateTxt('Cover image is required Please add it');
+    }
+  }
+  return errorText;
 }
 
 // check if the required fields has empty required input and add exclamation triangle icon else hide error panel and remove the icon
