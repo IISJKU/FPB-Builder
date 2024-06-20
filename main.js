@@ -76,7 +76,7 @@ const createWindow = () => {
       msg = transArr[3];
     });
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
-      fs.readFile(app.getPath("userData") + "\\projects\\" + name + ".json", "utf8", (err, jsonString) => {
+      fs.readFile(app.getPath("userData") + "//projects//" + name + ".json", "utf8", (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
         if (err) {
           if (err.code == "ENOENT" && name != "") {
@@ -135,15 +135,15 @@ app.on("window-all-closed", () => {
 });
 
 function loadRecentProjects() {
-  if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
-    fs.mkdirSync(app.getPath("userData") + "\\projects");
+  if (!fs.existsSync(app.getPath("userData") + "//projects")) {
+    fs.mkdirSync(app.getPath("userData") + "//projects");
   }
-  let projects = fs.readdirSync(app.getPath("userData") + "\\projects\\");
+  let projects = fs.readdirSync(app.getPath("userData") + "//projects//");
   let loadedProjects = new Array();
 
   if (Array.isArray(projects)) {
     projects.forEach((project) => {
-      loadedProjects.push(JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\" + project, { encoding: "utf8" })));
+      loadedProjects.push(JSON.parse(fs.readFileSync(app.getPath("userData") + "//projects//" + project, { encoding: "utf8" })));
     });
   }
 
@@ -151,13 +151,13 @@ function loadRecentProjects() {
 }
 
 function loadAppSettings() {
-  if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
-    fs.mkdirSync(app.getPath("userData") + "\\projects");
+  if (!fs.existsSync(app.getPath("userData") + "//projects")) {
+    fs.mkdirSync(app.getPath("userData") + "//projects");
   }
-  if (!fs.existsSync(app.getPath("userData") + "\\projects\\appSettings.json")) {
+  if (!fs.existsSync(app.getPath("userData") + "//projects//appSettings.json")) {
     return null;
   }
-  let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\appSettings.json", { encoding: "utf8" }));
+  let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "//projects//appSettings.json", { encoding: "utf8" }));
   return appSett;
 }
 

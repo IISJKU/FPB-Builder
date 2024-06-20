@@ -11,6 +11,12 @@ let pageDetails = {
     imagesScripts: {},
     alt: {},
   },
+  1: {
+    text: {},
+    narration: {},
+    imagesScripts: {},
+    alt: {},
+  },
 };
 
 let emptyPage = {

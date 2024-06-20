@@ -169,15 +169,18 @@ function saveDataBtn() {
 //check required fields before pressing save button or closing the application
 function checkRequired() {
   initializeReqFocus();
-  var emptyProjFields = formFilter("ProjectForm");
-  var emptyMetaFields = formFilter("metaForm");
-  var missDepSpine = $("#spineForm input:required:invalid").length;
+  let emptyProjFields = formFilter("ProjectForm");
+  let emptyMetaFields = formFilter("metaForm");
+  let missDepSpine = $("#spineForm input:required:invalid").length;
+  let spineErr = 0;
+  if (missDepSpine == 0) spineErr = checkSpineError();
 
   emptyFields(emptyProjFields, "project-list");
   emptyFields(emptyMetaFields, "metadata-list");
   emptyFields(missDepSpine, "spine-list");
+  if (spineErr != 0) emptyFields(spineErr, "spine-list");
 
-  if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) {
+  if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0 || spineErr != 0 ) {
     error = document.getElementById("toastBody");
     error.innerHTML = "";
     let exIcon = document.getElementById("toastIcon");
@@ -185,9 +188,11 @@ function checkRequired() {
     let errText = document.getElementById("toastText");
     errText.innerText=''
     errText.appendChild(document.createTextNode(translateTxt('Error')))
-    if (emptyProjFields != 0 || emptyMetaFields != 0) error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red)")));
+    if (emptyProjFields != 0 || emptyMetaFields != 0) error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red).")));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) error.appendChild(document.createElement("br"));
-    if (missDepSpine != 0) error.appendChild(document.createTextNode(checkSpineForm()));
+    if (missDepSpine != 0) checkSpineForm(error);
+    if ((emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) && spineErr != 0) error.appendChild(document.createElement("br"));
+    if (spineErr != 0) checkSpineData(error);
     $("#toastMessage").show();
     return false;
   }
@@ -222,21 +227,83 @@ function formFilter(formId) {
 }
 
 // check the invalid input field error and return the apropriate error text
-function checkSpineForm(){
-  let errorText = translateTxt("Please resolve spine missing dependencies");
+function checkSpineForm(errorMsg){
+  let newLineFlag = false;
   let pageId = $("#pageList .list-group-item.active").attr("id");
   var invalidInput = $("#spineForm input:required:invalid");
   for (let i = 0; i < invalidInput.length; i++) {
     let closeTr = invalidInput[i].closest('tr').children[0];
     let closeThead = invalidInput[i].closest("table").children[0].children[0].children[0]
     if (closeTr.innerText == 'Image' && pageId == 'cover'){
-      errorText = translateTxt('Cover image is required Please add it');
+      errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
+      newLineFlag = true;
     }
     if (closeThead.innerText == 'Narrations'){
-      errorText = translateTxt('Audio narrations setting is checked, please add narrations for all pages');
+      if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
+      errorMsg.appendChild(document.createTextNode(translateTxt('Audio narrations setting is checked, please add narrations for all pages.')));
+      newLineFlag = true;
+      continue;
+    }
+    if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
+    errorMsg.appendChild(document.createTextNode(translateTxt("Please resolve spine pages missing dependencies.")));
+    newLineFlag = true;
+    continue;
+  }
+}
+
+// check page details session variable data errors and return the apropriate error text
+function checkSpineData(errorMsg){
+  let newLineFlag = false;
+  let spineData = parseSessionData("pageDetails");
+  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
+    errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
+      newLineFlag = true;
+  }
+  for (let value in spineData) {
+    if (spineData[value]['imagesScripts'].hasOwnProperty('missing') && Object.keys(spineData[value]['imagesScripts']['missing']).length != 0){
+      if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
+      errorMsg.appendChild(document.createTextNode(translateTxt("Please resolve spine pages missing dependencies.")));
+      newLineFlag = true;
+      continue;
+    }
+    let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
+    if (publicationLangs.length == 0) return;
+    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
+    for (let i = 0; i < publicationLangs.length; i++) {
+      if(spineData[value]['narration'][publicationLangs[i]] == ''){
+        if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
+        errorMsg.appendChild(document.createTextNode(translateTxt("Audio narrations setting is checked, please add narrations for all pages.")));
+        newLineFlag = true;
+        continue;
+      }
     }
   }
-  return errorText;
+}
+
+// return flag that check page details session variable of the missing required values
+function checkSpineError(){
+  let spineError = 0;
+  let spineData = parseSessionData("pageDetails");
+  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
+    spineError = 1;
+    return;
+  }
+  for (let value in spineData) {
+    if (spineData[value]['imagesScripts'].hasOwnProperty('missing') && spineData[value]['imagesScripts']['missing'] != {}){
+      spineError = 1;
+      return;
+    }
+    let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
+    if (publicationLangs.length == 0) return;
+    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
+    for (let i = 0; i < publicationLangs.length; i++) {
+      if(spineData[value]['narration'][publicationLangs[i]] == ''){
+        spineError = 1;
+        return;
+      }
+    }
+  }
+  return spineError;
 }
 
 // check if the required fields has empty required input and add exclamation triangle icon else hide error panel and remove the icon

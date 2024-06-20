@@ -94,8 +94,8 @@ Script;Drehbuch;Le scénario;Scrittura;Skriptas
 Audio;Audio;Audio;Audio;Garso
 Style;Stil;Style;Stile;Stilius
 Page Details;Seite Details;Détails de la page;Dettagli pagina;Puslapio detalės
-Please fill all mandatory fields (highlighted in red);Bitte füllen Sie alle Pflichtfelder aus (rot markiert);Veuillez remplir tous les champs obligatoires (surlignés en rouge);Compilare tutti i campi obbligatori (evidenziati in rosso);Užpildykite visus privalomus laukus (pažymėti raudonai)
-Please resolve spine missing dependencies;Bitte beheben Sie fehlende Abhängigkeiten von Spine;Veuillez résoudre les dépendances manquantes de la colonne vertébrale;Risolvere le dipendenze mancanti della spina dorsale;Prašome išspręsti stuburo trūkstamas priklausomybes
+Please fill all mandatory fields (highlighted in red).;Bitte füllen Sie alle Pflichtfelder aus (rot markiert).;Veuillez remplir tous les champs obligatoires (surlignés en rouge).;Compilare tutti i campi obbligatori (evidenziati in rosso).;Užpildykite visus privalomus laukus (pažymėti raudonai).
+Please resolve spine pages missing dependencies.;Bitte beheben Sie die fehlenden Abhängigkeiten der Rückenseiten.;Veuillez résoudre les dépendances manquantes des pages spine.;Risolvere le dipendenze mancanti delle pagine della colonna vertebrale.;Išspręskite stuburo puslapių trūkstamas priklausomybes.
 Error;Fehler;Erreur;Errore;Klaida
 Confirmation;Konfirmation;Confirmation;Conferma;Patvirtinimas
 Your file has been saved successfully.;Ihre Datei wurde erfolgreich gespeichert.;Votre fichier a été enregistré avec succès.;Il file è stato salvato con successo.;Jūsų failas sėkmingai išsaugotas.
@@ -129,5 +129,5 @@ select;Wählen Sie;sélectionner;selezionare;pasirinkite
 item;Artikel;article;articolo;elementas
 delete entry;Eintrag löschen;supprimer l'entrée;eliminare la voce;ištrinti įrašą
 Add new entry;Neuen Eintrag hinzufügen;Ajouter une nouvelle entrée;Aggiungi una nuova voce;Pridėti naują įrašą
-Cover image is required Please add it;Titelbild ist erforderlich Bitte fügen Sie es hinzu;L'image de couverture est requise Veuillez l'ajouter;L'immagine di copertina è richiesta Si prega di aggiungerla;Reikalingas viršelio paveikslėlis Pridėkite jį
-Audio narrations setting is checked, please add narrations for all pages;Die Einstellung für Audiokommentare ist aktiviert, bitte fügen Sie Kommentare für alle Seiten hinzu;Si le paramètre Narrations audio est coché, veuillez ajouter des narrations pour toutes les pages;L'impostazione Narrazioni audio è selezionata, aggiungere narrazioni per tutte le pagine;Garso pasakojimų nustatymas pažymėtas, pridėkite visų puslapių pasakojimus
+Cover image is required Please add it.;Titelbild ist erforderlich Bitte fügen Sie es hinzu.;L'image de couverture est requise Veuillez l'ajouter.;L'immagine di copertina è richiesta Si prega di aggiungerla.;Reikalingas viršelio paveikslėlis Pridėkite jį.
+Audio narrations setting is checked, please add narrations for all pages.;Die Einstellung für Audiokommentare ist aktiviert, bitte fügen Sie Kommentare für alle Seiten hinzu.;Si le paramètre Narrations audio est coché, veuillez ajouter des narrations pour toutes les pages.;L'impostazione Narrazioni audio è selezionata, aggiungere narrazioni per tutte le pagine.;Garso pasakojimų nustatymas pažymėtas, pridėkite visų puslapių pasakojimus.

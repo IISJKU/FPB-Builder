@@ -2,11 +2,11 @@ const { app } = require("electron");
 const ProjectData = require("./backEnd/classes/ProjectData.js");
 let fs = require("fs");
 
-// write the data in a json file to "AppData\Roaming\fpb-builder\projects" path
+// write the data in a json file to "AppData/Roaming/fpb-builder/projects" path
 async function writeData(window, closeApp){
   window.webContents.executeJavaScript('checkRequired()', true).then( async (result) => {
     if (result == true){
-      let dir = app.getPath("userData") + "\\projects\\";
+      let dir = app.getPath("userData") + "//projects//";
       let project = new ProjectData();
       await project.fillData(window);
       if (!fs.existsSync(dir)) {
@@ -31,10 +31,10 @@ function saveData(window){
   });
 }
 
-// write the application settings in a json file to "AppData\Roaming\fpb-builder\projects" path
+// write the application settings in a json file to "AppData/Roaming/fpb-builder/projects" path
 function saveSettings(selLang){
   let settings = {appLanguage: selLang};
-  let dir = app.getPath("userData") + "\\projects\\";
+  let dir = app.getPath("userData") + "//projects//";
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
