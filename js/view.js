@@ -228,8 +228,12 @@ function checkSpineForm(){
   var invalidInput = $("#spineForm input:required:invalid");
   for (let i = 0; i < invalidInput.length; i++) {
     let closeTr = invalidInput[i].closest('tr').children[0];
+    let closeThead = invalidInput[i].closest("table").children[0].children[0].children[0]
     if (closeTr.innerText == 'Image' && pageId == 'cover'){
       errorText = translateTxt('Cover image is required Please add it');
+    }
+    if (closeThead.innerText == 'Narrations'){
+      errorText = translateTxt('Audio narrations setting is checked, please add narrations for all pages');
     }
   }
   return errorText;
