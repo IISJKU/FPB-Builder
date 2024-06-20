@@ -22,7 +22,6 @@ function makeFile(location, name, content) {
     } else {
       dirName = dirName + "(" + count + ")";
     }
-
   }
 
   if (content == null || content == undefined || content == "undefined") {

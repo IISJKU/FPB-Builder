@@ -280,6 +280,8 @@ function createContentFile(files, spineFiles) {
 
     if (filename.includes("/")) {
       name = filename.substring(filename.lastIndexOf("/") + 1, filename.length);
+    } else if (filename.includes("\\notice\\")) {
+      name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
     }
 
     if (filename.includes(".css")) {
@@ -291,12 +293,12 @@ function createContentFile(files, spineFiles) {
     } else if (filename.includes(".mp3")) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if (filename.includes(".jpg") || filename.includes(".jpeg")) {
-      if (filename.includes("/notice")) line = '   <item id="' + makeID(name) + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
+      if (filename.includes("\\notice")) line = '   <item id="' + makeID(name) + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
       else if (coverImage.includes(name)) {
         line = '   <item id="' + makeID(name) + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
       } else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
     } else if (filename.includes(".png")) {
-      if (filename.includes("/notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
+      if (filename.includes("\\notice")) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
       else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/png" />';
     } else if (filename.includes(".svg")) {
       line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/svg+xml" />';
@@ -324,6 +326,7 @@ function createContentFile(files, spineFiles) {
 
     let pID = name.substring(name.lastIndexOf("\\") + 1, name.length);
     pID = pID.replaceAll("(", "").replaceAll(")", "");
+    pID = pID.substring(0, pID.lastIndexOf("."));
 
     line = '   <item id="' + pID + '" href="xhtml/' + name + '" media-type="application/xhtml+xml" properties="' + properties + '" />';
     spineContents = spineContents + '   <itemref idref="' + pID + '"/>' + "\n";
@@ -369,7 +372,7 @@ function createPage00(firstPageNarration, fontNames) {
 
   if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
 
-  str = fs.readFileSync(__dirname + "/templates/" + language + "/page00.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "\\templates\\" + language.toLowerCase() + "\\page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
 
@@ -391,7 +394,8 @@ function createPage00(firstPageNarration, fontNames) {
     }
 
     let w = (150 + ((group-1)* 50));
-    let name = key.substring(0, key.indexOf(" ")) ;
+    let name = key.substring(0, key.indexOf(" "));
+    
 
     let moveDown = 0;
     if (count % 2 != 0) moveDown = 70;
@@ -399,7 +403,7 @@ function createPage00(firstPageNarration, fontNames) {
     if(name == "" || name == undefined) name = key;
     fontText =
       fontText +
-      '                   <g id="' + key +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
+      '                   <g id="' + key.replaceAll(" ", "") +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
       '                       <rect x="10" y="50" width="195" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
       '                       <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
       "                   </g>\n";
@@ -424,7 +428,7 @@ function createPage00(firstPageNarration, fontNames) {
 function createNotice() {
   let str = "";
 
-  str = fs.readFileSync(__dirname + "/templates/" + language + "/notice.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language.toLowerCase() + "/notice.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
 
   return str;
@@ -452,7 +456,7 @@ function filterToc(str, argument) {
 function createTocXHTML(pages) {
   let str = "";
 
-  str = fs.readFileSync(__dirname + "/templates/" + language + "/toc.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language.toLowerCase() + "/toc.xhtml", "utf-8");
 
   str = str.replaceAll("{title}", title);
 
@@ -484,7 +488,7 @@ function createTocXHTML(pages) {
 function createCredits(creditPage) {
   let str = "";
 
-  str = fs.readFileSync(__dirname + "/templates/" + language + "/credits.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language.toLowerCase() + "/credits.xhtml", "utf-8");
 
   /*
   let tempCredits = [
@@ -559,7 +563,7 @@ function createCredits(creditPage) {
 function createNoticeToc() {
   let str = "";
 
-  str = fs.readFileSync(__dirname + "/templates/" + language + "/notice_toc.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language.toLowerCase() + "/notice_toc.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
 
   return str;

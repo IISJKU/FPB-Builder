@@ -203,7 +203,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
   //make the cover
   FileSystemManager.makeFile(
-    path + "/" + newDirName + "/OEBPS/xhtml/",
+    path + "\\" + newDirName + "\\OEBPS\\xhtml\\",
     "cover.xhtml",
     EPUBFileCreator.createCover(metadata.title[language], coverImage, "Buchdeckel", coverNarration)
   );
@@ -219,7 +219,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   if (options.includeBookSettings) {
     //make page 00
     FileSystemManager.makeFile(
-      path + "/" + newDirName + "/OEBPS/xhtml/",
+      path + "\\" + newDirName + "\\OEBPS\\xhtml\\",
       "page00.xhtml",
       EPUBFileCreator.createPage00(pages[0].narration[language], fontNames)
     );
@@ -230,6 +230,13 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fileArray.push(coverNarration);
 
   fileArray = removeOldFiles(fileArray);
+
+  let testStr = "";
+  fileArray.forEach((element) => {
+    if (element != undefined) testStr = testStr + element.toString() + "\n";
+  });
+
+  fs.writeFileSync(path + "\\" + newDirName + "\\OEBPS\\files.txt", testStr);
 
   fileArray.forEach((element) => {
     tempFile = "";
@@ -289,9 +296,9 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         element.toLowerCase().includes(".png")
       ) {
         subFolder = "\\OEBPS\\images\\";
-        if (element.includes("/notice/")) {
+        if (element.includes("\\notice\\")) {
           subFolder = "\\OEBPS\\images\\notice\\";
-          i = element.lastIndexOf("/");
+          i = element.lastIndexOf("\\");
         }
         contents.push(element);
       }
@@ -337,10 +344,12 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 }
 
 function removeOldFiles(arr) {
+  let removedLDQR_MAIN_CSS = false;
   let t = [];
   arr.forEach((entr) => {
     if (typeof entr == "string") {
-      if (!entr.includes("/") && entr.includes("ldqr_main.min.css")) {
+      if (!removedLDQR_MAIN_CSS && entr.includes("ldqr_main")) {
+        removedLDQR_MAIN_CSS = true;
       } else {
         t.push(entr);
       }
@@ -389,7 +398,15 @@ function rewriteFontSection(element) {
       if (line.includes("default:")) {
         open = true;
         for (const [key, value] of Object.entries(fontNames)) {
-          line = '      case "' + key + '":\n' + '        o = "ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '";\n' + "        break; \n" + line;
+          line =
+            '      case "' +
+            key.replaceAll(" ", "") +
+            '":\n' +
+            '        o = "ldqr-font-' +
+            key.replaceAll(" ", "").toLowerCase() +
+            '";\n' +
+            "        break; \n" +
+            line;
         }
         tempFile = tempFile + line + "\n";
         inFunction = false;
@@ -515,72 +532,72 @@ function pathsToFonts() {
 
 function pathsToMenuDependencies() {
   let arr = new Array(
-    __dirname + "/imports/colorisation.min.js",
-    __dirname + "/imports/ldqr_main.min.css",
-    __dirname + "/imports/colorisation.css",
-    __dirname + "/imports/page00_svg.css",
-    __dirname + "/imports/page00.min.js",
-    __dirname + "/imports/radiobutton.js",
-    __dirname + "/imports/radiogroup.js",
-    __dirname + "/imports/ldqr2.js",
-    __dirname + "/imports/localforage.min.js",
-    __dirname + "/imports/SVGPanZoom.min.js"
+    __dirname + "\\imports\\colorisation.min.js",
+    __dirname + "\\imports\\ldqr_main.min.css",
+    __dirname + "\\imports\\colorisation.css",
+    __dirname + "\\imports\\page00_svg.css",
+    __dirname + "\\imports\\page00.min.js",
+    __dirname + "\\imports\\radiobutton.js",
+    __dirname + "\\imports\\radiogroup.js",
+    __dirname + "\\imports\\ldqr2.js",
+    __dirname + "\\imports\\localforage.min.js",
+    __dirname + "\\imports\\SVGPanZoom.min.js"
   );
-  console.log(arr);
+
   return arr;
 }
 
 function pathsToImages(language) {
   let a = new Array(
-    "/images/afnic.jpg",
-    "/images/aveugles.png",
-    "/images/edu-up.jpg",
-    "/images/Ftelecom.png",
-    "/images/RBFC.jpg",
-    "/images/version01-coul.png",
-    "/images/version01-nb.png",
-    "/images/version02-coul.png",
-    "/images/version02-nb.png",
-    "/images/version03-coul.png",
-    "/images/version03-nb.png",
-    "/images/version04-coul.png",
-    "/images/version04-nb.png",
-    "/images/version05-coul.png",
-    "/images/version05-nb.png",
-    "/images/notice/image020.jpg",
-    "/images/notice/image022.jpg",
-    "/images/notice/image024.jpg",
-    "/images/notice/image026.jpg",
-    "/images/notice/image028.jpg",
-    "/images/notice/image030.jpg",
-    "/images/notice/image032.jpg",
-    "/images/notice/image034.png",
-    "/images/notice/image038.png",
-    "/images/notice/image039.png",
-    "/images/notice/image042.jpg",
-    "/images/notice/image043.jpg",
-    "/images/notice/image044.jpg",
-    "/images/notice/image045.jpg",
-    "/images/notice/image046.jpg",
-    "/images/notice/image047.jpg",
-    "/images/notice/image050.jpg",
-    "/images/notice/image055.jpg",
-    "/images/notice/image058.jpg",
-    "/images/notice/image060.jpg",
-    "/images/notice/image062.jpg",
-    "/images/notice/image063.jpg",
-    "/images/notice/image064.jpg",
-    "/images/notice/image065.jpg",
-    "/images/notice/image068.jpg",
-    "/images/notice/image070.jpg",
-    "/images/notice/image072.png",
-    "/images/notice/image073.jpg",
-    "/images/notice/home.svg",
-    "/images/notice/logo_erasmusplus.svg"
+    "afnic.jpg",
+    "aveugles.png",
+    "edu-up.jpg",
+    "Ftelecom.png",
+    "RBFC.jpg",
+    "version01-coul.png",
+    "version01-nb.png",
+    "version02-coul.png",
+    "version02-nb.png",
+    "version03-coul.png",
+    "version03-nb.png",
+    "version04-coul.png",
+    "version04-nb.png",
+    "version05-coul.png",
+    "version05-nb.png",
+    "notice\\image020.jpg",
+    "notice\\image022.jpg",
+    "notice\\image024.jpg",
+    "notice\\image026.jpg",
+    "notice\\image028.jpg",
+    "notice\\image030.jpg",
+    "notice\\image032.jpg",
+    "notice\\image034.png",
+    "notice\\image038.png",
+    "notice\\image039.png",
+    "notice\\image042.jpg",
+    "notice\\image043.jpg",
+    "notice\\image044.jpg",
+    "notice\\image045.jpg",
+    "notice\\image046.jpg",
+    "notice\\image047.jpg",
+    "notice\\image050.jpg",
+    "notice\\image055.jpg",
+    "notice\\image058.jpg",
+    "notice\\image060.jpg",
+    "notice\\image062.jpg",
+    "notice\\image063.jpg",
+    "notice\\image064.jpg",
+    "notice\\image065.jpg",
+    "notice\\image068.jpg",
+    "notice\\image070.jpg",
+    "notice\\image072.png",
+    "notice\\image073.jpg",
+    "notice\\home.svg",
+    "notice\\logo_erasmusplus.svg"
   );
 
   for (let i = 0; i < a.length; i++) {
-    a[i] = __dirname + "\\templates\\" + language + a[i];
+    a[i] = __dirname + "\\templates\\" + language.toLowerCase() + "\\images\\" + a[i];
   }
   return a;
 }
