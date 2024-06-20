@@ -43,7 +43,7 @@ function setOptions(opt) {
 }
 
 function setCover(cover) {
-  if (typeof(cover) !='string' || cover == undefined) return ''; 
+  if (typeof cover != "string" || cover == undefined) return "";
   coverImage = "images/" + cover.substring(cover.lastIndexOf("\\") + 1, cover.length);
 }
 
@@ -574,6 +574,9 @@ function createPageText(obj){
   let text = obj.text[language];
   let audio = obj.narration[language];
   let title = obj.title;
+
+  if(text == undefined) text = " ";
+  if(audio == undefined) audio = " ";
 
   //parses text, and automatically adds propper html tags
   let processedText = "<p>";

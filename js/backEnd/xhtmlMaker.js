@@ -42,7 +42,7 @@ function initialize(metad, pag, data) {
   options = data.options;
   fontNames = data.selectedFonts;
 
-  if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "js\\backEnd\\imports\\fonts\\Luciole-Regular.ttf";
+  if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "\\imports\\fonts\\Luciole-Regular.ttf";
 
   //remove cover and credit from datastructure ;o
   cover = pages[pages.length - 2];
@@ -213,7 +213,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fonts.forEach((p) => {
     let symb = "\\";
     if (!p.includes(symb)) symb = "/";
-    fs.copyFileSync(p, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
+    fs.copyFileSync(__dirname + p, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
   });
 
   if (options.includeBookSettings) {
@@ -340,7 +340,7 @@ function removeOldFiles(arr) {
   let t = [];
   arr.forEach((entr) => {
     if (typeof entr == "string") {
-      if (entr.includes("\\") && entr.includes("ldqr_main.min.css")) {
+      if (!entr.includes("/") && entr.includes("ldqr_main.min.css")) {
       } else {
         t.push(entr);
       }
@@ -514,18 +514,20 @@ function pathsToFonts() {
 }
 
 function pathsToMenuDependencies() {
-  return new Array(
-    "./js/backEnd/imports/colorisation.min.js",
-    "./js/backEnd/imports/ldqr_main.min.css",
-    "./js/backEnd/imports/colorisation.css",
-    "./js/backEnd/imports/page00_svg.css",
-    "./js/backEnd/imports/page00.min.js",
-    "./js/backEnd/imports/radiobutton.js",
-    "./js/backEnd/imports/radiogroup.js",
-    "./js/backEnd/imports/ldqr2.js",
-    "./js/backEnd/imports/localforage.min.js",
-    "./js/backEnd/imports/SVGPanZoom.min.js"
+  let arr = new Array(
+    __dirname + "/imports/colorisation.min.js",
+    __dirname + "/imports/ldqr_main.min.css",
+    __dirname + "/imports/colorisation.css",
+    __dirname + "/imports/page00_svg.css",
+    __dirname + "/imports/page00.min.js",
+    __dirname + "/imports/radiobutton.js",
+    __dirname + "/imports/radiogroup.js",
+    __dirname + "/imports/ldqr2.js",
+    __dirname + "/imports/localforage.min.js",
+    __dirname + "/imports/SVGPanZoom.min.js"
   );
+  console.log(arr);
+  return arr;
 }
 
 function pathsToImages(language) {
@@ -578,7 +580,7 @@ function pathsToImages(language) {
   );
 
   for (let i = 0; i < a.length; i++) {
-    a[i] = "./js/backEnd/templates/" + language + a[i];
+    a[i] = __dirname + "\\templates\\" + language + a[i];
   }
   return a;
 }
