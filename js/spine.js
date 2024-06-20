@@ -163,7 +163,7 @@ $(document).on("click", ".otherFiles", function (e) {
 });
 
 window.BRIDGE.onSetPath((value, elemId) => {
-  if (value["canceled"] == true) return;
+  if (value["canceled"] == true || value.length == 0) return;
   let lastIdx = value["filePaths"][0].lastIndexOf("\\") + 1;
   let pthLength = value["filePaths"][0].length;
   let imgName = value["filePaths"][0].slice(lastIdx, pthLength);
@@ -202,7 +202,7 @@ window.BRIDGE.onSetPath((value, elemId) => {
 
 // handle on image loaded event
 window.BRIDGE.onImageLoaded((value) => {
-  if (value["canceled"] == true) return;
+  if (value["canceled"] == true || value.length == 0) return;
   let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
   let pthLength = value["imageFile"].length;
   let imgName = value["imageFile"].slice(lastIdx, pthLength);
@@ -244,7 +244,7 @@ window.BRIDGE.onImageLoaded((value) => {
 
 // handle on narration loaded event
 window.BRIDGE.onNarrationLoaded((value, elemId) => {
-  if (value["canceled"] == true) return;
+  if (value["canceled"] == true || value.length == 0) return;
   let lastIdx = value[0].lastIndexOf("\\") + 1;
   let pthLength = value[0].length;
   let imgName = value[0].slice(lastIdx, pthLength);
