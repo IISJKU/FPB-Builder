@@ -429,6 +429,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    if (section == "narration" && $('#audioNarr').is(':checked') == true)  th.setAttribute("class", "reqNarrHeader required");
     tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
@@ -456,6 +457,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
+      if ($('#audioNarr').is(':checked') == true)  narrInput.required = true;
       td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");
