@@ -19,43 +19,43 @@ const createWindow = () => {
 
   const template = [
     {
-      label: 'File',
+      label: "File",
       submenu: [
         {
-          label: 'Save',
-          accelerator: 'Ctrl+S',
+          label: "Save",
+          accelerator: "Ctrl+S",
           click() {
-            shared.saveData(mainWindow); }
+            shared.saveData(mainWindow);
+          },
         },
-        { type: 'separator'},
-        { role: 'quit', 
-        },
-      ]
+        { type: "separator" },
+        { role: "quit" },
+      ],
     },
     {
-      label: 'View',
+      label: "View",
       submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
-      ]
+        { role: "reload" },
+        { role: "forceReload" },
+        { role: "toggleDevTools" },
+        { type: "separator" },
+        { role: "resetZoom" },
+        { role: "zoomIn" },
+        { role: "zoomOut" },
+        { type: "separator" },
+        { role: "togglefullscreen" },
+      ],
     },
     {
-      label: 'Help',
+      label: "Help",
       submenu: [
         {
-          label: 'About',
+          label: "About",
         },
-      ]
+      ],
     },
-  ]
-    
+  ];
+
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
   //calling the constructor automatically registers all of the icpMain events
@@ -64,29 +64,32 @@ const createWindow = () => {
   //application on close event check if there is any changes on the data before closing the app
   mainWindow.on("close", async function (event) {
     event.preventDefault();
-    let yesBtn, noBtn, msgTitle, msg = '';
-    mainWindow.webContents.executeJavaScript('document.getElementById("appLang").value', true).then( (lang) => {
-      transArr = jsTranslate(lang,["Yes", "No", "Confirmation", "You have unsaved changes. Save before quitting?"]);
+    let yesBtn,
+      noBtn,
+      msgTitle,
+      msg = "";
+    mainWindow.webContents.executeJavaScript('document.getElementById("appLang").value', true).then((lang) => {
+      transArr = jsTranslate(lang, ["Yes", "No", "Confirmation", "You have unsaved changes. Save before quitting?"]);
       yesBtn = transArr[0];
       noBtn = transArr[1];
       msgTitle = transArr[2];
       msg = transArr[3];
     });
-    mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then( (name) => {
-      fs.readFile(app.getPath("userData") + "\\projects\\"+ name+'.json', "utf8",  (err, jsonString) => {
+    mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
+      fs.readFile(app.getPath("userData") + "\\projects\\" + name + ".json", "utf8", (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
         if (err) {
-          if (err.code == 'ENOENT' && name != '') {
+          if (err.code == "ENOENT" && name != "") {
             jsonString = "";
           }
         }
-        if (jsonString == undefined || jsonString == 'undefined'){
+        if (jsonString == undefined || jsonString == "undefined") {
           app.exit();
           return;
         }
-        mainWindow.webContents.executeJavaScript("compareData("+jsonString+")", true).then( async (equalCheck) => {
+        mainWindow.webContents.executeJavaScript("compareData(" + jsonString + ")", true).then(async (equalCheck) => {
           // all objects are equal (no change detected)
-          if (equalCheck == 1 ){
+          if (equalCheck == 1) {
             app.exit();
             return;
           }
@@ -100,10 +103,10 @@ const createWindow = () => {
           if (choice === 0) {
             event.preventDefault();
             await shared.writeData(mainWindow, true);
-          }else{
+          } else {
             app.exit();
           }
-        });  
+        });
       });
     });
   });
@@ -134,7 +137,7 @@ app.on("window-all-closed", () => {
 function loadRecentProjects() {
   if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
     fs.mkdirSync(app.getPath("userData") + "\\projects");
-  } 
+  }
   let projects = fs.readdirSync(app.getPath("userData") + "\\projects\\");
   let loadedProjects = new Array();
 
@@ -150,15 +153,15 @@ function loadRecentProjects() {
 function loadAppSettings() {
   if (!fs.existsSync(app.getPath("userData") + "\\projects")) {
     fs.mkdirSync(app.getPath("userData") + "\\projects");
-  } 
+  }
   if (!fs.existsSync(app.getPath("userData") + "\\projects\\appSettings.json")) {
     return null;
   }
-  let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\appSettings.json", { encoding: "utf8" }))
+  let appSett = JSON.parse(fs.readFileSync(app.getPath("userData") + "\\projects\\appSettings.json", { encoding: "utf8" }));
   return appSett;
 }
 
-function jsTranslate(lang, paramArr){
+function jsTranslate(lang, paramArr) {
   let retArr = [];
   let transArr = getTranslationCsv();
   for (let j = 0; j < paramArr.length; j++) {
@@ -171,20 +174,20 @@ function jsTranslate(lang, paramArr){
 
 // returns processed array of translation.csv file
 function getTranslationCsv() {
-// read csv into string
-let data = fs.readFileSync("translation.csv").toLocaleString();
-let lines = [];
-// string to array
-let rows = data.split("\n"); // split rows
-rows.forEach((row) => {
+  // read csv into string
+  let data = fs.readFileSync("translation.csv").toLocaleString();
+  let lines = [];
+  // string to array
+  let rows = data.split("\n"); // split rows
+  rows.forEach((row) => {
     let headers = rows[0].split(";");
     columns = row.split(";"); //split columns
     let tarr = {};
-      for (let j = 0; j < headers.length; j++) {
-        tarr[headers[j]] = columns[j];
-      }
+    for (let j = 0; j < headers.length; j++) {
+      tarr[headers[j]] = columns[j];
+    }
     lines.push(tarr);
-})
+  });
   return lines;
 }
 

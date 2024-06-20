@@ -369,7 +369,7 @@ function createPage00(firstPageNarration, fontNames) {
 
   if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/page00.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language + "/page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
 
@@ -424,7 +424,7 @@ function createPage00(firstPageNarration, fontNames) {
 function createNotice() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/notice.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language + "/notice.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
 
   return str;
@@ -452,7 +452,7 @@ function filterToc(str, argument) {
 function createTocXHTML(pages) {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/toc.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language + "/toc.xhtml", "utf-8");
 
   str = str.replaceAll("{title}", title);
 
@@ -484,7 +484,7 @@ function createTocXHTML(pages) {
 function createCredits(creditPage) {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/credits.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language + "/credits.xhtml", "utf-8");
 
   /*
   let tempCredits = [
@@ -559,7 +559,7 @@ function createCredits(creditPage) {
 function createNoticeToc() {
   let str = "";
 
-  str = fs.readFileSync("./js/backEnd/templates/" + language + "/notice_toc.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + "/templates/" + language + "/notice_toc.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
 
   return str;
