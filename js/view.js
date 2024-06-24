@@ -238,6 +238,7 @@ function checkSpineForm(errorMsg){
       newLineFlag = true;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (closeThead.innerText == 'Narrations'){
       if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
       errorMsg.appendChild(document.createTextNode(translateTxt('Audio narrations setting is checked, please add narrations for all pages.')));
@@ -304,6 +305,8 @@ function checkSpineError(){
         return;
       }
     }
+=======
+>>>>>>> parent of d410350 (Merge branch 'main' of https://github.com/IISJKU/FPB-Builder)
   }
   return spineError;
 }
