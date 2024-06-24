@@ -233,11 +233,11 @@ function checkSpineForm(errorMsg){
   var invalidInput = $("#spineForm input:required:invalid");
   for (let i = 0; i < invalidInput.length; i++) {
     let closeTr = invalidInput[i].closest('tr').children[0];
-    let closeThead = invalidInput[i].closest("table").children[0].children[0].children[0]
     if (closeTr.innerText == 'Image' && pageId == 'cover'){
       errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
       newLineFlag = true;
     }
+<<<<<<< HEAD
     if (closeThead.innerText == 'Narrations'){
       if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
       errorMsg.appendChild(document.createTextNode(translateTxt('Audio narrations setting is checked, please add narrations for all pages.')));
@@ -277,6 +277,8 @@ function checkSpineData(errorMsg){
         continue;
       }
     }
+=======
+>>>>>>> parent of d410350 (Merge branch 'main' of https://github.com/IISJKU/FPB-Builder)
   }
 }
 
