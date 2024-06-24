@@ -159,11 +159,11 @@ function saveDataBtn() {
     let msgIcon = document.getElementById("toastIcon");
     msgIcon.setAttribute("class", "bi bi-check-square-fill");
     let msgText = document.getElementById("toastText");
-    msgText.innerText=''
-    msgText.appendChild(document.createTextNode(translateTxt('Confirmation')))
+    msgText.innerText = "";
+    msgText.appendChild(document.createTextNode(translateTxt("Confirmation")));
     msg.appendChild(document.createTextNode(translateTxt("Your project has been saved successfully.")));
     $("#toastMessage").show().delay(5000).fadeOut(4000);
-  } 
+  }
 }
 
 //check required fields before pressing save button or closing the application
@@ -180,15 +180,16 @@ function checkRequired() {
   emptyFields(missDepSpine, "spine-list");
   if (spineErr != 0) emptyFields(spineErr, "spine-list");
 
-  if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0 || spineErr != 0 ) {
+  if (emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0 || spineErr != 0) {
     error = document.getElementById("toastBody");
     error.innerHTML = "";
     let exIcon = document.getElementById("toastIcon");
     exIcon.setAttribute("class", "bi bi-exclamation-triangle-fill");
     let errText = document.getElementById("toastText");
-    errText.innerText=''
-    errText.appendChild(document.createTextNode(translateTxt('Error')))
-    if (emptyProjFields != 0 || emptyMetaFields != 0) error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red).")));
+    errText.innerText = "";
+    errText.appendChild(document.createTextNode(translateTxt("Error")));
+    if (emptyProjFields != 0 || emptyMetaFields != 0)
+      error.appendChild(document.createTextNode(translateTxt("Please fill all mandatory fields (highlighted in red).")));
     if ((emptyProjFields != 0 || emptyMetaFields != 0) && missDepSpine != 0) error.appendChild(document.createElement("br"));
     if (missDepSpine != 0) checkSpineForm(error);
     if ((emptyProjFields != 0 || emptyMetaFields != 0 || missDepSpine != 0) && spineErr != 0) error.appendChild(document.createElement("br"));
@@ -227,21 +228,19 @@ function formFilter(formId) {
 }
 
 // check the invalid input field error and return the apropriate error text
-function checkSpineForm(errorMsg){
+function checkSpineForm(errorMsg) {
   let newLineFlag = false;
   let pageId = $("#pageList .list-group-item.active").attr("id");
   var invalidInput = $("#spineForm input:required:invalid");
   for (let i = 0; i < invalidInput.length; i++) {
-    let closeTr = invalidInput[i].closest('tr').children[0];
-    if (closeTr.innerText == 'Image' && pageId == 'cover'){
-      errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
+    let closeTr = invalidInput[i].closest("tr").children[0];
+    if (closeTr.innerText == "Image" && pageId == "cover") {
+      errorMsg.appendChild(document.createTextNode(translateTxt("Cover image is required Please add it.")));
       newLineFlag = true;
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if (closeThead.innerText == 'Narrations'){
+    if (closeThead.innerText == "Narrations") {
       if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
-      errorMsg.appendChild(document.createTextNode(translateTxt('Audio narrations setting is checked, please add narrations for all pages.')));
+      errorMsg.appendChild(document.createTextNode(translateTxt("Audio narrations setting is checked, please add narrations for all pages.")));
       newLineFlag = true;
       continue;
     }
@@ -253,15 +252,15 @@ function checkSpineForm(errorMsg){
 }
 
 // check page details session variable data errors and return the apropriate error text
-function checkSpineData(errorMsg){
+function checkSpineData(errorMsg) {
   let newLineFlag = false;
   let spineData = parseSessionData("pageDetails");
-  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
-    errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
-      newLineFlag = true;
+  if (!spineData["cover"]["imagesScripts"].hasOwnProperty("Image") || spineData["cover"]["imagesScripts"]["Image"] == undefined) {
+    errorMsg.appendChild(document.createTextNode(translateTxt("Cover image is required Please add it.")));
+    newLineFlag = true;
   }
   for (let value in spineData) {
-    if (spineData[value]['imagesScripts'].hasOwnProperty('missing') && Object.keys(spineData[value]['imagesScripts']['missing']).length != 0){
+    if (spineData[value]["imagesScripts"].hasOwnProperty("missing") && Object.keys(spineData[value]["imagesScripts"]["missing"]).length != 0) {
       if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
       errorMsg.appendChild(document.createTextNode(translateTxt("Please resolve spine pages missing dependencies.")));
       newLineFlag = true;
@@ -269,44 +268,40 @@ function checkSpineData(errorMsg){
     }
     let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
     if (publicationLangs.length == 0) return;
-    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
+    if (value == "credit" || $("#audioNarr").is(":checked") == false) continue;
     for (let i = 0; i < publicationLangs.length; i++) {
-      if(spineData[value]['narration'][publicationLangs[i]] == ''){
+      if (spineData[value]["narration"][publicationLangs[i]] == "") {
         if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
         errorMsg.appendChild(document.createTextNode(translateTxt("Audio narrations setting is checked, please add narrations for all pages.")));
         newLineFlag = true;
         continue;
       }
     }
-=======
->>>>>>> parent of d410350 (Merge branch 'main' of https://github.com/IISJKU/FPB-Builder)
   }
 }
 
 // return flag that check page details session variable of the missing required values
-function checkSpineError(){
+function checkSpineError() {
   let spineError = 0;
   let spineData = parseSessionData("pageDetails");
-  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
+  if (!spineData["cover"]["imagesScripts"].hasOwnProperty("Image") || spineData["cover"]["imagesScripts"]["Image"] == undefined) {
     spineError = 1;
     return;
   }
   for (let value in spineData) {
-    if (spineData[value]['imagesScripts'].hasOwnProperty('missing') && spineData[value]['imagesScripts']['missing'] != {}){
+    if (spineData[value]["imagesScripts"].hasOwnProperty("missing") && spineData[value]["imagesScripts"]["missing"] != {}) {
       spineError = 1;
       return;
     }
     let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
     if (publicationLangs.length == 0) return;
-    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
+    if (value == "credit" || $("#audioNarr").is(":checked") == false) continue;
     for (let i = 0; i < publicationLangs.length; i++) {
-      if(spineData[value]['narration'][publicationLangs[i]] == ''){
+      if (spineData[value]["narration"][publicationLangs[i]] == "") {
         spineError = 1;
         return;
       }
     }
-=======
->>>>>>> parent of d410350 (Merge branch 'main' of https://github.com/IISJKU/FPB-Builder)
   }
   return spineError;
 }
@@ -325,9 +320,13 @@ function emptyFields(reqFields, listId) {
 // return the given string in a camel case form
 function camelCaseStr(str) {
   return str
-    .replace(/\s(.)/g, function ($1) {return $1.toUpperCase();})
+    .replace(/\s(.)/g, function ($1) {
+      return $1.toUpperCase();
+    })
     .replace(/\s/g, "")
-    .replace(/^(.)/, function ($1) { return $1.toLowerCase();});
+    .replace(/^(.)/, function ($1) {
+      return $1.toLowerCase();
+    });
 }
 
 // returns processed array of translation.csv file
@@ -472,11 +471,11 @@ window.BRIDGE.onSetAppSettings((value) => {
 });
 
 // translate all application aria labels
-function translateAriaLbls(){
+function translateAriaLbls() {
   let labels = document.querySelectorAll("*[aria-label]");
 
   for (let i = 0; i < labels.length; i++) {
-    let labelText = labels[i].getAttribute('aria-label');
-    labels[i].setAttribute('aria-label',translateTxt(labelText));
+    let labelText = labels[i].getAttribute("aria-label");
+    labels[i].setAttribute("aria-label", translateTxt(labelText));
   }
 }
