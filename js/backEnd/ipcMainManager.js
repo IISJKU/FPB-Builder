@@ -37,7 +37,7 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("narrationLoaded", result.filePaths, element);
+          event.reply("narrationLoaded", result, element);
         })
         .catch((err) => {
           console.log(err);

@@ -12,6 +12,7 @@ let pageDetails = {
     alt: {},
   },
   1: {
+    name:'page 1',
     text: {},
     narration: {},
     imagesScripts: {},
@@ -169,7 +170,13 @@ $(document).on("click", ".otherFiles", function (e) {
 });
 
 window.BRIDGE.onSetPath((value, elemId) => {
-  if (value["canceled"] == true || value.length == 0) return;
+  if (value["canceled"] == true ) $("#" + elemId).val("");
+  if (value["canceled"] == true && value["type"] == "cover"){
+    $("#coverImage").val("");
+    $('#contentBox').find("#iframePreview").html("");
+    deleteItem("imagesScripts", "Image");
+  } 
+  if (value["canceled"] == true || value["filePaths"].length == 0) return;
   let lastIdx = value["filePaths"][0].lastIndexOf("\\") + 1;
   let pthLength = value["filePaths"][0].length;
   let imgName = value["filePaths"][0].slice(lastIdx, pthLength);
@@ -208,6 +215,11 @@ window.BRIDGE.onSetPath((value, elemId) => {
 
 // handle on image loaded event
 window.BRIDGE.onImageLoaded((value) => {
+  if (value["canceled"] == true ) {
+    $("#importImage").val("");
+    $('#contentBox').find("#iframePreview").html("");
+    deleteItem("imagesScripts", "Image");
+  }
   if (value["canceled"] == true || value.length == 0) return;
   let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
   let pthLength = value["imageFile"].length;
@@ -250,17 +262,30 @@ window.BRIDGE.onImageLoaded((value) => {
 
 // handle on narration loaded event
 window.BRIDGE.onNarrationLoaded((value, elemId) => {
-  if (value["canceled"] == true || value.length == 0) return;
-  let lastIdx = value[0].lastIndexOf("\\") + 1;
-  let pthLength = value[0].length;
-  let imgName = value[0].slice(lastIdx, pthLength);
+  if (value["canceled"] == true ) {
+    $("#" + elemId).val("");
+    deleteItem("narration", activeLang);
+  }
+  if (value["canceled"] == true || value['filePaths'].length == 0) return;
+  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
+  let pthLength = value['filePaths'][0].length;
+  let imgName = value['filePaths'][0].slice(lastIdx, pthLength);
   $("#" + elemId).val(imgName);
-  $("#" + elemId).attr("data-path", value[0]);
+  $("#" + elemId).attr("data-path", value['filePaths'][0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID].narration[activeLang] = value[0];
+  pageDetailsObj[pageID].narration[activeLang] = value['filePaths'][0];
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
+
+// delete current page sub Item
+function deleteItem(mainItem, subItem){
+  let selectedPage = $("#pageList .list-group-item.active").attr("id");
+  let delParsedDet = parseSessionData("pageDetails");
+  delParsedDet[selectedPage][mainItem][subItem]= '';
+  delete delParsedDet[selectedPage][mainItem][subItem];
+  sessionStorage.setItem("pageDetails", JSON.stringify(delParsedDet))
+}
 
 // initialize spine page
 function initializeSpine() {
@@ -435,6 +460,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
+    if (section == "narration" && $('#audioNarr').is(':checked') == true)  th.setAttribute("class", "reqNarrHeader required");
     tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
@@ -462,6 +488,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
+      if ($('#audioNarr').is(':checked') == true)  narrInput.required = true;
       td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");
