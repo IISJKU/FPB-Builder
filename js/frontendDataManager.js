@@ -2,7 +2,7 @@ class FrontendDataManager {
   emptyMeta = {
     Title: {},
     Identifier: {},
-    SourceISBN: "",
+    SourceISBN: {},
     Description: {},
     Author: [],
     Contributor: [],

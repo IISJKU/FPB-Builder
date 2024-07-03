@@ -6,6 +6,7 @@ const reqMeta = ["Title", "Identifier"];
 const langMetadata = [
   "Title",
   "Identifier",
+  "SourceISBN",
   "AccessMode",
   "AccessibilityFeature",
   "AccessibilityHazard",
@@ -23,12 +24,13 @@ const fieldIntMap = {
   AccessibilityFeature: 'Feature',
   AccessibilityHazard: 'Hazard',
   AccessibilitySummary: 'Summary',
+  SourceISBN: 'Source ISBN',
 };
 
 let bookDetails = {
   Title: {},
   Identifier: {},
-  SourceISBN: "",
+  SourceISBN: {},
   Description: {},
   Author: {},
   Contributor: {},
@@ -53,6 +55,8 @@ function setInfoObj(infoText){
       "Represents an instance of a name for the EPUB publication. <a class='langTxt' target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-title'>" + infoText + "</a>",
     Identifier:
       "Contains an identifier such as UUID, DOI or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-identifier'>" + infoText + "</a>",
+    SourceISBN:
+      "Contains the original identifier of the book, such as a UUID, DOI, or ISBN. <a target='_blank' href='https://www.w3.org/TR/epub-33/#sec-opf-dcmes-optional-def'>" + infoText + "</a>",
     Contributor:
       "Represent the name of a person, organisation, etc. that played a secondary role in the creation of the content. <a target='_blank' href='https://www.w3.org/TR/epub-33/#dfn-dc-contributor'>" +
     infoText +
@@ -174,6 +178,8 @@ function removeBtn() {
     optionElem.appendChild(document.createTextNode(metadataText));
     $("#itemBox").append(optionElem);
     $("#selectedBox #" + itemIntVal).remove();
+    // delete the item from the session variable
+    removeBookData(itemIntVal);
     // commented to check if they request it 
     //checkSelectedAccess(itemIntVal);
   }
@@ -430,6 +436,16 @@ function updateBookData(tableItemVal, key, mode, val) {
   // set the publishing file name if we the title of the book has been updated
   if (tableItemVal == 'Title' && bookDetObj[tableItemVal].hasOwnProperty(currLang) && bookDetObj[tableItemVal][currLang] != undefined){
     $("#pubFileName").val(val.replace(/ /g,"_"));
+  }
+  sessionStorage.setItem("bookDetails", JSON.stringify(bookDetObj));
+}
+
+// remove specific item in book data details
+function removeBookData(tableItemVal) {
+  let bookDetObj = parseSessionData("bookDetails");
+  if (Object.keys(bookDetObj[tableItemVal]).length == 0) return;
+  for (let key in bookDetObj[tableItemVal]) {
+    delete bookDetObj[tableItemVal][key];
   }
   sessionStorage.setItem("bookDetails", JSON.stringify(bookDetObj));
 }
