@@ -684,6 +684,8 @@ function pageSorting() {
   let pagesArr = $("#pageList .list-group-item");
   let oldId;
   let oldObj = parseSessionData("pageDetails");
+  // i = 1 to the counting after the cover page
+  // pagesArr.length - 2 to exit when it reach to credit and plus icon pages
   for (let i = 1; i < pagesArr.length - 2; i++) {
     if (pagesArr[i].id == "credit") return;
     oldId = pagesArr[i].id;
