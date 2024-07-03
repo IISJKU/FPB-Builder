@@ -213,7 +213,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fonts.forEach((p) => {
     let symb = "\\";
     if (!p.includes(symb)) symb = "/";
-    fs.copyFileSync(__dirname + p, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
+
+    let fPath = __dirname + p;
+    if (p.includes(":\\")) fPath = p;
+    fs.copyFileSync(fPath, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
   });
 
   if (options.includeBookSettings) {

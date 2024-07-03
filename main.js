@@ -64,9 +64,9 @@ const createWindow = () => {
   //application on close event check if there is any changes on the data before closing the app
   mainWindow.on("close", async function (event) {
     event.preventDefault();
-    let yesBtn,
-      noBtn,
-      msgTitle,
+    let yesBtn = "",
+      noBtn = "",
+      msgTitle = "",
       msg = "";
     mainWindow.webContents.executeJavaScript('document.getElementById("appLang").value', true).then((lang) => {
       transArr = jsTranslate(lang, ["Yes", "No", "Confirmation", "You have unsaved changes. Save before quitting?"]);
@@ -75,6 +75,9 @@ const createWindow = () => {
       msgTitle = transArr[2];
       msg = transArr[3];
     });
+
+    console.log("yesBtn = " + yesBtn + " noBtn = " + " msgTitle = " + msgTitle + " msg = " + msg);
+
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
       fs.readFile(app.getPath("userData") + "//projects//" + name + ".json", "utf8", (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
