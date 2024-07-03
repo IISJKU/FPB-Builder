@@ -184,7 +184,7 @@ function getTranslationCsv() {
     columns = row.split(";"); //split columns
     let tarr = {};
     for (let j = 0; j < headers.length; j++) {
-      tarr[headers[j]] = columns[j];
+      tarr[headers[j].trim()] = columns[j];
     }
     lines.push(tarr);
   });
