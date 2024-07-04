@@ -1,4 +1,4 @@
-const frontendDataManager = new FrontendDataManager();
+let frontendDataManager = new FrontendDataManager();
 
 function changeContent(event, controlledTab) {
   let tabTitle = event.textContent.trim();
@@ -9,7 +9,7 @@ function changeContent(event, controlledTab) {
   $("#tabTitle").text(tabTitle);
 
   if (tabTitle == translateTxt("Metadata")) {
-    $("#publicationLanguage").trigger("change");
+    //$("#publicationLanguage").trigger("change");
     initializeMetadata();
   }
   if (tabTitle == translateTxt("Spine")) {

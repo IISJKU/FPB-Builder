@@ -7,11 +7,7 @@ const langMetadata = [
   "Title",
   "Identifier",
   "SourceISBN",
-  //"AccessMode",
-  //"AccessibilityFeature",
-  //"AccessibilityHazard",
   "AccessibilitySummary",
-  //"AccessModeSufficient",
   "Type",
   "Subject",
 ];
@@ -32,18 +28,18 @@ let bookDetails = {
   Identifier: {},
   SourceISBN: {},
   Description: {},
-  Author: {},
-  Contributor: {},
-  Publisher: {},
+  Author: [],
+  Contributor: [],
+  Publisher: [],
+  PublishingDate: [],
   Copyright: "",
-  AccessMode: {},
-  AccessModeSufficient: {},
-  AccessibilityFeature: {},
-  AccessibilityHazard: {},
+  AccessMode: [],
+  AccessModeSufficient: [],
+  AccessibilityFeature: [],
+  AccessibilityHazard: [],
   AccessibilitySummary: {},
-  CertifiedBy: {},
-  ConformsTo: {},
-  PublishingDate: {},
+  CertifiedBy: [],
+  ConformsTo: [],
 };
 
 let infoObj = {};
@@ -123,7 +119,7 @@ function initializeMetadata() {
   }
   createTable(translateTxt("Title"), "selectedBox", "Title");
   createTable(translateTxt("Identifier"), "selectedBox", "Identifier");
-  displayMetadataContent()
+  displayMetadataContent();
   updateAddedList(0, 1);
 }
 
@@ -213,7 +209,11 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
   for (let val in bookDetObj[itemVal]) {
     let tr = document.createElement("tr");
     let th = document.createElement("th");
-    th.appendChild(document.createTextNode(val));
+    if (Number(val) !='NaN' && Array.isArray(bookDetObj[itemVal])){
+      th.appendChild(document.createTextNode(Number(val) + 1));
+    }else{
+      th.appendChild(document.createTextNode(val));
+    }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "metaHeader");
     tr.appendChild(th);
@@ -425,12 +425,26 @@ function addNewRow(tableTitle) {
 function updateBookData(tableItemVal, key, mode, val) {
   let bookDetObj = parseSessionData("bookDetails");
   if (mode == "delete") {
-    delete bookDetObj[tableItemVal][key];
-  } else {
-    if (Object.keys(bookDetObj[tableItemVal]).length == 0) {
-      bookDetObj[tableItemVal] = {};
+    if (Array.isArray(bookDetObj[tableItemVal])){
+      delete bookDetObj[tableItemVal][key - 1];
+      let filtered = bookDetObj[tableItemVal].filter(function (el) {return el != null; });
+      delete bookDetObj[tableItemVal];
+      bookDetObj[tableItemVal] = filtered;
+      sessionStorage.setItem("bookDetails", JSON.stringify(bookDetObj));
+      initializeMetadata();
+      return;
+    }else{
+      delete bookDetObj[tableItemVal][key];
     }
-    bookDetObj[tableItemVal][key] = val;
+  } else {
+    // if (Object.keys(bookDetObj[tableItemVal]).length == 0) {
+    //   bookDetObj[tableItemVal] = {};
+    // }
+    if (Array.isArray(bookDetObj[tableItemVal])){
+      bookDetObj[tableItemVal].push(val);
+    }else{
+      bookDetObj[tableItemVal][key] = val;
+    }
   }
   let currLang = document.getElementById("appLang").value;
   // set the publishing file name if we the title of the book has been updated

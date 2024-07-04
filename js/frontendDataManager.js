@@ -42,7 +42,7 @@ class FrontendDataManager {
         break;
       case "Metadata":
         // get all of the elements in the container, and get to where the data is stored!
-        let bookDataObj = parseSessionData("bookDetails");
+        /*let bookDataObj = parseSessionData("bookDetails");
         for (let fieldName in bookDataObj) {
           for (let fieldVal in bookDataObj[fieldName]) {
             if (isLanguageDependent(fieldName)) meta[fieldName][fieldVal] = bookDataObj[fieldName][fieldVal];
@@ -53,7 +53,7 @@ class FrontendDataManager {
         }
 
         //set into session, so it can be read from the "metadata" tab in frontend
-        sessionStorage.setItem("bookDetails", JSON.stringify(meta));
+        sessionStorage.setItem("bookDetails", JSON.stringify(meta));*/
 
         break;
       case "Spine":
