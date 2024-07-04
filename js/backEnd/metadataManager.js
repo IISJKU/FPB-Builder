@@ -67,9 +67,7 @@ function validate() {
   if (details["Copyright"] != undefined && details["Copyright"].length != 0) {
     metadata.copyright = details["Copyright"];
   } 
-  if (details["SourceISBN"] != undefined && details["SourceISBN"].length != 0) {
-    metadata.sourceISBN = details["SourceISBN"];
-  } 
+ 
 
   //check for each language if the required metadata is here!
   languages.forEach((lang) => {
@@ -95,16 +93,21 @@ function validate() {
     if (details["Description"] != undefined && details["Description"].length != 0) {
       metadata.description[lang] = details["Description"][lang];
     }
+    if (details["Description"] != undefined && details["Description"].length != 0) {
+      metadata.description[lang] = details["Description"][lang];
+    }
   });
     //
     //  Important but not mandataory
     //
   if (details["Contributor"] != undefined && details["Contributor"].length != 0) {
-    metadata.contributor = details["Contributor"];
+    metadata.contributors = details["Contributor"];
   }
-  if (details["Creator"] != undefined && details["Creator"].length != 0) {
-    metadata.creator = details["Creator"];
+  if (details["Author"] != undefined && details["Author"].length != 0) {
+    metadata.authors = details["Author"];
   }
+
+
   if (details["Format"] != undefined && details["Format"].length != 0) {
     metadata.format = details["Format"];
   }
@@ -129,6 +132,9 @@ function validate() {
 
   let er = JSON.stringify(errorList);
   storage.set("errors", er);
+
+  console.log("details");
+  console.log(details);
 
   console.log(errorList);
 

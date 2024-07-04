@@ -52,7 +52,7 @@ class ipcMainManager {
           filters: [
             {
               name: "jpg/png/jpeg",
-              extensions: ["jpg", "png", "jpeg"],
+              extensions: ["jpg", "png", "jpeg", "gif"],
             },
           ],
         })
@@ -166,7 +166,6 @@ class ipcMainManager {
 
     //manually import dependency with arguments
     ipcMain.on("importDependency2", (event, arg) => {
-
       EPUBMaker.manuallySelectDependency2(arg);
     });
 
@@ -191,10 +190,10 @@ class ipcMainManager {
     ipcMain.on("reloadRecentProjects", (event, arg) => {
       if (!fs.existsSync(app.getPath("userData") + "//projects")) {
         fs.mkdirSync(app.getPath("userData") + "//projects");
-      } 
+      }
       let projects = fs.readdirSync(app.getPath("userData") + "//projects//");
       let loadedProjects = new Array();
-    
+
       if (Array.isArray(projects)) {
         projects.forEach((project) => {
           loadedProjects.push(JSON.parse(fs.readFileSync(app.getPath("userData") + "//projects//" + project, { encoding: "utf8" })));
@@ -202,7 +201,6 @@ class ipcMainManager {
       }
       this.window.webContents.send("recentProjectsLoaded", loadedProjects);
     });
-
   }
 }
 

@@ -12,11 +12,16 @@ function setLanguage(lang) {
 let title = "";
 
 let pubISBN = "";
-let originalISBN = "CHANGETHIS";
+let originalISBN = "";
 let authors = [];
 let publisher = "";
 let copyright = "";
 let description = "";
+let accessMode;
+let accessModeSufficient;
+
+let meta;
+
 let contributors = [];
 let options = [];
 
@@ -27,8 +32,11 @@ let dateText = date.substring(0, date.indexOf(".")) + "Z";
 let coverImage = "";
 
 function setMetadata(metadata) {
+  meta = metadata;
+
   title = metadata.title[language];
   pubISBN = metadata.identifier[language];
+  originalISBN = metadata.sourceISBN[language];
   authors = metadata.authors;
   publisher = metadata.publisher;
   copyright = metadata.copyright;
@@ -188,22 +196,23 @@ function createContentFile(files, spineFiles) {
     "\n";
 
   authors.forEach((author) => {
-    metaDataContents =
-      metaDataContents +
-      '   <dc:creator id="' +
-      author.replaceAll(" ", "-") +
-      '">' +
-      author +
-      "</dc:creator>\n" +
-      '   <meta property="role" refines="#' +
-      author.replaceAll(" ", "-") +
-      '" scheme="marc:relators">aut</meta>\n' +
-      '   <meta property="file-as" refines="#' +
-      author.replaceAll(" ", "-") +
-      '">' +
-      author +
-      "</meta>\n" +
-      "\n";
+    if (author != null)
+      metaDataContents =
+        metaDataContents +
+        '   <dc:creator id="' +
+        author.replaceAll(" ", "-") +
+        '">' +
+        author +
+        "</dc:creator>\n" +
+        '   <meta property="role" refines="#' +
+        author.replaceAll(" ", "-") +
+        '" scheme="marc:relators">aut</meta>\n' +
+        '   <meta property="file-as" refines="#' +
+        author.replaceAll(" ", "-") +
+        '">' +
+        author +
+        "</meta>\n" +
+        "\n";
   });
 
   metaDataContents =
@@ -215,7 +224,9 @@ function createContentFile(files, spineFiles) {
     "\n" +
     "\n";
 
-  if (publisher != undefined && publisher.length > 0) metaDataContents = metaDataContents + "   <dc:publisher>" + publisher + "</dc:publisher>\n";
+  publisher.forEach((p) => {
+    if (p != undefined && p.length > 0) metaDataContents = metaDataContents + "   <dc:publisher>" + p + "</dc:publisher>\n";
+  });
 
   if (copyright != undefined && copyright.length > 0) metaDataContents = metaDataContents + "   <dc:rights>Copyright ©" + copyright + "</dc:rights>\n";
 
@@ -224,45 +235,55 @@ function createContentFile(files, spineFiles) {
     ' metaDataContents = metaDataContents +    <dc:description id="description">' + description + "</dc:description>\n";
 
   contributors.forEach((contributor) => {
-    metaDataContents =
-      metaDataContents +
-      '   <dc:contributor id="' +
-      contributor.replaceAll(" ", "-") +
-      '">' +
-      contributor +
-      '"</dc:contributor>\n' +
-      '   <meta scheme="marc:relators" property="role" refines="#' +
-      contributor.replaceAll(" ", "-") +
-      '">mrk</meta>\n' +
-      '   <meta scheme="marc:relators" property="role" refines="#' +
-      contributor.replaceAll(" ", "-") +
-      '">prg</meta>\n' +
-      '   <meta refines="#' +
-      contributor.replaceAll(" ", "-") +
-      '" property="file-as">' +
-      contributor +
-      "</meta>\n";
+    if (contributor != null)
+      metaDataContents =
+        metaDataContents +
+        '   <dc:contributor id="' +
+        contributor.replaceAll(" ", "-") +
+        '">' +
+        contributor +
+        '"</dc:contributor>\n' +
+        '   <meta scheme="marc:relators" property="role" refines="#' +
+        contributor.replaceAll(" ", "-") +
+        '">mrk</meta>\n' +
+        '   <meta scheme="marc:relators" property="role" refines="#' +
+        contributor.replaceAll(" ", "-") +
+        '">prg</meta>\n' +
+        '   <meta refines="#' +
+        contributor.replaceAll(" ", "-") +
+        '" property="file-as">' +
+        contributor +
+        "</meta>\n";
   });
 
   metaDataContents =
-    metaDataContents +
-    "\n" +
-    '   <meta name="cover" content="' +
-    coverImage +
-    '"/>\n' +
-    '   <meta property="ibooks:specified-fonts">true</meta>\n' +
-    "\n" +
-    '   <meta property="schema:accessMode">textual</meta>\n' +
-    '   <meta property="schema:accessMode">visual</meta>\n' +
-    '   <meta property="schema:accessModeSufficient">visual</meta>\n' +
-    '   <meta property="schema:accessModeSufficient">textual</meta>\n' +
-    '   <meta property="schema:accessibilityFeature">alternativeText</meta>\n' +
-    '   <meta property="schema:accessibilityFeature">structuralNavigation</meta>\n' +
-    '   <meta property="schema:accessibilityFeature">displayTransformability</meta>\n' +
-    '   <meta property="schema:accessibilityFeature">printPageNumbers</meta>\n' +
-    '   <meta property="schema:accessibilityHazard">sound</meta>\n' +
-    '   <meta property="schema:accessibilityAPI">ARIA</meta>\n' +
-    '   <meta property="schema:accessibilitySummary">Les illustrations sont décrites.</meta>\n'; // translate this
+    metaDataContents + "\n" + '   <meta name="cover" content="' + coverImage + '"/>\n' + '   <meta property="ibooks:specified-fonts">true</meta>\n' + "\n";
+
+  if (meta.accessMode != undefined && meta.accessMode != null && meta.accessMode.length != 0)
+    meta.accessMode.forEach((mode) => {
+      if (mode != null && mode != undefined && mode != "") metaDataContents = metaDataContents + '   <meta property="schema:accessMode">' + mode + "</meta>\n";
+    });
+
+  if (meta.accessibilityModeSufficcient != undefined && meta.accessibilityModeSufficcient != null && meta.accessibilityModeSufficcient.length != 0)
+    meta.accessibilityModeSufficcient.forEach((mode) => {
+      if (mode != null && mode != undefined && mode != "")
+        metaDataContents = metaDataContents + '   <meta property="schema:accessModeSufficient">' + mode + "</meta>\n";
+    });
+
+  if (meta.accessibilityFeature != undefined && meta.accessibilityFeature != null && meta.accessibilityFeature.length != 0)
+    meta.accessibilityFeature.forEach((f) => {
+      if (f != null && f != undefined && f != "") metaDataContents = metaDataContents + '   <meta property="schema:accessibilityFeature">' + f + "</meta>\n";
+    });
+
+  if (meta.accessibilityHazard != undefined && meta.accessibilityHazard != null && meta.accessibilityHazard.length != 0)
+    meta.accessibilityHazard.forEach((f) => {
+      if (f != null && f != undefined && f != "") metaDataContents = metaDataContents + '   <meta property="schema:accessibilityHazard">' + f + "</meta>\n";
+    });
+
+  metaDataContents = metaDataContents + '   <meta property="schema:accessibilityAPI">ARIA</meta>\n';
+
+  if (meta.accessibilitySummary[language] != null && meta.accessibilitySummary[language] != undefined && meta.accessibilitySummary[language] != "")
+    metaDataContents = metaDataContents + '   <meta property="schema:accessibilitySummary">' + meta.accessibilitySummary[language] + "</meta>\n"; // translate this
 
   let closeMetadata = "  </metadata>\n\n";
   let metaData = startMetadataTag + metaDataContents + closeMetadata;

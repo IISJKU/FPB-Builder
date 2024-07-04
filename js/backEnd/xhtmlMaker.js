@@ -296,7 +296,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         element.toLowerCase().includes(".jpeg") ||
         element.toLowerCase().includes(".svg") ||
         element.toLowerCase().includes(".svg") ||
-        element.toLowerCase().includes(".png")
+        element.toLowerCase().includes(".png") ||
+        element.toLowerCase().includes(".gif")
       ) {
         subFolder = "\\OEBPS\\images\\";
         if (element.includes("\\notice\\")) {
