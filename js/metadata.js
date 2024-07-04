@@ -222,7 +222,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     input.setAttribute("type", "text");
     input.setAttribute("class", "form-control");
     input.value = bookDetObj[itemVal][val];
-    if (!reqMeta.includes(itemVal)) {
+    if (!reqMeta.includes(itemVal) || (itemVal == "AccessModeSufficient" && ($("#selectedBox #AccessModeSufficient tbody tr").length > 0 || bookDetObj["AccessModeSufficient"].length > 0) && val != 0)) {
       createIcon(td, "bi bi-trash3-fill", translateTxt("delete entry"));
     }else{
       input.required = true;
@@ -288,7 +288,7 @@ function tableHeader(tbl, tableTitle, aElemVal) {
   }
   thdthText = document.createTextNode(tableTitle);
   thdth.appendChild(thdthText);
-  if (!reqMeta.includes(aElemVal) && !langMetadata.includes(aElemVal)) {
+  if (!langMetadata.includes(aElemVal)) {
     if (aElemVal == "PublishingDate") {
       // check if the property is there
       if (Object.keys(getSessionElem("bookDetails","PublishingDate")).length < 1) {
@@ -381,6 +381,10 @@ function createNewTable(tableTitle, elemID, intVal) {
   tableHeader(tbl, tableTitle, intVal);
   if (langMetadata.includes(intVal)) {
     let tbdy = document.createElement("tbody");
+    if (accessMeta.includes(intVal)){
+      if(reqMeta.indexOf("AccessibilitySummary") === -1) reqMeta.push("AccessibilitySummary");
+      if(reqMeta.indexOf("AccessModeSufficient") === -1) reqMeta.push("AccessModeSufficient");
+    }
     langMetaAttr(tbl, tbdy, intVal, elemID);
     return;
   }
@@ -410,7 +414,7 @@ function addNewRow(tableTitle) {
   input.setAttribute("type", "text");
   input.setAttribute("class", "form-control");
   input.value = "";
-  if (!reqMeta.includes(elementTitle)) {
+  if (!reqMeta.includes(elementTitle) || (elementTitle == "AccessModeSufficient" && $("#selectedBox #AccessModeSufficient tbody tr").length > 0)) {
     createIcon(td, "bi bi-trash3-fill", translateTxt("delete entry"));
   }else{
     input.required = true;
@@ -503,8 +507,8 @@ function updateInfo() {
   // when the user add any accessibility metadata
 function reqAccessMeta(itemVal){
   if (accessMeta.includes(itemVal)) {
-    if(reqMeta.indexOf("AccessibilitySummary") === -1) reqMeta.push("AccessibilitySummary")
-    if(reqMeta.indexOf("AccessModeSufficient") === -1) reqMeta.push("AccessModeSufficient")
+    if(reqMeta.indexOf("AccessibilitySummary") === -1) reqMeta.push("AccessibilitySummary");
+    if(reqMeta.indexOf("AccessModeSufficient") === -1) reqMeta.push("AccessModeSufficient");
     if (checkAddedList("AccessibilitySummary") < 1) createTable("Summary", "selectedBox", "AccessibilitySummary");
     if (checkAddedList("AccessModeSufficient") < 1) createTable("Mode Sufficient", "selectedBox", "AccessModeSufficient");
   }
