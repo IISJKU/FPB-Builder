@@ -3,12 +3,12 @@ const { ipcRenderer, contextBridge } = require("electron");
 //expose all of these main process functions to the renderer in namespace "BRIDGE"
 contextBridge.exposeInMainWorld("BRIDGE", {
   desktop: true,
-  narrations(defPath, element) {
-    ipcRenderer.send("narrations", defPath, element);
+  narrations(defPath, element, lang) {
+    ipcRenderer.send("narrations", defPath, element, lang);
   },
 
-  coverImage(defPath) {
-    ipcRenderer.send("coverImage", defPath);
+  coverImage(defPath, element, lang) {
+    ipcRenderer.send("coverImage", defPath, element, lang);
   },
 
   otherFiles(defPath, element) {
@@ -60,7 +60,8 @@ contextBridge.exposeInMainWorld("BRIDGE", {
   onProjectData: (callback) => ipcRenderer.on("projectData", (_event, value) => callback(value)),
   onPublishUpdate: (callback) => ipcRenderer.on("publishUpdate", (_event, value) => callback(value)),
   onFontSet: (callback) => ipcRenderer.on("fontSet", (_event, value) => callback(value)),
-  onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value, elementId) => callback(value, elementId)),
+  onNarrationLoaded: (callback) => ipcRenderer.on("narrationLoaded", (_event, value, elementId, activeLang) => callback(value, elementId, activeLang)),
+  onCoverLoaded: (callback) => ipcRenderer.on("coverLoaded", (_event, value, elementId, activeLang) => callback(value, elementId, activeLang)),
   onSetPath: (callback) => ipcRenderer.on("setPath", (_event, value, elementId) => callback(value, elementId)),
   onSetAppSettings: (callback) => ipcRenderer.on("setAppSettings", (_event, value) => callback(value)),
   onPublishSuccessful: (callback) => ipcRenderer.on("publishSuccessful", (_event, value) => callback(value)),

@@ -2,7 +2,9 @@ let pageDetails = {
   cover: {
     text: {},
     narration: {},
-    imagesScripts: {},
+    imagesScripts: {
+      Image: {},
+    },
     alt: {},
   },
   credit: {
@@ -147,19 +149,20 @@ $(document).on("click", "#importImage", function (e) {
   BRIDGE.importImage(path);
 });
 
-let activeLang = "";
 // browse button event for narrations audio
 $(document).on("click", ".narrations", function (e) {
-  activeLang = $(this).closest("tr").children("th").text();
+  let activeLang = $(this).closest("tr").children("th").text();
   let path = $(this).data("path");
   let elemId = $(this).attr("id");
-  BRIDGE.narrations(path, elemId);
+  BRIDGE.narrations(path, elemId, activeLang);
 });
 
 // browse button event for the cover image
-$(document).on("click", "#coverImage", function (e) {
+$(document).on("click", ".coverImage", function (e) {
+  let actLang = $(this).closest("tr").children("th").text();
   let path = $(this).data("path");
-  BRIDGE.coverImage(path);
+  let elemId = $(this).attr("id");
+  BRIDGE.coverImage(path, elemId, actLang);
 });
 
 // browse button event for the other files
@@ -171,45 +174,27 @@ $(document).on("click", ".otherFiles", function (e) {
 
 window.BRIDGE.onSetPath((value, elemId) => {
   if (value["canceled"] == true ) $("#" + elemId).val("");
-  if (value["canceled"] == true && value["type"] == "cover"){
-    $("#coverImage").val("");
-    $('#contentBox').find("#iframePreview").html("");
-    deleteItem("imagesScripts", "Image");
-  } 
   if (value["canceled"] == true || value["filePaths"].length == 0) return;
   let lastIdx = value["filePaths"][0].lastIndexOf("\\") + 1;
   let pthLength = value["filePaths"][0].length;
   let imgName = value["filePaths"][0].slice(lastIdx, pthLength);
-  if (value.hasOwnProperty("type") && value["type"] == "cover") {
-    $("#coverImage").val(imgName);
-    $("#coverImage").attr("data-path", value["filePaths"][0]);
-    addImageiframe(value["filePaths"][0], imgName);
-  } else {
-    $("#" + elemId).val(imgName);
-    $("#" + elemId).attr("data-path", value["filePaths"][0]);
-    if ($("#" + elemId).attr("data-missing") == 1) {
-      $("#" + elemId)
-        .get(0)
-        .setCustomValidity("");
-      $("#" + elemId).attr("data-missing", 0);
-      // add the solved dependency to imagesScripts object and delete it from missing object
-      elemKey = TranslateToEN(
-        $("#" + elemId)
-          .closest("tr")
-          .children("th")
-          .text()
-      );
-      if (elemKey.indexOf(" ") != -1 && elemKey.split(" ").length > 1) {
-        let spElem = elemKey.split(" ");
-        elemKey = TranslateToEN(spElem[0]) + " " + spElem[1];
-      }
-      let pageID = $("#pageList .list-group-item.active").attr("id");
-      let parsedDet = parseSessionData("pageDetails");
-      parsedDet[pageID]["imagesScripts"][elemKey] = value["filePaths"][0];
-      delete parsedDet[pageID]["imagesScripts"]["missing"][elemKey];
-      window.BRIDGE.importDependency2(value["filePaths"][0]);
-      sessionStorage.setItem("pageDetails", JSON.stringify(parsedDet));
+  $("#" + elemId).val(imgName);
+  $("#" + elemId).attr("data-path", value["filePaths"][0]);
+  if ($("#" + elemId).attr("data-missing") == 1) {
+    $("#" + elemId).get(0).setCustomValidity("");
+    $("#" + elemId).attr("data-missing", 0);
+    // add the solved dependency to imagesScripts object and delete it from missing object
+    elemKey = TranslateToEN($("#" + elemId).closest("tr").children("th").text());
+    if (elemKey.indexOf(" ") != -1 && elemKey.split(" ").length > 1) {
+      let spElem = elemKey.split(" ");
+      elemKey = TranslateToEN(spElem[0]) + " " + spElem[1];
     }
+    let pageID = $("#pageList .list-group-item.active").attr("id");
+    let parsedDet = parseSessionData("pageDetails");
+    parsedDet[pageID]["imagesScripts"][elemKey] = value["filePaths"][0];
+    delete parsedDet[pageID]["imagesScripts"]["missing"][elemKey];
+    window.BRIDGE.importDependency2(value["filePaths"][0]);
+    sessionStorage.setItem("pageDetails", JSON.stringify(parsedDet));
   }
 });
 
@@ -220,15 +205,15 @@ window.BRIDGE.onImageLoaded((value) => {
     $('#contentBox').find("#iframePreview").html("");
     deleteItem("imagesScripts", "Image");
   }
-  if (value["canceled"] == true || value.length == 0) return;
-  let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
-  let pthLength = value["imageFile"].length;
-  let imgName = value["imageFile"].slice(lastIdx, pthLength);
+  if (value["canceled"] == true || value['filePaths'].length == 0) return;
+  let lastIdx = value['filePaths']["imageFile"].lastIndexOf("\\") + 1;
+  let pthLength = value['filePaths']["imageFile"].length;
+  let imgName = value['filePaths']["imageFile"].slice(lastIdx, pthLength);
   $("#importImage").val(imgName);
-  $("#importImage").attr("data-path", value["imageFile"]);
+  $("#importImage").attr("data-path", value['filePaths']["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
+  pageDetailsObj[pageID]["name"] = value['filePaths']["imageFile"].slice(lastIdx, value['filePaths']["imageFile"].indexOf("."));
   if (pageID != "cover" && pageID != "credit") {
     if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] != "" || pageDetailsObj[pageID]["name"] != undefined)) {
       $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
@@ -239,7 +224,7 @@ window.BRIDGE.onImageLoaded((value) => {
     }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
-    let newarr = sortArr(value["foundFiles"]);
+    let newarr = sortArr(value['filePaths']["foundFiles"]);
     //pageDetailsObj[pageID]["imagesScripts"]["Image"] = newarr;
     for (let i = 0; i < newarr.length; i++) {
       let tag = "";
@@ -255,13 +240,13 @@ window.BRIDGE.onImageLoaded((value) => {
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
     let table = $("#contentBox #imagesScripts table");
     createTableBody(table, pageID, "imagesScripts");
-    if (value["missingFiles"]) addMissScripts(value["missingFiles"], pageID);
-    addImageiframe(value["imageFile"], imgName);
+    if (value['filePaths']["missingFiles"]) addMissScripts(value['filePaths']["missingFiles"], pageID);
+    addImageiframe(value['filePaths']["imageFile"], imgName);
   }
 });
 
 // handle on narration loaded event
-window.BRIDGE.onNarrationLoaded((value, elemId) => {
+window.BRIDGE.onNarrationLoaded((value, elemId, activeLang) => {
   if (value["canceled"] == true ) {
     $("#" + elemId).val("");
     deleteItem("narration", activeLang);
@@ -278,12 +263,37 @@ window.BRIDGE.onNarrationLoaded((value, elemId) => {
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
+// handle on cover image loaded event
+window.BRIDGE.onCoverLoaded((value, elemId, activeLang) => {
+  if (value["canceled"] == true ) {
+    $("#" + elemId).val("");
+    $('#contentBox').find("#iframePreview").html("");
+    deleteItem("imagesScripts", "Image" , activeLang);
+  }
+  if (value["canceled"] == true || value['filePaths'].length == 0) return;
+  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
+  let pthLength = value['filePaths'][0].length;
+  let imgName = value['filePaths'][0].slice(lastIdx, pthLength);
+  $("#" + elemId).val(imgName);
+  $("#" + elemId).attr("data-path", value['filePaths'][0]);
+  addImageiframe(value["filePaths"][0], imgName);
+  let pageID = $("#pageList .list-group-item.active").attr("id");
+  let pageDetailsObj = parseSessionData("pageDetails");
+  pageDetailsObj[pageID]['imagesScripts']['Image'][activeLang] = value['filePaths'][0];
+  sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
+});
+
 // delete current page sub Item
-function deleteItem(mainItem, subItem){
+function deleteItem(mainItem, subItem, subSubItem){
   let selectedPage = $("#pageList .list-group-item.active").attr("id");
   let delParsedDet = parseSessionData("pageDetails");
   delParsedDet[selectedPage][mainItem][subItem]= '';
-  delete delParsedDet[selectedPage][mainItem][subItem];
+  if (subSubItem != '' || subSubItem != undefined){
+    delete delParsedDet[selectedPage][mainItem][subSubItem];
+  }else{
+    delete delParsedDet[selectedPage][mainItem][subItem];
+  }
+  
   sessionStorage.setItem("pageDetails", JSON.stringify(delParsedDet))
 }
 
@@ -346,6 +356,9 @@ function fillData() {
 // handle clear data of the body of imagesScripts panel
 function clearBody(tbl, pageID, sec) {
   tbdy = tbl.children("tbody");
+  if (sec == 'imagesScripts' && pageID == "cover"){
+    return;
+  }
   let pageDetObj = parseSessionData("pageDetails");
   let tr = document.createElement("tr");
   let th = document.createElement("th");
@@ -366,12 +379,7 @@ function clearBody(tbl, pageID, sec) {
       imageInput.value = pageDetObj[pageID][sec]["Image"];
     }
   }
-  if (pageID == "cover") {
-    imageInput.setAttribute("id", "coverImage");
-    imageInput.setAttribute("required", "true");
-  } else {
-    imageInput.setAttribute("id", "importImage");
-  }
+  imageInput.setAttribute("id", "importImage");
   td.append(imageInput);
   tr.appendChild(td);
   tbdy.append(tr);
@@ -384,8 +392,12 @@ function createTableBody(tbl, pageId, section) {
   if (tbl.find("tbody").length > 0) {
     tbdy = tbl.children("tbody");
   }
-  if (section == "text" || section == "alt" || section == "narration") {
+  if (section == "text" || section == "alt" || section == "narration" ) {
     createLangRows(tbl, tbdy, pageId, section);
+    return;
+  }
+  if (section == 'imagesScripts' && pageId == "cover"){
+    createLangsCover(tbl, tbdy, pageId, section);
     return;
   }
   let pageDetObj = parseSessionData("pageDetails");
@@ -409,18 +421,11 @@ function createTableBody(tbl, pageId, section) {
     }
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
-    if (pageId == "cover" && val == "Image") th.setAttribute("class", "header required");
     tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
     if (section == "imagesScripts") {
-      if (pageId == "cover" && val == "Image") {
-        let coverImg = document.getElementById("coverImage");
-        coverImg.value = sliceName(pageDetObj[pageId][section][val]);
-        coverImg.required = true;
-        addImageiframe(pageDetObj[pageId][section][val],coverImg.value);
-        continue;
-      } else if (val == "Image") {
+      if (val == "Image") {
         let importImg = document.getElementById("importImage");
         importImg.value = sliceName(pageDetObj[pageId][section][val]);
         addImageiframe(pageDetObj[pageId][section][val],importImg.value);
@@ -431,7 +436,6 @@ function createTableBody(tbl, pageId, section) {
         imageInput.setAttribute("type", "imageInput");
         imageInput.setAttribute("aria-label", translateTxt("Browse scripts button"));
         imageInput.setAttribute("placeholder", translateTxt("Browse"));
-        //imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
         imageInput.value = sliceName(pageDetObj[pageId][section][val]);
         imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
         imageInput.setAttribute("id", camelCaseStr(val));
@@ -484,7 +488,6 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("class", "form-control narrations");
       narrInput.setAttribute("aria-label", translateTxt("Browse narration button"));
       narrInput.setAttribute("placeholder", translateTxt("Browse"));
-      //narrInput.setAttribute("title", translateTxt("Browse narrations"));
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = sliceName(colVal);
       narrInput.setAttribute("data-path", colVal);
@@ -503,14 +506,48 @@ function createLangRows(tbl, tbdy, pageId, section) {
   tbl.append(tbdy);
 }
 
+// Create selected languages rows in the tables
+function createLangsCover(tbl, tbdy, pageId, section) {
+  let value = "";
+  let colVal = "";
+  let textElem = "";
+  let langs = JSON.parse(sessionStorage.getItem("pubLang"));
+  for (let i = 0; i < langs.length; i++) {
+    let tr = document.createElement("tr");
+    let th = document.createElement("th");
+    th.appendChild(document.createTextNode(langs[i]));
+    th.setAttribute("scope", "row");
+    th.setAttribute("class", "header required");
+    tr.setAttribute("tabindex", "0");
+    tr.appendChild(th);
+    let td = document.createElement("td");
+    let pageDetObj = parseSessionData("pageDetails");
+    if (pageDetObj.hasOwnProperty(pageId) && Object.keys(pageDetObj[pageId]).length > 0 && pageDetObj[pageId] && pageDetObj[pageId][section]) {
+      value = pageDetObj[pageId][section]['Image'][langs[i]];
+    }
+    if (value != "" && value != undefined && value != "undefined") {
+      colVal = value;
+    }
+    let imageInput = document.createElement("input");
+    imageInput.setAttribute("type", "covInput");
+    imageInput.setAttribute("class", "form-control coverImage");
+    imageInput.setAttribute("aria-label", translateTxt("Browse cover image"));
+    imageInput.setAttribute("placeholder", translateTxt("Browse"));
+    imageInput.setAttribute("id", langs[i].toLowerCase() + "Cover");
+    imageInput.value = sliceName(colVal);
+    imageInput.setAttribute("data-path", colVal);
+    imageInput.required = true;
+    td.append(imageInput);
+    tr.appendChild(td);
+    tbdy.append(tr);
+  }
+  tbl.append(tbdy);
+}
+
 // handle images and scripts panel for new pages
 function newImagesScripts(pageID) {
   let imageInput = document.getElementById("importImage");
-  if (pageID == "cover" && document.getElementById("coverImage") == undefined) {
-    imageInput.closest('tr').children[0].classList.add('required');
-    imageInput.setAttribute("id", "coverImage");
-    imageInput.setAttribute("required", "true");
-  } else if (pageID != "cover" && pageID != "credit" && document.getElementById("importImage") == undefined) {
+  if (pageID != "cover" && pageID != "credit" && document.getElementById("importImage") == undefined) {
     imageInput = document.getElementById("coverImage");
     imageInput.setAttribute("id", "importImage");
   }
@@ -535,11 +572,13 @@ function saveData() {
     }
     missingAttr = $(this).children("td").children(0).attr("data-missing");
     //Change this later!
-    if (section != "imagesScripts") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+    if (section != "imagesScripts" && pageId != "cover" ) pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
     if ((section == "narration" || section == "imagesScripts") && $(this).children("td").children(0).attr("data-path") != undefined) {
       if (missingAttr == "1") {
         if (pageDetObj[pageId][section]["missing"] == undefined) pageDetObj[pageId][section]["missing"] = {};
         pageDetObj[pageId][section]["missing"][attr] = $(this).children("td").children(0).attr("data-path");
+      } else if (section == "imagesScripts" && pageId == "cover"){
+        pageDetObj[pageId][section]["Image"][attr] = $(this).children("td").children(0).attr("data-path");
       } else {
         pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr("data-path");
       }
@@ -660,7 +699,6 @@ function missingDependencies(tbl, tbdy, pageId) {
     imageInput.setCustomValidity("Invalid");
     imageInput.setAttribute("data-missing", 1);
     imageInput.setAttribute("placeholder", translateTxt("Browse"));
-    //imageInput.setAttribute("title", translateTxt("XHTML page scripts"));
     imageInput.setAttribute("id", camelCaseStr(val));
     imageInput.value = sliceName(pageObj[pageId]["imagesScripts"]["missing"][val]);
     imageInput.setAttribute("data-path", pageObj[pageId]["imagesScripts"]["missing"][val]);

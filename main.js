@@ -76,8 +76,6 @@ const createWindow = () => {
       msg = transArr[3];
     });
 
-    console.log("yesBtn = " + yesBtn + " noBtn = " + " msgTitle = " + msgTitle + " msg = " + msg);
-
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
       fs.readFile(app.getPath("userData") + "//projects//" + name + ".json", "utf8", (err, jsonString) => {
         // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project

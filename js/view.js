@@ -219,10 +219,20 @@ function formFilter(formId) {
 // check page details session variable data errors and return the apropriate error text
 function checkSpineData(errorMsg){
   let newLineFlag = false;
+  let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
   let spineData = parseSessionData("pageDetails");
-  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
+  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image')){
+    if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
     errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
-      newLineFlag = true;
+    newLineFlag = true;
+  }else{
+    for (let i = 0; i < publicationLangs.length; i++) {
+      if(Object.keys(spineData['cover']['imagesScripts']['Image']).length == 0 || spineData['cover']['imagesScripts']['Image'][publicationLangs[i]] == '' || spineData['cover']['imagesScripts']['Image'][publicationLangs[i]] == undefined){
+        if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
+        errorMsg.appendChild(document.createTextNode(publicationLangs[i] + ' '+ translateTxt('Cover image is required Please add it.')));
+        newLineFlag = true;
+      }
+    }
   }
   for (let value in spineData) {
     let pageName = spineData[value]['name'] == undefined ? value : spineData[value]['name'];
@@ -231,7 +241,6 @@ function checkSpineData(errorMsg){
       errorMsg.appendChild(document.createTextNode(translateTxt("Please resolve the missing dependencies for the spine in")  + ' ' + pageName + '.'));
       newLineFlag = true;
     }
-    let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
     if (publicationLangs.length == 0) return;
     if (value == 'credit'|| $('#audioNarr').is(':checked') == false) return;
     for (let i = 0; i < publicationLangs.length; i++) {

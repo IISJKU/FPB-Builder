@@ -24,7 +24,7 @@ class ipcMainManager {
           })
       );
     });
-    ipcMain.on("narrations", (event, defPath, element) => {
+    ipcMain.on("narrations", (event, defPath, element, lang) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
@@ -37,28 +37,27 @@ class ipcMainManager {
           ],
         })
         .then((result) => {
-          event.reply("narrationLoaded", result, element);
+          event.reply("narrationLoaded", result, element, lang);
         })
         .catch((err) => {
           console.log(err);
         });
     });
 
-    ipcMain.on("coverImage", (event, defPath) => {
+    ipcMain.on("coverImage", (event, defPath, element, lang) => {
       dialog
         .showOpenDialog({
           properties: ["openFile"],
           defaultPath: defPath,
           filters: [
             {
-              name: "jpg/png/jpeg",
-              extensions: ["jpg", "png", "jpeg", "gif"],
+              name: "jpeg/jpg",
+              extensions: ["jpeg","jpg"],
             },
           ],
         })
         .then((result) => {
-          result["type"] = "cover";
-          event.reply("setPath", result);
+          event.reply("coverLoaded", result, element, lang);
         })
         .catch((err) => {
           console.log(err);
@@ -148,6 +147,7 @@ class ipcMainManager {
           ],
         })
         .then((value) => {
+          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
           let dependencyList = EPUBMaker.importImage(value["filePaths"][0]);
           this.window.webContents.send("imageLoaded", dependencyList);
         });
@@ -160,6 +160,7 @@ class ipcMainManager {
           properties: ["openFile"],
         })
         .then((value) => {
+          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
           EPUBMaker.manuallySelectDependency(value["filePaths"][0]);
         });
     });
@@ -181,6 +182,7 @@ class ipcMainManager {
           ],
         })
         .then((value) => {
+          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
           this.window.webContents.send("fontSet", value.filePaths[0]);
         });
     });
