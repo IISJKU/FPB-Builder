@@ -13,6 +13,12 @@ let pageDetails = {
     imagesScripts: {},
     alt: {},
   },
+  menu: {
+    text: {},
+    narration: {},
+    imagesScripts: {},
+    alt: {},
+  },
   1: {
     name:'page 1',
     text: {},
@@ -49,8 +55,8 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
   let tempObj = "";
 
   if (tItem.length == 0 || tItem.attr("id") == "plusIcon" || tItem.attr("id") == "credit") {
-    //[1] to insert the item after the cover page
-    let child = $(this).closest("div").children()[1];
+    //[2] to insert the item after the menu page
+    let child = $(this).closest("div").children()[2];
     let tempId = child.id;
     child.id = cItem.attr("id");
     cItem.attr("id", tempId);
@@ -78,7 +84,7 @@ $(document).on("click", "#pageList .bi-arrow-up", function (e) {
   let tItem = cItem.prev("a");
   let tempObj = "";
   let pageDetailsObj = parseSessionData("pageDetails");
-  if (tItem.length == 0 || tItem.attr("id") == "cover") {
+  if (tItem.length == 0 || tItem.attr("id") == "cover" || tItem.attr("id") == "menu") {
     let childrenLength = $(this).closest("div").children().length;
     //it should be -1 but -3 because of the plus list item and the credit page
     let child = $(this).closest("div").children()[childrenLength - 3];
@@ -205,18 +211,18 @@ window.BRIDGE.onImageLoaded((value) => {
     $('#contentBox').find("#iframePreview").html("");
     deleteItem("imagesScripts", "Image");
   }
-  if (value["canceled"] == true || value['filePaths'].length == 0) return;
-  let lastIdx = value['filePaths']["imageFile"].lastIndexOf("\\") + 1;
-  let pthLength = value['filePaths']["imageFile"].length;
-  let imgName = value['filePaths']["imageFile"].slice(lastIdx, pthLength);
+  if (value["canceled"] == true || value.length == 0) return;
+  let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
+  let pthLength = value["imageFile"].length;
+  let imgName = value["imageFile"].slice(lastIdx, pthLength);
   $("#importImage").val(imgName);
-  $("#importImage").attr("data-path", value['filePaths']["imageFile"]);
+  $("#importImage").attr("data-path", value["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID]["name"] = value['filePaths']["imageFile"].slice(lastIdx, value['filePaths']["imageFile"].indexOf("."));
+  pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
   if (pageID != "cover" && pageID != "credit") {
     if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] != "" || pageDetailsObj[pageID]["name"] != undefined)) {
-      $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
+      if (pageID != "menu") $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
       //Create up and down icons to the element
       let pageElem = document.getElementById(pageID);
       createIcon(pageElem, "bi bi-arrow-up icons", translateTxt("Move the page up"));
@@ -224,7 +230,7 @@ window.BRIDGE.onImageLoaded((value) => {
     }
   }
   if (typeof pageDetailsObj[pageID] != undefined && pageDetailsObj[pageID] != undefined) {
-    let newarr = sortArr(value['filePaths']["foundFiles"]);
+    let newarr = sortArr(value["foundFiles"]);
     //pageDetailsObj[pageID]["imagesScripts"]["Image"] = newarr;
     for (let i = 0; i < newarr.length; i++) {
       let tag = "";
@@ -240,8 +246,8 @@ window.BRIDGE.onImageLoaded((value) => {
     sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
     let table = $("#contentBox #imagesScripts table");
     createTableBody(table, pageID, "imagesScripts");
-    if (value['filePaths']["missingFiles"]) addMissScripts(value['filePaths']["missingFiles"], pageID);
-    addImageiframe(value['filePaths']["imageFile"], imgName);
+    if (value["missingFiles"]) addMissScripts(value["missingFiles"], pageID);
+    addImageiframe(value["imageFile"], imgName);
   }
 });
 
@@ -319,7 +325,8 @@ function createPage(id) {
   let creditPage = document.getElementById("credit");
   let aElem = document.createElement("a");
   pageLength = id;
-  if (pageLength == "" || pageLength == undefined) pageLength = $("#pageList a").length - 2;
+  // -3 because of the menu, cover, credit and plus icon pages
+  if (pageLength == "" || pageLength == undefined) pageLength = $("#pageList a").length - 3;
   aElem.setAttribute("href", "#");
   aElem.setAttribute("id", pageLength);
   aElem.setAttribute("class", "list-group-item list-group-item-action");
@@ -359,6 +366,7 @@ function clearBody(tbl, pageID, sec) {
   if (sec == 'imagesScripts' && pageID == "cover"){
     return;
   }
+  if (pageID == "credit") return;
   let pageDetObj = parseSessionData("pageDetails");
   let tr = document.createElement("tr");
   let th = document.createElement("th");
@@ -406,6 +414,7 @@ function createTableBody(tbl, pageId, section) {
     newImagesScripts(pageId);
     return;
   }
+  if (pageId == "credit") return;
   for (let val in pageDetObj[pageId][section]) {
     if (val == "missing") {
       missingDependencies(tbl, tbdy, pageId);
@@ -451,7 +460,7 @@ function createTableBody(tbl, pageId, section) {
 
 // Create selected languages rows in the tables
 function createLangRows(tbl, tbdy, pageId, section) {
-  if (pageId == "credit" && (section == "narration" || section == "alt")) {
+  if ((pageId == "menu" && (section == "narration" || section == "alt" || section == "text")) || (pageId == "credit" && (section == "narration" || section == "alt"))) {
     return;
   }
   let value = "";
@@ -606,7 +615,7 @@ function sliceName(value) {
 //after the user choose the xhtml image the page name and the page title in the content box
 function updatePageName(pageID, detObj) {
   if (detObj == undefined) detObj = parseSessionData("pageDetails");
-  if (pageID != "cover" && pageID != "credit") {
+  if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
     if (detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       $("#pageList .list-group-item.active").text(detObj[pageID]["name"]);
       let pageLabel = document.getElementById("contentBoxLabel");
@@ -624,7 +633,7 @@ function updatePageName(pageID, detObj) {
 function initPagesName(pageID, pagelength) {
   let detObj = parseSessionData("pageDetails");
   let pageText ='';
-  if (pageID != "cover" && pageID != "credit") {
+  if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
     if (detObj.hasOwnProperty(pageID) &&  detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       pageText = document.createTextNode(detObj[pageID]["name"]);
     } else {
@@ -722,12 +731,12 @@ function pageSorting() {
   let pagesArr = $("#pageList .list-group-item");
   let oldId;
   let oldObj = parseSessionData("pageDetails");
-  // i = 1 to the counting after the cover page
-  // pagesArr.length - 2 to exit when it reach to credit and plus icon pages
-  for (let i = 1; i < pagesArr.length - 2; i++) {
+  // i = 2 to the counting after the menu page
+  // pagesArr.length - 2 to exit when it reach to credit page
+  for (let i = 2; i < pagesArr.length - 2; i++) {
     if (pagesArr[i].id == "credit") return;
     oldId = pagesArr[i].id;
-    pagesArr[i].id = i;
+    pagesArr[i].id = i-1;
     dtailsObj[i] = oldObj[oldId];
   }
   sessionStorage.setItem("pageDetails", JSON.stringify(dtailsObj));
