@@ -19,6 +19,8 @@ let pages = [];
 
 let cover;
 let credit;
+let menuIllustration;
+
 let options;
 let fontNames;
 
@@ -44,10 +46,14 @@ function initialize(metad, pag, data) {
 
   if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "\\imports\\fonts\\Luciole-Regular.ttf";
 
+  console.log("aaaaaaaaaaaaaaaaaa");
+  console.log(pages);
+
   //remove cover and credit from datastructure ;o
-  cover = pages[pages.length - 2];
-  credit = pages[pages.length - 1];
-  pages.splice(pages.length - 2, 2);
+  cover = pages[pages.length - 3];
+  credit = pages[pages.length - 2];
+  menuIllustration = pages[pages.length - 2];
+  pages.splice(pages.length - 3, 3);
 
   //this is some truely gangster stuff:
   //remove this as soon as there is an alternative lol
@@ -193,7 +199,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
 
-  let coverImage = cover.imagesScripts.Image;
+  console.log("what????");
+  console.log(cover);
+
+  let coverImage = cover.imagesScripts.Image[language];
   EPUBFileCreator.setCover(coverImage);
   let coverNarration = cover.narration[language];
 
