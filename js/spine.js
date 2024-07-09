@@ -460,7 +460,9 @@ function createTableBody(tbl, pageId, section) {
 
 // Create selected languages rows in the tables
 function createLangRows(tbl, tbdy, pageId, section) {
-  if ((pageId == "menu" && (section == "narration" || section == "alt" || section == "text")) || (pageId == "credit" && (section == "narration" || section == "alt"))) {
+  if ((pageId == "menu" && (section == "narration" || section == "alt" || section == "text")) 
+    || (pageId == "cover" && (section == "text"))
+    || (pageId == "credit" && (section == "narration" || section == "alt"))) {
     return;
   }
   let value = "";
