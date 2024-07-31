@@ -133,10 +133,6 @@ function validate() {
   let er = JSON.stringify(errorList);
   storage.set("errors", er);
 
-  console.log("details");
-  console.log(details);
-
-  console.log(errorList);
 
   return errorList.isEmpty();
 }

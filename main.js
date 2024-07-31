@@ -13,6 +13,7 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: true,
     },
+    icon: __dirname + "/images/fpb_icon-02.png",
   });
 
   mainWindow.loadFile("index.html");

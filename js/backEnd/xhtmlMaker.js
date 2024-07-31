@@ -46,13 +46,11 @@ function initialize(metad, pag, data) {
 
   if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "\\imports\\fonts\\Luciole-Regular.ttf";
 
-  console.log("aaaaaaaaaaaaaaaaaa");
-  console.log(pages);
-
   //remove cover and credit from datastructure ;o
   cover = pages[pages.length - 3];
   credit = pages[pages.length - 2];
-  menuIllustration = pages[pages.length - 2];
+  menuIllustration = pages[pages.length - 1];
+
   pages.splice(pages.length - 3, 3);
 
   //this is some truely gangster stuff:
@@ -199,9 +197,6 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import js and css needed for the menu
   fileArray = fileArray.concat(pathsToMenuDependencies());
 
-  console.log("what????");
-  console.log(cover);
-
   let coverImage = cover.imagesScripts.Image[language];
   EPUBFileCreator.setCover(coverImage);
   let coverNarration = cover.narration[language];
@@ -233,7 +228,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     FileSystemManager.makeFile(
       path + "\\" + newDirName + "\\OEBPS\\xhtml\\",
       "page00.xhtml",
-      EPUBFileCreator.createPage00(pages[0].narration[language], fontNames)
+      EPUBFileCreator.createPage00(menuIllustration, pages[0].narration[language], fontNames)
     );
     spine.push("page00.xhtml");
   }

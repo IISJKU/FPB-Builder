@@ -385,17 +385,85 @@ function pageID(str) {
   return tId;
 }
 
+function extractSVG(link) {
+  let data = fs.readFileSync(link, "utf-8");
+
+  let file = data.split("\n");
+
+  let txt = "";
+  let open = false;
+
+  let numOpenTags = 0;
+  let numCloseTags = 0;
+
+  file.forEach((line) => {
+    if (line != undefined) {
+      if (line.includes("groupeImage")) open = true;
+      if (line.includes("<g")) numOpenTags++;
+      if (line.includes("</g")) numCloseTags++;
+
+      if (open) {
+        txt = txt + line + "\n";
+      }
+
+      if (numOpenTags != 0 && numOpenTags == numCloseTags) open = false;
+    }
+  });
+
+  return txt;
+}
+
+function extractCSSfromSVG(link) {
+  let data = fs.readFileSync(link, "utf-8");
+
+  let file = data.split("\n");
+
+  let txt = "";
+
+  file.forEach((line) => {
+    if (line.includes("couleurCssSvg")) {
+      let start = line.indexOf("href", line.indexOf("couleurCssSvg")); //get pos of href
+      start = line.indexOf('"', start) + 1;
+      let end = line.indexOf('"', start);
+
+      txt = line.substring(start, end);
+    }
+  });
+
+  txt = '<link id="couleurCssSvg2" href="' + txt + '" rel="stylesheet" type="text/css" />';
+
+  return txt;
+}
+
 //this reads page00 from a template,
 //fills in the fonts according to what is specified in the frontend
 //prettier-ignore
-function createPage00(firstPageNarration, fontNames) {
+function createPage00(page, firstPageNarration, fontNames) {
+
   let str = "";
+  let img_str = "";
+  let color_css = "";
 
   if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
+
+  if(page.imagesScripts != undefined && page.imagesScripts.Image != undefined) {
+    console.log("--------------------");
+    
+    if(fs.existsSync(page.imagesScripts.Image)){
+      img_str = extractSVG(page.imagesScripts.Image);
+      color_css = extractCSSfromSVG(page.imagesScripts.Image);
+      console.log(color_css);
+    }
+    
+  }
 
   str = fs.readFileSync(__dirname + "\\templates\\" + language.toLowerCase() + "\\page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
+  str = str.replaceAll("$MENUSVG", img_str);
+  str = str.replaceAll("<!-- color css2 -->", color_css);
+  
+
 
   let fontText = "";
 
