@@ -220,7 +220,7 @@ window.BRIDGE.onImageLoaded((value) => {
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
   pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
-  if (pageID != "cover" && pageID != "credit") {
+  if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
     if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] != "" || pageDetailsObj[pageID]["name"] != undefined)) {
       if (pageID != "menu") $("#pageList .list-group-item.active").text(pageDetailsObj[pageID]["name"]);
       //Create up and down icons to the element
@@ -346,7 +346,7 @@ function fillData() {
   let pageId = $("#pageList .list-group-item.active").attr("id");
   let pageLabel = document.getElementById("contentBoxLabel");
   pageLabel.innerText = translateTxt(page.text());
-  if (pageId != "cover" && pageId != "credit") {
+  if (pageId != "cover" && pageId != "credit" && pageId != "menu") {
     createIcon(pageLabel, "bi bi-trash3-fill icons", translateTxt("delete page"), "deletePage");
   }
   $('#contentBox').find("#iframePreview").html("");
