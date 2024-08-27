@@ -75,7 +75,7 @@ const createWindow = () => {
       noBtn = transArr[1];
       msgTitle = transArr[2];
       msg = transArr[3];
-    });
+   
 
     mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
       fs.readFile(app.getPath("userData") + "//projects//" + name + ".json", "utf8", (err, jsonString) => {
@@ -89,7 +89,7 @@ const createWindow = () => {
           app.exit();
           return;
         }
-        mainWindow.webContents.executeJavaScript("compareData(" + jsonString + ")", true).then(async (equalCheck) => {
+        mainWindow.webContents.executeJavaScript("compareData(" + jsonString + ")", true).then((equalCheck) => {
           // all objects are equal (no change detected)
           if (equalCheck == 1) {
             app.exit();
@@ -104,13 +104,14 @@ const createWindow = () => {
           // if the user choose to save the data of the book
           if (choice === 0) {
             event.preventDefault();
-            await shared.writeData(mainWindow, true);
+            shared.writeData(mainWindow, true);
           } else {
             app.exit();
           }
         });
       });
     });
+  });
   });
 
   // Open the DevTools.
@@ -177,7 +178,7 @@ function jsTranslate(lang, paramArr) {
 // returns processed array of translation.csv file
 function getTranslationCsv() {
   // read csv into string
-  let data = fs.readFileSync("translation.csv").toLocaleString();
+  let data = fs.readFileSync(__dirname +"\\translation.csv").toLocaleString();
   let lines = [];
   // string to array
   let rows = data.split("\n"); // split rows

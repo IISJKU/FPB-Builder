@@ -57,12 +57,14 @@ $(document).on("click", "#pageList .bi-arrow-down", function (e) {
   if (tItem.length == 0 || tItem.attr("id") == "plusIcon" || tItem.attr("id") == "credit") {
     //[2] to insert the item after the menu page
     let child = $(this).closest("div").children()[2];
+    let nextElem = child.nextElementSibling.id;
     let tempId = child.id;
     child.id = cItem.attr("id");
     cItem.attr("id", tempId);
     tempObj = pageDetailsObj[child.id];
+    //pageDetailsObj[nextElem] = pageDetailsObj[cItem.attr("id")];
     pageDetailsObj[child.id] = pageDetailsObj[cItem.attr("id")];
-    pageDetailsObj[cItem.attr("id")] = tempObj;
+    //pageDetailsObj[cItem.attr("id")] = tempObj;
     cItem.insertBefore(child);
   } else {
     let tempId = tItem.attr("id");
@@ -739,7 +741,7 @@ function pageSorting() {
     if (pagesArr[i].id == "credit") return;
     oldId = pagesArr[i].id;
     pagesArr[i].id = i-1;
-    dtailsObj[i] = oldObj[oldId];
+    dtailsObj[i-1] = oldObj[oldId];
   }
   sessionStorage.setItem("pageDetails", JSON.stringify(dtailsObj));
 }

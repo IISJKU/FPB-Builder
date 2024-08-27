@@ -510,7 +510,10 @@ function reqAccessMeta(itemVal){
     if(reqMeta.indexOf("AccessibilitySummary") === -1) reqMeta.push("AccessibilitySummary");
     if(reqMeta.indexOf("AccessModeSufficient") === -1) reqMeta.push("AccessModeSufficient");
     if (checkAddedList("AccessibilitySummary") < 1) createTable("Summary", "selectedBox", "AccessibilitySummary");
+    $("#itemBox [value=AccessibilitySummary").remove();
     if (checkAddedList("AccessModeSufficient") < 1) createTable("Mode Sufficient", "selectedBox", "AccessModeSufficient");
+    addNewRow("AccessModeSufficient");
+    $("#itemBox [value=AccessModeSufficient").remove();
   }
 }
 

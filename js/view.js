@@ -154,7 +154,7 @@ function isObject(object) {
 //save data button function
 function saveDataBtn() {
   if (checkRequired() == true) {
-    if ($("#toastMessage").is(':visible')) $("#toastMessage").hide();
+    if ($("#toastMessage").is(':visible') && $("#toastIcon").hasClass("bi-exclamation-triangle-fill")) $("#toastMessage").hide();
     BRIDGE.saveDataBtn();
     let msg = document.getElementById("toastBody");
     msg.innerHTML = "";
@@ -170,7 +170,7 @@ function saveDataBtn() {
 
 //check required fields before pressing save button or closing the application
 function checkRequired() {
-  if ($("#toastMessage").is(':visible')) $("#toastMessage").hide();
+  if ($("#toastMessage").is(':visible') && $("#toastIcon").hasClass("bi-exclamation-triangle-fill")) $("#toastMessage").hide();
   let emptyProjFields = formFilter("ProjectForm");
   let emptyMetaFields = formFilter("metaForm");
   let spineErr = checkSpineError();
@@ -221,7 +221,7 @@ function checkSpineData(errorMsg){
   let newLineFlag = false;
   let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
   let spineData = parseSessionData("pageDetails");
-  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image')){
+  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined || spineData['cover']['imagesScripts']['Image'] == "" || Object.keys(spineData['cover']['imagesScripts']['Image']).length < 1) {
     if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
     errorMsg.appendChild(document.createTextNode(translateTxt('Cover image is required Please add it.')));
     newLineFlag = true;
@@ -242,7 +242,7 @@ function checkSpineData(errorMsg){
       newLineFlag = true;
     }
     if (publicationLangs.length == 0) return;
-    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) return;
+    if (value == 'menu'|| value == 'credit'|| $('#audioNarr').is(':checked') == false) return;
     for (let i = 0; i < publicationLangs.length; i++) {
       if(Object.keys(spineData[value]['narration']).length == 0 || spineData[value]['narration'][publicationLangs[i]] == '' || spineData[value]['narration'][publicationLangs[i]] == undefined){
         if (newLineFlag == true) errorMsg.appendChild(document.createElement("br"));
@@ -257,7 +257,7 @@ function checkSpineData(errorMsg){
 function checkSpineError(){
   let spineError = 0;
   let spineData = parseSessionData("pageDetails");
-  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined){
+  if (!spineData['cover']['imagesScripts'].hasOwnProperty('Image') || spineData['cover']['imagesScripts']['Image'] == undefined || spineData['cover']['imagesScripts']['Image'] == "" || Object.keys(spineData['cover']['imagesScripts']['Image']).length < 1) {
     spineError = 1;
     return spineError;
   }
@@ -268,7 +268,7 @@ function checkSpineError(){
     }
     let publicationLangs = JSON.parse(sessionStorage.getItem("pubLang"));
     if (publicationLangs.length == 0) continue;
-    if (value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
+    if (value == 'menu'|| value == 'credit'|| $('#audioNarr').is(':checked') == false) continue;
     for (let i = 0; i < publicationLangs.length; i++) {
       if(Object.keys(spineData[value]['narration']).length == 0 || spineData[value]['narration'][publicationLangs[i]] == '' || spineData[value]['narration'][publicationLangs[i]] == undefined){
         spineError = 1;
