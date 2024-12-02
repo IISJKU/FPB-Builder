@@ -1,3 +1,5 @@
+const pathU = require("path");
+
 //version of the same function, but with an offset!
 function cutOutFilename(str, tag) {
   let index = str.indexOf(tag);
@@ -28,6 +30,8 @@ function cutEnd(string) {
   let newPath = "";
   let end = string.lastIndexOf("\\");
 
+  if (string.includes("/")) end = string.lastIndexOf("/");
+
   for (let i = 0; i < end; i++) {
     newPath = newPath + string.charAt(i);
   }
@@ -37,7 +41,6 @@ function cutEnd(string) {
 
 function getAbsolutePath(ogFilePath, path) {
   let temp = "";
-
   let newPath = "";
 
   //cuts off the filename from original path
@@ -64,6 +67,8 @@ function getAbsolutePath(ogFilePath, path) {
 
   newPath = newPath + "\\" + temp;
   newPath = newPath.replaceAll("/", "\\");
+
+  pathU.normalize(newPath); // adapt to operating system
 
   return newPath;
 }

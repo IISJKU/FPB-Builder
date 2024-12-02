@@ -225,6 +225,10 @@ window.BRIDGE.onImageLoaded((value) => {
   $("#importImage").attr("data-path", value["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
+
+  let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
+  if (name.includes("/")) lastIdx = value["imageFile"].lastIndexOf("/") + 1;
+
   pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
   if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
     if (pageDetailsObj[pageID].hasOwnProperty("name") && (pageDetailsObj[pageID]["name"] != "" || pageDetailsObj[pageID]["name"] != undefined)) {
@@ -261,8 +265,8 @@ window.BRIDGE.onImageLoaded((value) => {
 function cutOutName(name) {
   if (name == "") return "";
 
-  let lastIdx = name.lastIndexOf("/") + 1;
-  if (name.includes("\\")) lastIdx = name.lastIndexOf("\\") + 1;
+  let lastIdx = name.lastIndexOf("\\") + 1;
+  if (name.includes("/")) lastIdx = name.lastIndexOf("/") + 1;
 
   let pthLength = name.length;
   let imgName = name.slice(lastIdx, pthLength);
