@@ -296,6 +296,10 @@ function createContentFile(files, spineFiles) {
   let handledFiles = [];
 
   files.forEach((filename) => {
+    filename = path.normalize(filename);
+    console.log("Normalized");
+    console.log(filename);
+
     let line = "";
     let name = filename.substring(filename.lastIndexOf(path.sep) + 1, filename.length);
 
@@ -373,7 +377,7 @@ function pageID(str) {
     ids.push(tId);
     return str;
   }
-  let count = 0;
+  let count = -1;
 
   ids.forEach((id) => {
     if (id.includes(tId)) count++;
@@ -781,9 +785,9 @@ function createCover(title, cover, altText, audio){
   '<body>\n'
 
 
-  if(audio != "" || audio.substring(audio.lastIndexOf("\\") + 1, audio.length) != ""){
+  if(audio != "" || audio.substring(audio.lastIndexOf(path.sep) + 1, audio.length) != ""){
     str =  str + '  <audio preload="auto" id="monTexteAudio">\n' +
-    '    <source src="../audio/' + audio.substring(audio.lastIndexOf("\\") + 1, audio.length) +'" type="audio/mpeg">\n' +
+    '    <source src="../audio/' + audio.substring(audio.lastIndexOf(path.sep) + 1, audio.length) +'" type="audio/mpeg">\n' +
     '    </source>\n' +
     '  </audio>\n';
   }

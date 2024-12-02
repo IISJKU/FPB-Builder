@@ -75,43 +75,42 @@ const createWindow = () => {
       noBtn = transArr[1];
       msgTitle = transArr[2];
       msg = transArr[3];
-   
 
-    mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
-      fs.readFile(app.getPath("userData") + "//projects//" + name + ".json", "utf8", (err, jsonString) => {
-        // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
-        if (err) {
-          if (err.code == "ENOENT" && name != "") {
-            jsonString = "";
+      mainWindow.webContents.executeJavaScript('document.getElementById("projName").value', true).then((name) => {
+        fs.readFile(app.getPath("userData") + path.sep + "projects" + path.sep + name + ".json", "utf8", (err, jsonString) => {
+          // if the file is not exist (new project) set the jsonString value to empty to continue saving the new project
+          if (err) {
+            if (err.code == "ENOENT" && name != "") {
+              jsonString = "";
+            }
           }
-        }
-        if (jsonString == undefined || jsonString == "undefined") {
-          app.exit();
-          return;
-        }
-        mainWindow.webContents.executeJavaScript("compareData(" + jsonString + ")", true).then((equalCheck) => {
-          // all objects are equal (no change detected)
-          if (equalCheck == 1) {
+          if (jsonString == undefined || jsonString == "undefined") {
             app.exit();
             return;
           }
-          const choice = dialog.showMessageBoxSync(this, {
-            type: "warning",
-            buttons: [yesBtn, noBtn],
-            title: msgTitle,
-            message: msg,
+          mainWindow.webContents.executeJavaScript("compareData(" + jsonString + ")", true).then((equalCheck) => {
+            // all objects are equal (no change detected)
+            if (equalCheck == 1) {
+              app.exit();
+              return;
+            }
+            const choice = dialog.showMessageBoxSync(this, {
+              type: "warning",
+              buttons: [yesBtn, noBtn],
+              title: msgTitle,
+              message: msg,
+            });
+            // if the user choose to save the data of the book
+            if (choice === 0) {
+              event.preventDefault();
+              shared.writeData(mainWindow, true);
+            } else {
+              app.exit();
+            }
           });
-          // if the user choose to save the data of the book
-          if (choice === 0) {
-            event.preventDefault();
-            shared.writeData(mainWindow, true);
-          } else {
-            app.exit();
-          }
         });
       });
     });
-  });
   });
 
   // Open the DevTools.

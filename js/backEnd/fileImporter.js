@@ -2,6 +2,7 @@ let fs = require("fs");
 let PathUtilities = require("./utilities/pathUtilities.js");
 const DependencyList = require("./classes/DependencyList.js");
 const storage = require("electron-json-storage");
+const path = require("path");
 
 class FileImporter {
   importedFiles = [];
@@ -99,7 +100,7 @@ class FileImporter {
 
   //this function gets called, when a dependency has to be manually selected
   manuallySelectDependency(path) {
-    let name = path.substring(path.lastIndexOf("\\") + 1, path.length);
+    let name = path.substring(path.lastIndexOf(path.sep) + 1, path.length);
     ////////////////////////////////////////
     //
     //  TODO: Maybe do some validation
@@ -113,7 +114,7 @@ class FileImporter {
 
   //this function gets called, when a dependency has to be manually selected
   manuallySelectDependency2(path) {
-    let name = path.substring(path.lastIndexOf("\\") + 1, path.length);
+    let name = path.substring(path.lastIndexOf(path.sep) + 1, path.length);
     ////////////////////////////////////////
     //
     //  TODO: Maybe do some validation
@@ -184,7 +185,7 @@ class FileImporter {
 
           if (filename != "") {
             let t = PathUtilities.getAbsolutePath(src, filename);
-            let shortName = t.substring(t.lastIndexOf("\\") + 1, t.length);
+            let shortName = t.substring(t.lastIndexOf(path.sep) + 1, t.length);
 
             //check if the file was already imported!
             if (this.dependencyMap.has(shortName)) {
@@ -212,8 +213,6 @@ class FileImporter {
     } else {
       dependencyList.isImage = false;
     }
-
-    //dependencyList.imageFile = src.substring(src.lastIndexOf("\\") + 1, src.length);
 
     dependencyList.imageFile = src;
     let d = JSON.stringify(dependencyList);

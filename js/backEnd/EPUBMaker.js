@@ -9,8 +9,9 @@ const Language = require("./classes/Languages.js");
 
 let fs = require("fs");
 const { fileURLToPath } = require("url");
-const { shell } = require('electron');
+const { shell } = require("electron");
 const Metadata = require("./classes/Metadata.js");
+const path = require("path");
 
 //set this to null to let the user pick for themselves
 //let directory = null;
@@ -53,8 +54,8 @@ function make(metadata, pages, data) {
     let count = 1;
 
     //if folder with that name exists, add (*) at the end.
-    if (fs.existsSync(directory + "\\" + dirName)) {
-      while (fs.existsSync(directory + "\\" + dirName + "(" + count + ")")) {
+    if (fs.existsSync(directory + path.sep + dirName)) {
+      while (fs.existsSync(directory + path.sep + dirName + "(" + count + ")")) {
         count = count + 1;
       }
       dirName = dirName + "(" + count + ")";
@@ -78,8 +79,8 @@ function make(metadata, pages, data) {
  * @param {*} fileName name of the file
  */
 function makeEPUB(fileName, launchCheck) {
-  ZipHandler.makeEPUB(directory + "\\" + fileName + "\\").then(() => {
-    fs.rename(directory + "\\" + fileName + ".zip", directory + "\\" + fileName + ".epub", (error) => {
+  ZipHandler.makeEPUB(directory + path.sep + fileName + path.sep).then(() => {
+    fs.rename(directory + path.sep + fileName + ".zip", directory + path.sep + fileName + ".epub", (error) => {
       if (error) {
         // Show the error
         console.log("An Error occured:");
@@ -88,7 +89,7 @@ function makeEPUB(fileName, launchCheck) {
         // List all the filenames after renaming
         console.log("\nFile Renamed\n");
         window.webContents.send("publishSuccessful");
-        if (launchCheck == true) shell.openPath(directory + "\\" + fileName + ".epub");
+        if (launchCheck == true) shell.openPath(directory + path.sep + fileName + ".epub");
       }
     });
   });

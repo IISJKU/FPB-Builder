@@ -1,5 +1,3 @@
-const path = require("node:path");
-
 let pageDetails = {
   cover: {
     text: {},
@@ -22,7 +20,7 @@ let pageDetails = {
     alt: {},
   },
   1: {
-    name:'page 1',
+    name: "page 1",
     text: {},
     narration: {},
     imagesScripts: {},
@@ -121,7 +119,7 @@ $(document).on("click", "#deletePage", function (e) {
     $("#pageList .list-group-item.active").prev("a").addClass("active");
     //delete the page element
     $("#pageList #" + elem).remove();
-    $('#contentBox').find("#iframePreview").html("");
+    $("#contentBox").find("#iframePreview").html("");
     $("#contentBox table").each(function () {
       $(this).find("tbody").html("");
     });
@@ -183,16 +181,23 @@ $(document).on("click", ".otherFiles", function (e) {
 });
 
 window.BRIDGE.onSetPath((value, elemId) => {
-  if (value["canceled"] == true ) $("#" + elemId).val("");
+  if (value["canceled"] == true) $("#" + elemId).val("");
   if (value["canceled"] == true || value["filePaths"].length == 0) return;
   let imgName = cutOutName(value["filePaths"][0]);
   $("#" + elemId).val(imgName);
   $("#" + elemId).attr("data-path", value["filePaths"][0]);
   if ($("#" + elemId).attr("data-missing") == 1) {
-    $("#" + elemId).get(0).setCustomValidity("");
+    $("#" + elemId)
+      .get(0)
+      .setCustomValidity("");
     $("#" + elemId).attr("data-missing", 0);
     // add the solved dependency to imagesScripts object and delete it from missing object
-    elemKey = TranslateToEN($("#" + elemId).closest("tr").children("th").text());
+    elemKey = TranslateToEN(
+      $("#" + elemId)
+        .closest("tr")
+        .children("th")
+        .text()
+    );
     if (elemKey.indexOf(" ") != -1 && elemKey.split(" ").length > 1) {
       let spElem = elemKey.split(" ");
       elemKey = TranslateToEN(spElem[0]) + " " + spElem[1];
@@ -208,13 +213,13 @@ window.BRIDGE.onSetPath((value, elemId) => {
 
 // handle on image loaded event
 window.BRIDGE.onImageLoaded((value) => {
-  if (value["canceled"] == true ) {
+  if (value["canceled"] == true) {
     $("#importImage").val("");
-    $('#contentBox').find("#iframePreview").html("");
+    $("#contentBox").find("#iframePreview").html("");
     deleteItem("imagesScripts", "Image");
   }
   if (value["canceled"] == true || value.length == 0) return;
- 
+
   let imgName = cutOutName(value["imageFile"]);
   $("#importImage").val(imgName);
   $("#importImage").attr("data-path", value["imageFile"]);
@@ -253,10 +258,11 @@ window.BRIDGE.onImageLoaded((value) => {
 });
 
 //cut out the name out of the path, depending on the system
-function cutOutName(name){
+function cutOutName(name) {
   if (name == "") return "";
 
-  let lastIdx = name.lastIndexOf(path.sep) + 1;;
+  let lastIdx = name.lastIndexOf("/") + 1;
+  if (name.includes("\\")) lastIdx = name.lastIndexOf("\\") + 1;
 
   let pthLength = name.length;
   let imgName = name.slice(lastIdx, pthLength);
@@ -266,52 +272,50 @@ function cutOutName(name){
 
 // handle on narration loaded event
 window.BRIDGE.onNarrationLoaded((value, elemId, activeLang) => {
-  if (value["canceled"] == true ) {
+  if (value["canceled"] == true) {
     $("#" + elemId).val("");
     deleteItem("narration", activeLang);
   }
-  if (value["canceled"] == true || value['filePaths'].length == 0) return;
-  let imgName = cutOutName(value['filePaths'][0]);
+  if (value["canceled"] == true || value["filePaths"].length == 0) return;
+  let imgName = cutOutName(value["filePaths"][0]);
   $("#" + elemId).val(imgName);
-  $("#" + elemId).attr("data-path", value['filePaths'][0]);
+  $("#" + elemId).attr("data-path", value["filePaths"][0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID].narration[activeLang] = value['filePaths'][0];
+  pageDetailsObj[pageID].narration[activeLang] = value["filePaths"][0];
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
-
-
 // handle on cover image loaded event
 window.BRIDGE.onCoverLoaded((value, elemId, activeLang) => {
-  if (value["canceled"] == true ) {
+  if (value["canceled"] == true) {
     $("#" + elemId).val("");
-    $('#contentBox').find("#iframePreview").html("");
-    deleteItem("imagesScripts", "Image" , activeLang);
+    $("#contentBox").find("#iframePreview").html("");
+    deleteItem("imagesScripts", "Image", activeLang);
   }
-  if (value["canceled"] == true || value['filePaths'].length == 0) return;
-  let imgName = cutOutName(value['filePaths'][0]);
+  if (value["canceled"] == true || value["filePaths"].length == 0) return;
+  let imgName = cutOutName(value["filePaths"][0]);
   $("#" + elemId).val(imgName);
-  $("#" + elemId).attr("data-path", value['filePaths'][0]);
+  $("#" + elemId).attr("data-path", value["filePaths"][0]);
   addImageiframe(value["filePaths"][0], imgName);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-  pageDetailsObj[pageID]['imagesScripts']['Image'][activeLang] = value['filePaths'][0];
+  pageDetailsObj[pageID]["imagesScripts"]["Image"][activeLang] = value["filePaths"][0];
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
 
 // delete current page sub Item
-function deleteItem(mainItem, subItem, subSubItem){
+function deleteItem(mainItem, subItem, subSubItem) {
   let selectedPage = $("#pageList .list-group-item.active").attr("id");
   let delParsedDet = parseSessionData("pageDetails");
-  delParsedDet[selectedPage][mainItem][subItem]= '';
-  if (subSubItem != '' || subSubItem != undefined){
+  delParsedDet[selectedPage][mainItem][subItem] = "";
+  if (subSubItem != "" || subSubItem != undefined) {
     delete delParsedDet[selectedPage][mainItem][subSubItem];
-  }else{
+  } else {
     delete delParsedDet[selectedPage][mainItem][subItem];
   }
-  
-  sessionStorage.setItem("pageDetails", JSON.stringify(delParsedDet))
+
+  sessionStorage.setItem("pageDetails", JSON.stringify(delParsedDet));
 }
 
 // initialize spine page
@@ -360,7 +364,7 @@ function fillData() {
   if (pageId != "cover" && pageId != "credit" && pageId != "menu") {
     createIcon(pageLabel, "bi bi-trash3-fill icons", translateTxt("delete page"), "deletePage");
   }
-  $('#contentBox').find("#iframePreview").html("");
+  $("#contentBox").find("#iframePreview").html("");
   $("#contentBox table").each(function () {
     let table = $(this);
     let theadTxt = $(this).children("thead").children("tr").children("th");
@@ -374,7 +378,7 @@ function fillData() {
 // handle clear data of the body of imagesScripts panel
 function clearBody(tbl, pageID, sec) {
   tbdy = tbl.children("tbody");
-  if (sec == 'imagesScripts' && pageID == "cover"){
+  if (sec == "imagesScripts" && pageID == "cover") {
     return;
   }
   if (pageID == "credit") return;
@@ -411,11 +415,11 @@ function createTableBody(tbl, pageId, section) {
   if (tbl.find("tbody").length > 0) {
     tbdy = tbl.children("tbody");
   }
-  if (section == "text" || section == "alt" || section == "narration" ) {
+  if (section == "text" || section == "alt" || section == "narration") {
     createLangRows(tbl, tbdy, pageId, section);
     return;
   }
-  if (section == 'imagesScripts' && pageId == "cover"){
+  if (section == "imagesScripts" && pageId == "cover") {
     createLangsCover(tbl, tbdy, pageId, section);
     return;
   }
@@ -448,7 +452,7 @@ function createTableBody(tbl, pageId, section) {
       if (val == "Image") {
         let importImg = document.getElementById("importImage");
         importImg.value = cutOutName(pageDetObj[pageId][section][val]);
-        addImageiframe(pageDetObj[pageId][section][val],importImg.value);
+        addImageiframe(pageDetObj[pageId][section][val], importImg.value);
         updatePageName(pageId, pageDetObj);
         continue;
       } else if (val != "Image") {
@@ -471,9 +475,11 @@ function createTableBody(tbl, pageId, section) {
 
 // Create selected languages rows in the tables
 function createLangRows(tbl, tbdy, pageId, section) {
-  if ((pageId == "menu" && (section == "narration" || section == "alt" || section == "text")) 
-    || (pageId == "cover" && (section == "text"))
-    || (pageId == "credit" && (section == "narration" || section == "alt"))) {
+  if (
+    (pageId == "menu" && (section == "narration" || section == "alt" || section == "text")) ||
+    (pageId == "cover" && section == "text") ||
+    (pageId == "credit" && (section == "narration" || section == "alt"))
+  ) {
     return;
   }
   let value = "";
@@ -486,7 +492,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     th.appendChild(document.createTextNode(langs[i]));
     th.setAttribute("scope", "row");
     th.setAttribute("class", "header");
-    if (section == "narration" && $('#audioNarr').is(':checked') == true)  th.setAttribute("class", "reqNarrHeader required");
+    if (section == "narration" && $("#audioNarr").is(":checked") == true) th.setAttribute("class", "reqNarrHeader required");
     tr.setAttribute("tabindex", "0");
     tr.appendChild(th);
     let td = document.createElement("td");
@@ -500,7 +506,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
     if (section == "alt") {
       textElem = document.createElement("input");
       textElem.setAttribute("type", "text");
-      textElem.setAttribute("aria-label", langs[i]+' '+ translateTxt("language image alt text"));
+      textElem.setAttribute("aria-label", langs[i] + " " + translateTxt("language image alt text"));
       textElem.setAttribute("class", "form-control");
       textElem.value = colVal;
       td.appendChild(textElem);
@@ -513,12 +519,12 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = cutOutName(colVal);
       narrInput.setAttribute("data-path", colVal);
-      if ($('#audioNarr').is(':checked') == true)  narrInput.required = true;
+      if ($("#audioNarr").is(":checked") == true) narrInput.required = true;
       td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");
       textElem.setAttribute("class", "form-control");
-      textElem.setAttribute("aria-label", langs[i] +' '+ translateTxt("language text"));
+      textElem.setAttribute("aria-label", langs[i] + " " + translateTxt("language text"));
       textElem.value = colVal;
       td.appendChild(textElem);
     }
@@ -545,7 +551,7 @@ function createLangsCover(tbl, tbdy, pageId, section) {
     let td = document.createElement("td");
     let pageDetObj = parseSessionData("pageDetails");
     if (pageDetObj.hasOwnProperty(pageId) && Object.keys(pageDetObj[pageId]).length > 0 && pageDetObj[pageId] && pageDetObj[pageId][section]) {
-      value = pageDetObj[pageId][section]['Image'][langs[i]];
+      value = pageDetObj[pageId][section]["Image"][langs[i]];
     }
     if (value != "" && value != undefined && value != "undefined") {
       colVal = value;
@@ -594,12 +600,12 @@ function saveData() {
     }
     missingAttr = $(this).children("td").children(0).attr("data-missing");
     //Change this later!
-    if (section != "imagesScripts" && pageId != "cover" ) pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+    if (section != "imagesScripts" && pageId != "cover") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
     if ((section == "narration" || section == "imagesScripts") && $(this).children("td").children(0).attr("data-path") != undefined) {
       if (missingAttr == "1") {
         if (pageDetObj[pageId][section]["missing"] == undefined) pageDetObj[pageId][section]["missing"] = {};
         pageDetObj[pageId][section]["missing"][attr] = $(this).children("td").children(0).attr("data-path");
-      } else if (section == "imagesScripts" && pageId == "cover"){
+      } else if (section == "imagesScripts" && pageId == "cover") {
         pageDetObj[pageId][section]["Image"][attr] = $(this).children("td").children(0).attr("data-path");
       } else {
         pageDetObj[pageId][section][attr] = $(this).children("td").children(0).attr("data-path");
@@ -615,8 +621,6 @@ $(document).on("focusout", "#contentBox input,#contentBox textarea", function (e
     saveData();
   }
 });
-
-
 
 //after the user choose the xhtml image the page name and the page title in the content box
 function updatePageName(pageID, detObj) {
@@ -638,13 +642,13 @@ function updatePageName(pageID, detObj) {
 //after the user choose the xhtml image the page name and the page title in the content box
 function initPagesName(pageID, pagelength) {
   let detObj = parseSessionData("pageDetails");
-  let pageText ='';
+  let pageText = "";
   if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
-    if (detObj.hasOwnProperty(pageID) &&  detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
+    if (detObj.hasOwnProperty(pageID) && detObj[pageID].hasOwnProperty("name") && (detObj[pageID]["name"] != "" || detObj[pageID]["name"] != undefined)) {
       pageText = document.createTextNode(detObj[pageID]["name"]);
     } else {
       pageText = document.createTextNode(translateTxt("Page") + " " + pagelength);
-    } 
+    }
   }
   return pageText;
 }
@@ -742,16 +746,16 @@ function pageSorting() {
   for (let i = 2; i < pagesArr.length - 2; i++) {
     if (pagesArr[i].id == "credit") return;
     oldId = pagesArr[i].id;
-    pagesArr[i].id = i-1;
-    dtailsObj[i-1] = oldObj[oldId];
+    pagesArr[i].id = i - 1;
+    dtailsObj[i - 1] = oldObj[oldId];
   }
   sessionStorage.setItem("pageDetails", JSON.stringify(dtailsObj));
 }
 
 // add ifram of the selected XHTML image
-function addImageiframe(src, title){
-  $('#contentBox').find("#iframePreview").html("");
-  let iframeDiv = document.getElementById('iframePreview');
+function addImageiframe(src, title) {
+  $("#contentBox").find("#iframePreview").html("");
+  let iframeDiv = document.getElementById("iframePreview");
   let iframeElem = document.createElement("iframe");
   iframeElem.setAttribute("src", src);
   iframeElem.setAttribute("title", title);
@@ -761,7 +765,7 @@ function addImageiframe(src, title){
 }
 
 //handle iframe onload event
-function onloadiframe(){
+function onloadiframe() {
   $("#xhtmlIframe").contents().find("#monAudioPlay").attr("style", "display: none !important");
   $("#xhtmlIframe").contents().find(".svg-content").attr("style", "transform: scale(1.2); margin-top: 5%;");
   $("#xhtmlIframe").contents().find("img").attr("style", "margin-left: 35%; height: 97%;");
