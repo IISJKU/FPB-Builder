@@ -1,3 +1,5 @@
+const path = require("node:path");
+
 let pageDetails = {
   cover: {
     text: {},
@@ -183,9 +185,7 @@ $(document).on("click", ".otherFiles", function (e) {
 window.BRIDGE.onSetPath((value, elemId) => {
   if (value["canceled"] == true ) $("#" + elemId).val("");
   if (value["canceled"] == true || value["filePaths"].length == 0) return;
-  let lastIdx = value["filePaths"][0].lastIndexOf("\\") + 1;
-  let pthLength = value["filePaths"][0].length;
-  let imgName = value["filePaths"][0].slice(lastIdx, pthLength);
+  let imgName = cutOutName(value["filePaths"][0]);
   $("#" + elemId).val(imgName);
   $("#" + elemId).attr("data-path", value["filePaths"][0]);
   if ($("#" + elemId).attr("data-missing") == 1) {
@@ -214,9 +214,8 @@ window.BRIDGE.onImageLoaded((value) => {
     deleteItem("imagesScripts", "Image");
   }
   if (value["canceled"] == true || value.length == 0) return;
-  let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
-  let pthLength = value["imageFile"].length;
-  let imgName = value["imageFile"].slice(lastIdx, pthLength);
+ 
+  let imgName = cutOutName(value["imageFile"]);
   $("#importImage").val(imgName);
   $("#importImage").attr("data-path", value["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
@@ -253,6 +252,18 @@ window.BRIDGE.onImageLoaded((value) => {
   }
 });
 
+//cut out the name out of the path, depending on the system
+function cutOutName(name){
+  if (name == "") return "";
+
+  let lastIdx = name.lastIndexOf(path.sep) + 1;;
+
+  let pthLength = name.length;
+  let imgName = name.slice(lastIdx, pthLength);
+
+  return imgName;
+}
+
 // handle on narration loaded event
 window.BRIDGE.onNarrationLoaded((value, elemId, activeLang) => {
   if (value["canceled"] == true ) {
@@ -260,9 +271,7 @@ window.BRIDGE.onNarrationLoaded((value, elemId, activeLang) => {
     deleteItem("narration", activeLang);
   }
   if (value["canceled"] == true || value['filePaths'].length == 0) return;
-  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
-  let pthLength = value['filePaths'][0].length;
-  let imgName = value['filePaths'][0].slice(lastIdx, pthLength);
+  let imgName = cutOutName(value['filePaths'][0]);
   $("#" + elemId).val(imgName);
   $("#" + elemId).attr("data-path", value['filePaths'][0]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
@@ -270,6 +279,8 @@ window.BRIDGE.onNarrationLoaded((value, elemId, activeLang) => {
   pageDetailsObj[pageID].narration[activeLang] = value['filePaths'][0];
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
+
+
 
 // handle on cover image loaded event
 window.BRIDGE.onCoverLoaded((value, elemId, activeLang) => {
@@ -279,9 +290,7 @@ window.BRIDGE.onCoverLoaded((value, elemId, activeLang) => {
     deleteItem("imagesScripts", "Image" , activeLang);
   }
   if (value["canceled"] == true || value['filePaths'].length == 0) return;
-  let lastIdx = value['filePaths'][0].lastIndexOf("\\") + 1;
-  let pthLength = value['filePaths'][0].length;
-  let imgName = value['filePaths'][0].slice(lastIdx, pthLength);
+  let imgName = cutOutName(value['filePaths'][0]);
   $("#" + elemId).val(imgName);
   $("#" + elemId).attr("data-path", value['filePaths'][0]);
   addImageiframe(value["filePaths"][0], imgName);
@@ -438,7 +447,7 @@ function createTableBody(tbl, pageId, section) {
     if (section == "imagesScripts") {
       if (val == "Image") {
         let importImg = document.getElementById("importImage");
-        importImg.value = sliceName(pageDetObj[pageId][section][val]);
+        importImg.value = cutOutName(pageDetObj[pageId][section][val]);
         addImageiframe(pageDetObj[pageId][section][val],importImg.value);
         updatePageName(pageId, pageDetObj);
         continue;
@@ -447,7 +456,7 @@ function createTableBody(tbl, pageId, section) {
         imageInput.setAttribute("type", "imageInput");
         imageInput.setAttribute("aria-label", translateTxt("Browse scripts button"));
         imageInput.setAttribute("placeholder", translateTxt("Browse"));
-        imageInput.value = sliceName(pageDetObj[pageId][section][val]);
+        imageInput.value = cutOutName(pageDetObj[pageId][section][val]);
         imageInput.setAttribute("data-path", pageDetObj[pageId][section][val]);
         imageInput.setAttribute("id", camelCaseStr(val));
         imageInput.setAttribute("class", "form-control otherFiles");
@@ -502,7 +511,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("aria-label", translateTxt("Browse narration button"));
       narrInput.setAttribute("placeholder", translateTxt("Browse"));
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
-      narrInput.value = sliceName(colVal);
+      narrInput.value = cutOutName(colVal);
       narrInput.setAttribute("data-path", colVal);
       if ($('#audioNarr').is(':checked') == true)  narrInput.required = true;
       td.append(narrInput);
@@ -547,7 +556,7 @@ function createLangsCover(tbl, tbdy, pageId, section) {
     imageInput.setAttribute("aria-label", translateTxt("Browse cover image"));
     imageInput.setAttribute("placeholder", translateTxt("Browse"));
     imageInput.setAttribute("id", langs[i].toLowerCase() + "Cover");
-    imageInput.value = sliceName(colVal);
+    imageInput.value = cutOutName(colVal);
     imageInput.setAttribute("data-path", colVal);
     imageInput.required = true;
     td.append(imageInput);
@@ -607,14 +616,7 @@ $(document).on("focusout", "#contentBox input,#contentBox textarea", function (e
   }
 });
 
-//slice the given value to extract the file name with it's extenstion
-function sliceName(value) {
-  if (value == "") return "";
-  let lastIdx = value.lastIndexOf("\\") + 1;
-  let pthLength = value.length;
-  let retName = value.slice(lastIdx, pthLength);
-  return retName;
-}
+
 
 //after the user choose the xhtml image the page name and the page title in the content box
 function updatePageName(pageID, detObj) {
@@ -713,7 +715,7 @@ function missingDependencies(tbl, tbdy, pageId) {
     imageInput.setAttribute("data-missing", 1);
     imageInput.setAttribute("placeholder", translateTxt("Browse"));
     imageInput.setAttribute("id", camelCaseStr(val));
-    imageInput.value = sliceName(pageObj[pageId]["imagesScripts"]["missing"][val]);
+    imageInput.value = cutOutName(pageObj[pageId]["imagesScripts"]["missing"][val]);
     imageInput.setAttribute("data-path", pageObj[pageId]["imagesScripts"]["missing"][val]);
     td.append(imageInput);
     tr.appendChild(td);

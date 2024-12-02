@@ -1,4 +1,5 @@
 let selectedFonts = {}
+const path = require("node:path");
 
 // initialize metadata screen data
 function initializeFonts() {
@@ -76,7 +77,7 @@ function setSelectedFonts(fonts){
 }
 
 function addFontListElem(val){
-    let lastInd= val.lastIndexOf("\\") + 1;
+    let lastInd= val.lastIndexOf(path.sep) + 1;
     let extIndex= val.indexOf(".");
     let fontText = val.slice(lastInd,extIndex)
     let fontList = document.getElementById("fontList");

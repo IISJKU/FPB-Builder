@@ -178,7 +178,7 @@ function jsTranslate(lang, paramArr) {
 // returns processed array of translation.csv file
 function getTranslationCsv() {
   // read csv into string
-  let data = fs.readFileSync(__dirname +"\\translation.csv").toLocaleString();
+  let data = fs.readFileSync(__dirname + path.sep + "translation.csv").toLocaleString();
   let lines = [];
   // string to array
   let rows = data.split("\n"); // split rows

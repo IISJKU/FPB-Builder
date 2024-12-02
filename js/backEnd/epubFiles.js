@@ -52,7 +52,7 @@ function setOptions(opt) {
 
 function setCover(cover) {
   if (typeof cover != "string" || cover == undefined) return "";
-  coverImage = "images/" + cover.substring(cover.lastIndexOf("\\") + 1, cover.length);
+  coverImage = "images/" + cover.substring(cover.lastIndexOf(path.sep) + 1, cover.length);
 }
 
 //this is a string of the container file used in the epub, it is usually saved under /META-INF
@@ -297,7 +297,7 @@ function createContentFile(files, spineFiles) {
 
   files.forEach((filename) => {
     let line = "";
-    let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+    let name = filename.substring(filename.lastIndexOf(path.sep) + 1, filename.length);
 
     if (filename.includes("/")) {
       name = filename.substring(filename.lastIndexOf("/") + 1, filename.length);
@@ -334,7 +334,7 @@ function createContentFile(files, spineFiles) {
 
   spineFiles.forEach((filename) => {
     let line = "";
-    let name = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+    let name = filename.substring(filename.lastIndexOf(path.sep) + 1, filename.length);
 
     let properties = "scripted svg";
 
@@ -345,7 +345,7 @@ function createContentFile(files, spineFiles) {
 
     name = pageID(name);
 
-    let pID = name.substring(name.lastIndexOf("\\") + 1, name.length);
+    let pID = name.substring(name.lastIndexOf(path.sep) + 1, name.length);
     pID = pID.replaceAll("(", "").replaceAll(")", "");
     pID = pID.substring(0, pID.lastIndexOf("."));
 
@@ -444,7 +444,7 @@ function createPage00(page, firstPageNarration, fontNames) {
   let img_str = "";
   let color_css = "";
 
-  if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf("\\") + 1, firstPageNarration.length);
+  if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf(path.sep) + 1, firstPageNarration.length);
 
   if(page.imagesScripts != undefined && page.imagesScripts.Image != undefined) {
     console.log("--------------------");
@@ -457,7 +457,7 @@ function createPage00(page, firstPageNarration, fontNames) {
     
   }
 
-  str = fs.readFileSync(__dirname + "\\templates\\" + language.toLowerCase() + "\\page00.xhtml", "utf-8");
+  str = fs.readFileSync(__dirname + path.sep + "templates" + path.sep + language.toLowerCase() + path.sep + "page00.xhtml", "utf-8");
   str = str.replaceAll("{title}", title);
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
   str = str.replaceAll("$MENUSVG", img_str);
@@ -709,7 +709,7 @@ function createPageText(obj){
   '    <section class="page" epub:type="chapter" role="doc-chapter">\n';
   
 
-  let a = audio.substring(audio.lastIndexOf("\\")+1, audio.length);
+  let a = audio.substring(audio.lastIndexOf("\\") + 1, audio.length);
 
   if(options.includeNarrations && a != "" && a != " " ) {
     str = str + 
@@ -790,7 +790,7 @@ function createCover(title, cover, altText, audio){
 
   str = str +
   '  <div style="text-align: center; height: 100%">\n' +
-  '    <img epub:type="cover" role="doc-cover" class="alt_sentence0" src="../images/' + cover.substring(cover.lastIndexOf("\\") + 1, cover.length) + '" alt="' + altText +'" style="max-width: 100%; max-height: 100%" />\n' +
+  '    <img epub:type="cover" role="doc-cover" class="alt_sentence0" src="../images/' + cover.substring(cover.lastIndexOf(path.sep) + 1, cover.length) + '" alt="' + altText +'" style="max-width: 100%; max-height: 100%" />\n' +
   '  </div>\n' +
   '  <button id="playTexteSr" aria-labelledby="label" class="screen-reader bouton-surprise">\n' +
   '    <span id="label" class="tslt_ecouter_texte">anhören</span>\n' +
