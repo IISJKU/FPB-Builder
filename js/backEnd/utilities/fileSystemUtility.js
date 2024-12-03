@@ -29,8 +29,7 @@ function makeFile(location, name, content) {
   }
 
   if(dirName.includes("/"))dirName = dirName.replaceAll("\\", "/");
-  if(content.includes("/"))content = content.replaceAll("\\", "/");
-  fs.writeFileSync(path.normalize(dirName), path.normalize(content));
+  fs.writeFileSync(path.normalize(dirName), content);
 }
 
 function createFileStructure(name, setPath) {
