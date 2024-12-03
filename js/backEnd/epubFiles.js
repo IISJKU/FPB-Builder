@@ -297,9 +297,7 @@ function createContentFile(files, spineFiles) {
 
   files.forEach((filename) => {
     filename = path.normalize(filename);
-    console.log("Normalized");
-    console.log(filename);
-
+  
     let line = "";
     let name = filename.substring(filename.lastIndexOf(path.sep) + 1, filename.length);
 

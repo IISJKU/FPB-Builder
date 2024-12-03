@@ -1,12 +1,14 @@
 const FileSystemManager = require("./utilities/fileSystemUtility.js");
 const EPUBFileCreator = require("./epubFiles.js");
 let PathUtilities = require("./utilities/pathUtilities.js");
+const pathU = require("path");
 tempFile = "";
 
 const relativePaths = new Array();
 let fonts = new Array();
 
 const fs = require("fs");
+
 const { forEach, file } = require("jszip");
 
 //this array contains every entry that is later going to be used in the "contents.opf" file
@@ -43,6 +45,7 @@ function initialize(metad, pag, data) {
   pages = pag;
   options = data.options;
   fontNames = data.selectedFonts;
+
 
   if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "\\imports\\fonts\\Luciole-Regular.ttf";
 
@@ -214,13 +217,23 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   spine.push("cover.xhtml");
 
   fonts = fonts.concat(pathsToFonts());
+
   fonts.forEach((p) => {
     let symb = "\\";
     if (!p.includes(symb)) symb = "/";
 
     let fPath = __dirname + p;
     if (p.includes(":\\")) fPath = p;
-    fs.copyFileSync(fPath, path + "\\" + newDirName + "\\OEBPS\\fonts\\" + p.substring(p.lastIndexOf(symb, p.length)));
+    let newPath = pathU.normalize(path + pathU.sep + newDirName + pathU.sep +"OEBPS"+ pathU.sep +"fonts" + pathU.sep + p.substring(p.lastIndexOf(symb, p.length)));
+    fPath = pathU.normalize(fPath);
+ 
+    
+    if(fPath.includes("/")) {
+      fPath = fPath.replaceAll("\\", "/");
+      fPath = fPath.replaceAll("//", "/");
+    }
+
+    fs.copyFileSync(fPath, newPath);
   });
 
   if (options.includeBookSettings) {
@@ -243,7 +256,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     if (element != undefined) testStr = testStr + element.toString() + "\n";
   });
 
-  fs.writeFileSync(path + "\\" + newDirName + "\\OEBPS\\files.txt", testStr);
+  //fs.writeFileSync(path + "\\" + newDirName + "\\OEBPS\\files.txt", testStr);
 
   fileArray.forEach((element) => {
     tempFile = "";
@@ -319,7 +332,9 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length);
 
         if (!(element == "" || relAdress == "")) {
-          fs.copyFileSync(element, relAdress);
+          if(element.includes("/"))element = element.replaceAll("\\", "/");
+          if(relAdress.includes("/"))relAdress = relAdress.replaceAll("\\", "/");
+          fs.copyFileSync(pathU.normalize(element), pathU.normalize(relAdress));
         }
       }
 
@@ -540,16 +555,16 @@ function pathsToFonts() {
 
 function pathsToMenuDependencies() {
   let arr = new Array(
-    __dirname + "\\imports\\colorisation.min.js",
-    __dirname + "\\imports\\ldqr_main.min.css",
-    __dirname + "\\imports\\colorisation.css",
-    __dirname + "\\imports\\page00_svg.css",
-    __dirname + "\\imports\\page00.min.js",
-    __dirname + "\\imports\\radiobutton.js",
-    __dirname + "\\imports\\radiogroup.js",
-    __dirname + "\\imports\\ldqr2.js",
-    __dirname + "\\imports\\localforage.min.js",
-    __dirname + "\\imports\\SVGPanZoom.min.js"
+    __dirname + pathU.sep + "imports" + pathU.sep + "colorisation.min.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "ldqr_main.min.css",
+    __dirname + pathU.sep + "imports" + pathU.sep + "colorisation.css",
+    __dirname + pathU.sep + "imports" + pathU.sep + "page00_svg.css",
+    __dirname + pathU.sep + "imports" + pathU.sep + "page00.min.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "radiobutton.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "radiogroup.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "ldqr2.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "localforage.min.js",
+    __dirname + pathU.sep + "imports" + pathU.sep + "SVGPanZoom.min.js"
   );
 
   return arr;
@@ -572,40 +587,41 @@ function pathsToImages(language) {
     "version04-nb.png",
     "version05-coul.png",
     "version05-nb.png",
-    "notice\\image020.jpg",
-    "notice\\image022.jpg",
-    "notice\\image024.jpg",
-    "notice\\image026.jpg",
-    "notice\\image028.jpg",
-    "notice\\image030.jpg",
-    "notice\\image032.jpg",
-    "notice\\image034.png",
-    "notice\\image038.png",
-    "notice\\image039.png",
-    "notice\\image042.jpg",
-    "notice\\image043.jpg",
-    "notice\\image044.jpg",
-    "notice\\image045.jpg",
-    "notice\\image046.jpg",
-    "notice\\image047.jpg",
-    "notice\\image050.jpg",
-    "notice\\image055.jpg",
-    "notice\\image058.jpg",
-    "notice\\image060.jpg",
-    "notice\\image062.jpg",
-    "notice\\image063.jpg",
-    "notice\\image064.jpg",
-    "notice\\image065.jpg",
-    "notice\\image068.jpg",
-    "notice\\image070.jpg",
-    "notice\\image072.png",
-    "notice\\image073.jpg",
-    "notice\\home.svg",
-    "notice\\logo_erasmusplus.svg"
+    "notice"+ pathU.sep + "image020.jpg",
+    "notice"+ pathU.sep + "image022.jpg",
+    "notice"+ pathU.sep + "image024.jpg",
+    "notice"+ pathU.sep + "image026.jpg",
+    "notice"+ pathU.sep + "image028.jpg",
+    "notice"+ pathU.sep + "image030.jpg",
+    "notice"+ pathU.sep + "image032.jpg",
+    "notice"+ pathU.sep + "image034.png",
+    "notice"+ pathU.sep + "image038.png",
+    "notice"+ pathU.sep + "image039.png",
+    "notice"+ pathU.sep + "image042.jpg",
+    "notice"+ pathU.sep + "image043.jpg",
+    "notice"+ pathU.sep + "image044.jpg",
+    "notice"+ pathU.sep + "image045.jpg",
+    "notice"+ pathU.sep + "image046.jpg",
+    "notice"+ pathU.sep + "image047.jpg",
+    "notice"+ pathU.sep + "image050.jpg",
+    "notice"+ pathU.sep + "image055.jpg",
+    "notice"+ pathU.sep + "image058.jpg",
+    "notice"+ pathU.sep + "image060.jpg",
+    "notice"+ pathU.sep + "image062.jpg",
+    "notice"+ pathU.sep + "image063.jpg",
+    "notice"+ pathU.sep + "image064.jpg",
+    "notice"+ pathU.sep + "image065.jpg",
+    "notice"+ pathU.sep + "image068.jpg",
+    "notice"+ pathU.sep + "image070.jpg",
+    "notice"+ pathU.sep + "image072.png",
+    "notice"+ pathU.sep + "image073.jpg",
+    "notice"+ pathU.sep + "home.svg",
+    "notice"+ pathU.sep + "logo_erasmusplus.svg"
   );
 
   for (let i = 0; i < a.length; i++) {
-    a[i] = __dirname + "\\templates\\" + language.toLowerCase() + "\\images\\" + a[i];
+    a[i] = __dirname + pathU.sep + "templates" + pathU.sep + language.toLowerCase() + pathU.sep + "images" + pathU.sep + a[i];
+   
   }
   return a;
 }

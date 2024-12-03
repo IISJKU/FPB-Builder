@@ -3,7 +3,7 @@ const EPUBFileCreator = require("../epubFiles.js");
 let fs = require("fs");
 
 function makeFolder(location, name) {
-  fs.mkdirSync(path.join(location, name));
+  fs.mkdirSync(path.normalize(path.join(location, name)));
 }
 
 function makeFile(location, name, content) {
@@ -12,8 +12,8 @@ function makeFile(location, name, content) {
   let dirName = location + name;
   let count = 1;
 
-  if (fs.existsSync(location + name)) {
-    while (fs.existsSync(location + name + "(" + count + ")")) {
+  if (fs.existsSync(path.normalize(location + name))) {
+    while (fs.existsSync(path.normalize(location + name + "(" + count + ")"))) {
       count = count + 1;
     }
 
@@ -28,34 +28,36 @@ function makeFile(location, name, content) {
     content = "";
   }
 
-  fs.writeFileSync(dirName, content);
+  if(dirName.includes("/"))dirName = dirName.replaceAll("\\", "/");
+  if(content.includes("/"))content = content.replaceAll("\\", "/");
+  fs.writeFileSync(path.normalize(dirName), path.normalize(content));
 }
 
-function createFileStructure(name, path) {
+function createFileStructure(name, setPath) {
   //create overall folder
-  makeFolder(path, name);
+  makeFolder(setPath, name);
 
   //Everything is put into this folder
-  tempDir = path + "\\" + name + "\\";
+  tempDir = setPath + path.sep + name + path.sep;
 
   //create top layer in folder structure
 
   //the mimetype will be added when zipping!
   //FileSystemManager.makeFile(tempDir, "mimetype", "application/epub+zip");
   makeFolder(tempDir, "META-INF");
-  makeFile(tempDir + "\\META-INF\\", "container.xml", EPUBFileCreator.containerFile);
-  makeFile(tempDir + "\\META-INF\\", "com.apple.ibooks.display-options.xml", EPUBFileCreator.iBooksOptions);
+  makeFile(tempDir + path.sep+ "META-INF" + path.sep, "container.xml", EPUBFileCreator.containerFile);
+  makeFile(tempDir + path.sep + "META-INF" + path.sep, "com.apple.ibooks.display-options.xml", EPUBFileCreator.iBooksOptions);
 
   //Create OEBPS AND ALL THE FOLDERS and FILES INSIDE
   makeFolder(tempDir, "OEBPS");
   //set the tempDir one layer below
-  tempDir = tempDir + "\\OEBPS\\";
+  tempDir = tempDir + path.sep + "OEBPS" + path.sep;
   //create all of the folders inside this one
   makeFolder(tempDir, "audio");
   makeFolder(tempDir, "css");
   makeFolder(tempDir, "fonts");
   makeFolder(tempDir, "images");
-  makeFolder(tempDir + "\\images\\", "notice");
+  makeFolder(tempDir + path.sep + "images" + path.sep, "notice");
   makeFolder(tempDir, "Misc");
   makeFolder(tempDir, "xhtml");
 }

@@ -1,11 +1,15 @@
 const archiver = require("archiver");
 //var FileSaver = require("file-saver");
 let fs = require("fs");
+const pathU = require("path");
 
 function makeEPUB(path) {
   //zip.file(path + "mimetype");
   const archive = archiver("zip", { zlib: { level: 0 } });
-  const stream = fs.createWriteStream(path.substring(0, path.lastIndexOf("\\")) + ".zip");
+
+  console.log(path);
+
+  const stream = fs.createWriteStream(path.substring(0, path.lastIndexOf(pathU.sep)) + ".zip");
 
   return new Promise((resolve, reject) => {
     archive
