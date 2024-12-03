@@ -1,3 +1,4 @@
+const fs = require("fs");
 const pathU = require("path");
 
 //version of the same function, but with an offset!
@@ -40,36 +41,12 @@ function cutEnd(string) {
 }
 
 function getAbsolutePath(ogFilePath, path) {
-  let temp = "";
-  let newPath = "";
+  let oPath = ogFilePath;
+  if(ogFilePath.includes(".")) oPath = ogFilePath.substring(0, ogFilePath.lastIndexOf(pathU.sep));
+  newPath = pathU.resolve(oPath, path); // adapt to operating system
 
-  //cuts off the filename from original path
-  newPath = cutEnd(ogFilePath);
-
-  //cut off everything before name of new file
-  //caution: this breaks if there is a slash at the end, which is actually unlikely :P
-  temp = path.trim();
-
-  //if the path jumps directory, we need to change the absolute path accordingly
-  while (temp.includes("../")) {
-    newPath = cutEnd(newPath);
-
-    //cut the ../ signifier if it is at the start
-    if (temp.substring(0, 3) == "../") {
-      temp = temp.substring(3, temp.length);
-    }
-  }
-
-  if (temp.substring(0, 1) == "./") {
-    //this cuts of the signifier that it is in the same dir as the selected file
-    temp = temp.replaceAll("./", "");
-  }
-
-  newPath = newPath + "\\" + temp;
-  newPath = newPath.replaceAll("/", "\\");
-
-  pathU.normalize(newPath); // adapt to operating system
-
+  newPath = pathU.normalize(newPath);
+  
   return newPath;
 }
 
