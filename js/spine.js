@@ -227,7 +227,7 @@ window.BRIDGE.onImageLoaded((value) => {
   let pageDetailsObj = parseSessionData("pageDetails");
 
   let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
-  if (name.includes("/")) lastIdx = value["imageFile"].lastIndexOf("/") + 1;
+  if (value["imageFile"].includes("/")) lastIdx = value["imageFile"].lastIndexOf("/") + 1;
 
   pageDetailsObj[pageID]["name"] = value["imageFile"].slice(lastIdx, value["imageFile"].indexOf("."));
   if (pageID != "cover" && pageID != "credit" && pageID != "menu") {
