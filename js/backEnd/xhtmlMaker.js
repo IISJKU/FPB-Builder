@@ -272,6 +272,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         spine.push("..\\OEBPS\\xhtml\\" + element.title + "-txt.xhtml");
       }
     } else {
+      //element = element.replaceAll("/", "\\");
+
       //look at where the name should be cut!
       let i = element.lastIndexOf("\\");
       if (element.includes("/")) {
@@ -317,9 +319,16 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         element.toLowerCase().includes(".gif")
       ) {
         subFolder = "\\OEBPS\\images\\";
-        if (element.includes("\\notice\\")) {
+        if (element.includes("\\notice\\") || element.includes("/notice/")) {
+
+          
+
           subFolder = "\\OEBPS\\images\\notice\\";
+
           i = element.lastIndexOf("\\");
+          if(element.includes("/notice/")) i = element.lastIndexOf("/");
+
+          console.log(element);
         }
         contents.push(element);
       }
@@ -339,7 +348,8 @@ function createXHTMLFiles(fileArray, path, newDirName) {
       }
 
       relativePaths.push(relAdress);
-    }
+
+  }
   });
   tempFile = "";
 
