@@ -122,8 +122,6 @@ class FileImporter {
     ////////////////////////////////////////
     //this.dependencyList.found(name);
 
-    console.log(path);
-
     if (!this.missingDependencies.includes(path)) {
       this.missingDependencies.push(path);
       this.dependencyMap.set(name, path);

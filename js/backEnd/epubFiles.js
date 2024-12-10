@@ -297,26 +297,23 @@ function createContentFile(files, spineFiles) {
 
   files.forEach((filename) => {
     filename = path.normalize(filename);
-  
+
     let line = "";
-    
 
     let name = filename.substring(filename.lastIndexOf("||") + 1, filename.length);
     name = name.replaceAll("\\", "/");
-
 
     if (name.includes("/notice/")) {
       name = name.substring(name.lastIndexOf("/") + 1, name.length);
     } else {
       name = name.substring(name.lastIndexOf("/") + 1, name.length);
     }
-    
+
     /*
     if (name.includes("\\")) {
       name = name.substring(name.lastIndexOf("\\") + 1, name.length);
     } */
 
-    
     if (filename.includes(".css")) {
       line = '   <item id="' + name + '" href="css/' + name + '" media-type="text/css" />';
     } else if (filename.includes(".js")) {
@@ -326,12 +323,14 @@ function createContentFile(files, spineFiles) {
     } else if (filename.includes(".mp3")) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if (filename.includes(".jpg") || filename.includes(".jpeg")) {
-      if (filename.includes("\\notice") || filename.includes("/notice/") ) line = '   <item id="' + makeID(name) + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
+      if (filename.includes("\\notice") || filename.includes("/notice/"))
+        line = '   <item id="' + makeID(name) + '" href="images/notice/' + name + '" media-type="image/jpeg" />';
       else if (coverImage.includes(name)) {
         line = '   <item id="' + makeID(name) + '" href="images/' + name + '" media-type="image/jpeg" properties="cover-image" />';
       } else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/jpeg" />';
     } else if (filename.includes(".png")) {
-      if (filename.includes("\\notice") || filename.includes("/notice/") ) line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
+      if (filename.includes("\\notice") || filename.includes("/notice/"))
+        line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/png" />';
       else line = '   <item id="' + name + '" href="images/' + name + '" media-type="image/png" />';
     } else if (filename.includes(".svg")) {
       line = '   <item id="' + name + '" href="images/notice/' + name + '" media-type="image/svg+xml" />';
@@ -346,7 +345,7 @@ function createContentFile(files, spineFiles) {
 
   spineFiles.forEach((filename) => {
     let line = "";
-    let name = filename.replaceAll("\\", "/")
+    let name = filename.replaceAll("\\", "/");
     name = name.substring(name.lastIndexOf("/") + 1, name.length);
 
     let properties = "scripted svg";
@@ -460,12 +459,12 @@ function createPage00(page, firstPageNarration, fontNames) {
   if (firstPageNarration != undefined) firstPageNarration = firstPageNarration.substring(firstPageNarration.lastIndexOf(path.sep) + 1, firstPageNarration.length);
 
   if(page.imagesScripts != undefined && page.imagesScripts.Image != undefined) {
-    console.log("--------------------");
+
     
     if(fs.existsSync(page.imagesScripts.Image)){
       img_str = extractSVG(page.imagesScripts.Image);
       color_css = extractCSSfromSVG(page.imagesScripts.Image);
-      console.log(color_css);
+   
     }
     
   }

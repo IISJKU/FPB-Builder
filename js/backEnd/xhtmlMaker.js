@@ -46,7 +46,6 @@ function initialize(metad, pag, data) {
   options = data.options;
   fontNames = data.selectedFonts;
 
-
   if (typeof fontNames["Luciole"] != String) fontNames["Luciole"] = "\\imports\\fonts\\Luciole-Regular.ttf";
 
   //remove cover and credit from datastructure ;o
@@ -197,8 +196,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   //import the images needed for the settings / notice
   fileArray = fileArray.concat(pathsToImages(language));
 
-  //import js and css needed for the menu
-  fileArray = fileArray.concat(pathsToMenuDependencies());
+  //import js and css needed for the menu, replace files with new ones provided by us
+
+  fileArray = addDependencies(fileArray);
+  console.log(fileArray);
 
   let coverImage = cover.imagesScripts.Image[language];
   EPUBFileCreator.setCover(coverImage);
@@ -224,11 +225,12 @@ function createXHTMLFiles(fileArray, path, newDirName) {
 
     let fPath = __dirname + p;
     if (p.includes(":\\")) fPath = p;
-    let newPath = pathU.normalize(path + pathU.sep + newDirName + pathU.sep +"OEBPS"+ pathU.sep +"fonts" + pathU.sep + p.substring(p.lastIndexOf(symb, p.length)));
+    let newPath = pathU.normalize(
+      path + pathU.sep + newDirName + pathU.sep + "OEBPS" + pathU.sep + "fonts" + pathU.sep + p.substring(p.lastIndexOf(symb, p.length))
+    );
     fPath = pathU.normalize(fPath);
- 
-    
-    if(fPath.includes("/")) {
+
+    if (fPath.includes("/")) {
       fPath = fPath.replaceAll("\\", "/");
       fPath = fPath.replaceAll("//", "/");
     }
@@ -249,7 +251,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   fileArray.push(coverImage);
   fileArray.push(coverNarration);
 
-  fileArray = removeOldFiles(fileArray);
+  //fileArray = removeOldFiles(fileArray);
 
   let testStr = "";
   fileArray.forEach((element) => {
@@ -320,15 +322,10 @@ function createXHTMLFiles(fileArray, path, newDirName) {
       ) {
         subFolder = "\\OEBPS\\images\\";
         if (element.includes("\\notice\\") || element.includes("/notice/")) {
-
-          
-
           subFolder = "\\OEBPS\\images\\notice\\";
 
           i = element.lastIndexOf("\\");
-          if(element.includes("/notice/")) i = element.lastIndexOf("/");
-
-          console.log(element);
+          if (element.includes("/notice/")) i = element.lastIndexOf("/");
         }
         contents.push(element);
       }
@@ -341,15 +338,14 @@ function createXHTMLFiles(fileArray, path, newDirName) {
         relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length);
 
         if (!(element == "" || relAdress == "")) {
-          if(element.includes("/"))element = element.replaceAll("\\", "/");
-          if(relAdress.includes("/"))relAdress = relAdress.replaceAll("\\", "/");
+          if (element.includes("/")) element = element.replaceAll("\\", "/");
+          if (relAdress.includes("/")) relAdress = relAdress.replaceAll("\\", "/");
           fs.copyFileSync(pathU.normalize(element), pathU.normalize(relAdress));
         }
       }
 
       relativePaths.push(relAdress);
-
-  }
+    }
   });
   tempFile = "";
 
@@ -374,6 +370,49 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "content.opf", EPUBFileCreator.createContentFile(contents.concat(fonts), spine));
 
   FileSystemManager.makeFile(path + "/" + newDirName + "/OEBPS/", "toc.ncx", EPUBFileCreator.createTOC());
+}
+
+/**
+ *  Adds dependencies that are needed.
+ * Replaces old files with new ones, provided by us.
+ *
+ *  @param Arr
+ *  @returns Array
+ */
+function addDependencies(arr) {
+  let menuDep = pathsToMenuDependencies();
+  let nuArr = [];
+
+  //if a simmilar dependency gets imported, remove it
+
+  arr.forEach((el) => {
+    if (typeof el != "string") nuArr.push(el);
+    else {
+      let sep = "/";
+      if (el.includes("\\")) sep = "\\";
+
+      let found = false;
+
+      menuDep.forEach((mEl) => {
+        //console.log(mEl.substring(mEl.lastIndexOf(pathU.sep) + 1, mEl.length));
+        if (mEl.substring(mEl.lastIndexOf(pathU.sep) + 1, mEl.length) == el.substring(el.lastIndexOf(sep) + 1, el.length)) {
+          /*
+          console.log("------------------------------------------");
+          console.log(el.substring(el.lastIndexOf(sep) + 1, el.length));
+          console.log("------------------------------------------");
+          */
+
+          found = true;
+        }
+      });
+
+      if (!found) nuArr.push(el);
+    }
+  });
+
+  nuArr = nuArr.concat(menuDep);
+
+  return nuArr;
 }
 
 function removeOldFiles(arr) {
@@ -597,41 +636,40 @@ function pathsToImages(language) {
     "version04-nb.png",
     "version05-coul.png",
     "version05-nb.png",
-    "notice"+ pathU.sep + "image020.jpg",
-    "notice"+ pathU.sep + "image022.jpg",
-    "notice"+ pathU.sep + "image024.jpg",
-    "notice"+ pathU.sep + "image026.jpg",
-    "notice"+ pathU.sep + "image028.jpg",
-    "notice"+ pathU.sep + "image030.jpg",
-    "notice"+ pathU.sep + "image032.jpg",
-    "notice"+ pathU.sep + "image034.png",
-    "notice"+ pathU.sep + "image038.png",
-    "notice"+ pathU.sep + "image039.png",
-    "notice"+ pathU.sep + "image042.jpg",
-    "notice"+ pathU.sep + "image043.jpg",
-    "notice"+ pathU.sep + "image044.jpg",
-    "notice"+ pathU.sep + "image045.jpg",
-    "notice"+ pathU.sep + "image046.jpg",
-    "notice"+ pathU.sep + "image047.jpg",
-    "notice"+ pathU.sep + "image050.jpg",
-    "notice"+ pathU.sep + "image055.jpg",
-    "notice"+ pathU.sep + "image058.jpg",
-    "notice"+ pathU.sep + "image060.jpg",
-    "notice"+ pathU.sep + "image062.jpg",
-    "notice"+ pathU.sep + "image063.jpg",
-    "notice"+ pathU.sep + "image064.jpg",
-    "notice"+ pathU.sep + "image065.jpg",
-    "notice"+ pathU.sep + "image068.jpg",
-    "notice"+ pathU.sep + "image070.jpg",
-    "notice"+ pathU.sep + "image072.png",
-    "notice"+ pathU.sep + "image073.jpg",
-    "notice"+ pathU.sep + "home.svg",
-    "notice"+ pathU.sep + "logo_erasmusplus.svg"
+    "notice" + pathU.sep + "image020.jpg",
+    "notice" + pathU.sep + "image022.jpg",
+    "notice" + pathU.sep + "image024.jpg",
+    "notice" + pathU.sep + "image026.jpg",
+    "notice" + pathU.sep + "image028.jpg",
+    "notice" + pathU.sep + "image030.jpg",
+    "notice" + pathU.sep + "image032.jpg",
+    "notice" + pathU.sep + "image034.png",
+    "notice" + pathU.sep + "image038.png",
+    "notice" + pathU.sep + "image039.png",
+    "notice" + pathU.sep + "image042.jpg",
+    "notice" + pathU.sep + "image043.jpg",
+    "notice" + pathU.sep + "image044.jpg",
+    "notice" + pathU.sep + "image045.jpg",
+    "notice" + pathU.sep + "image046.jpg",
+    "notice" + pathU.sep + "image047.jpg",
+    "notice" + pathU.sep + "image050.jpg",
+    "notice" + pathU.sep + "image055.jpg",
+    "notice" + pathU.sep + "image058.jpg",
+    "notice" + pathU.sep + "image060.jpg",
+    "notice" + pathU.sep + "image062.jpg",
+    "notice" + pathU.sep + "image063.jpg",
+    "notice" + pathU.sep + "image064.jpg",
+    "notice" + pathU.sep + "image065.jpg",
+    "notice" + pathU.sep + "image068.jpg",
+    "notice" + pathU.sep + "image070.jpg",
+    "notice" + pathU.sep + "image072.png",
+    "notice" + pathU.sep + "image073.jpg",
+    "notice" + pathU.sep + "home.svg",
+    "notice" + pathU.sep + "logo_erasmusplus.svg"
   );
 
   for (let i = 0; i < a.length; i++) {
     a[i] = __dirname + pathU.sep + "templates" + pathU.sep + language.toLowerCase() + pathU.sep + "images" + pathU.sep + a[i];
-   
   }
   return a;
 }

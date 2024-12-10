@@ -52,7 +52,7 @@ class ipcMainManager {
           filters: [
             {
               name: "jpeg/jpg",
-              extensions: ["jpeg","jpg"],
+              extensions: ["jpeg", "jpg"],
             },
           ],
         })
@@ -147,7 +147,7 @@ class ipcMainManager {
           ],
         })
         .then((value) => {
-          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
+          if (value["filePaths"] == "" || value["filePaths"] == undefined || value["filePaths"][0] == "" || value["filePaths"][0] == undefined) return;
           let dependencyList = EPUBMaker.importImage(value["filePaths"][0]);
           this.window.webContents.send("imageLoaded", dependencyList);
         });
@@ -160,7 +160,7 @@ class ipcMainManager {
           properties: ["openFile"],
         })
         .then((value) => {
-          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
+          if (value["filePaths"] == "" || value["filePaths"] == undefined || value["filePaths"][0] == "" || value["filePaths"][0] == undefined) return;
           EPUBMaker.manuallySelectDependency(value["filePaths"][0]);
         });
     });
@@ -182,7 +182,7 @@ class ipcMainManager {
           ],
         })
         .then((value) => {
-          if (value["filePaths"] == '' || value["filePaths"] == undefined || value["filePaths"][0] == '' || value["filePaths"][0] == undefined) return;
+          if (value["filePaths"] == "" || value["filePaths"] == undefined || value["filePaths"][0] == "" || value["filePaths"][0] == undefined) return;
           this.window.webContents.send("fontSet", value.filePaths[0]);
         });
     });
