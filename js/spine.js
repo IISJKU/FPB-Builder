@@ -225,7 +225,8 @@ window.BRIDGE.onImageLoaded((value) => {
   $("#importImage").attr("data-path", value["imageFile"]);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
-
+  pageDetailsObj[pageID]["imagesScripts"]["Image"] = {};
+  pageDetailsObj[pageID]["imagesScripts"]["Image"] = value["imageFile"];
   let lastIdx = value["imageFile"].lastIndexOf("\\") + 1;
   if (value["imageFile"].includes("/")) lastIdx = value["imageFile"].lastIndexOf("/") + 1;
 
@@ -304,6 +305,8 @@ window.BRIDGE.onCoverLoaded((value, elemId, activeLang) => {
   addImageiframe(value["filePaths"][0], imgName);
   let pageID = $("#pageList .list-group-item.active").attr("id");
   let pageDetailsObj = parseSessionData("pageDetails");
+  pageDetailsObj[pageID]["imagesScripts"]["Image"] = {};
+  pageDetailsObj[pageID]["imagesScripts"]["Image"][activeLang] = {};
   pageDetailsObj[pageID]["imagesScripts"]["Image"][activeLang] = value["filePaths"][0];
   sessionStorage.setItem("pageDetails", JSON.stringify(pageDetailsObj));
 });
@@ -314,7 +317,7 @@ function deleteItem(mainItem, subItem, subSubItem) {
   let delParsedDet = parseSessionData("pageDetails");
   delParsedDet[selectedPage][mainItem][subItem] = "";
   if (subSubItem != "" || subSubItem != undefined) {
-    delete delParsedDet[selectedPage][mainItem][subSubItem];
+    delete delParsedDet[selectedPage][mainItem][subItem][subSubItem];
   } else {
     delete delParsedDet[selectedPage][mainItem][subItem];
   }
@@ -567,6 +570,7 @@ function createLangsCover(tbl, tbdy, pageId, section) {
     imageInput.setAttribute("placeholder", translateTxt("Browse"));
     imageInput.setAttribute("id", langs[i].toLowerCase() + "Cover");
     imageInput.value = cutOutName(colVal);
+    addImageiframe(colVal, imageInput.value);
     imageInput.setAttribute("data-path", colVal);
     imageInput.required = true;
     td.append(imageInput);
