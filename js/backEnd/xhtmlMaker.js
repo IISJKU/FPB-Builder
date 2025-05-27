@@ -118,6 +118,7 @@ function rewriteXHTMLFile(filePath) {
         lastPart = lastPart.substring(end + 1, lastPart.length);
 
         let name = line.substring(firstPart.length, tempLine.length - lastPart.length);
+
         let newName = "";
         let open = false;
 
@@ -130,13 +131,20 @@ function rewriteXHTMLFile(filePath) {
             newName = name[i] + newName;
           }
         }
+
+        newName = newName.substring(0, newName.lastIndexOf(".")).replaceAll(" ", "_") + newName.substring(newName.lastIndexOf("."), newName.length); //make sure file names dont include spaces
+
         if (newName.includes(".css")) {
           newName = "../css/" + newName;
         } else if (newName.includes(".js")) {
           newName = "../Misc/" + newName;
         } else if (newName.includes(".mp3")) {
           newName = "../audio/" + newName;
+        } else if (newName.includes(".wav")) {
+          newName = "../audio/" + newName;
         }
+
+        console.log(newName);
 
         if (firstPart.trim() != "") {
           tempLine = firstPart + activeTag + '="' + newName + '"' + lastPart;
@@ -226,7 +234,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     let fPath = __dirname + p;
     if (p.includes(":\\")) fPath = p;
     let newPath = pathU.normalize(
-      path + pathU.sep + newDirName + pathU.sep + "OEBPS" + pathU.sep + "fonts" + pathU.sep + p.substring(p.lastIndexOf(symb, p.length))
+      path + pathU.sep + newDirName + pathU.sep + "OEBPS" + pathU.sep + "fonts" + pathU.sep + p.substring(p.lastIndexOf(symb, p.length)).replaceAll(" ", "_")
     );
     fPath = pathU.normalize(fPath);
 
@@ -335,11 +343,12 @@ function createXHTMLFiles(fileArray, path, newDirName) {
       if (rewritten) {
         FileSystemManager.makeFile(relAdress, element.slice(i, element.length), tempFile);
       } else {
-        relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length);
+        relAdress = path + "\\" + newDirName + subFolder + element.slice(i, element.length).replaceAll(" ", "_");
 
         if (!(element == "" || relAdress == "")) {
           if (element.includes("/")) element = element.replaceAll("\\", "/");
           if (relAdress.includes("/")) relAdress = relAdress.replaceAll("\\", "/");
+
           fs.copyFileSync(pathU.normalize(element), pathU.normalize(relAdress));
         }
       }
@@ -510,7 +519,7 @@ function addFonts(element) {
           "  font-style: normal;\n" +
           "  font-variant-numeric: normal;\n" +
           '  src: url("../fonts/' +
-          link +
+          link.replaceAll(" ", "_") +
           '") format("truetype");\n' +
           "}\n";
       }
@@ -550,7 +559,7 @@ function importFonts(element, newPath, newDirName) {
       let symb = "\\";
       if (!path.includes(symb)) symb = "/";
 
-      let relPath = "../fonts/" + path.substring(path.lastIndexOf(symb) + 1, path.length);
+      let relPath = "../fonts/" + path.substring(path.lastIndexOf(symb) + 1, path.length).replaceAll(" ", "_");
       let firstBracketIndex = line.indexOf("(");
       let secondBracket = line.indexOf(")");
       //+ line.substring(secondBracket, line.length)

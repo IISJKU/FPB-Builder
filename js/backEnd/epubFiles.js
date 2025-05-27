@@ -46,6 +46,11 @@ function setMetadata(metadata) {
   contributors = metadata.contributors;
 }
 
+function makeNameID(str) {
+  str = str.replaceAll(/[^a-zA-Z0-9 ]/g, "");
+  return str.replaceAll(" ", "-");
+}
+
 function setOptions(opt) {
   options = opt;
 }
@@ -200,15 +205,15 @@ function createContentFile(files, spineFiles) {
       metaDataContents =
         metaDataContents +
         '   <dc:creator id="' +
-        author.replaceAll(" ", "-") +
+        makeNameID(author) +
         '">' +
         author +
         "</dc:creator>\n" +
         '   <meta property="role" refines="#' +
-        author.replaceAll(" ", "-") +
+        makeNameID(author) +
         '" scheme="marc:relators">aut</meta>\n' +
         '   <meta property="file-as" refines="#' +
-        author.replaceAll(" ", "-") +
+        makeNameID(author) +
         '">' +
         author +
         "</meta>\n" +
@@ -239,18 +244,18 @@ function createContentFile(files, spineFiles) {
       metaDataContents =
         metaDataContents +
         '   <dc:contributor id="' +
-        contributor.replaceAll(" ", "-") +
+        makeNameID(contributor) +
         '">' +
         contributor +
         '"</dc:contributor>\n' +
         '   <meta scheme="marc:relators" property="role" refines="#' +
-        contributor.replaceAll(" ", "-") +
+        makeNameID(contributor) +
         '">mrk</meta>\n' +
         '   <meta scheme="marc:relators" property="role" refines="#' +
-        contributor.replaceAll(" ", "-") +
+        makeNameID(contributor) +
         '">prg</meta>\n' +
         '   <meta refines="#' +
-        contributor.replaceAll(" ", "-") +
+        makeNameID(contributor) +
         '" property="file-as">' +
         contributor +
         "</meta>\n";
@@ -303,6 +308,8 @@ function createContentFile(files, spineFiles) {
     let name = filename.substring(filename.lastIndexOf("||") + 1, filename.length);
     name = name.replaceAll("\\", "/");
 
+    name = name.replaceAll(" ", "_");
+
     if (name.includes("/notice/")) {
       name = name.substring(name.lastIndexOf("/") + 1, name.length);
     } else {
@@ -320,7 +327,7 @@ function createContentFile(files, spineFiles) {
       line = '   <item id="' + name + '" href="Misc/' + name + '" media-type="application/javascript" />';
     } else if (filename.includes(".otf") || filename.includes(".ttf")) {
       line = '   <item id="' + name + '" href="fonts/' + name + '" media-type="application/vnd.ms-opentype" />';
-    } else if (filename.includes(".mp3")) {
+    } else if (filename.includes(".mp3") || filename.includes(".wav")) {
       line = '   <item id="' + name + '" href="audio/' + name + '" media-type="audio/mpeg" />';
     } else if (filename.includes(".jpg") || filename.includes(".jpeg")) {
       if (filename.includes("\\notice") || filename.includes("/notice/"))
@@ -345,6 +352,7 @@ function createContentFile(files, spineFiles) {
 
   spineFiles.forEach((filename) => {
     let line = "";
+    filename = filename.replaceAll(" ", "_");
     let name = filename.replaceAll("\\", "/");
     name = name.substring(name.lastIndexOf("/") + 1, name.length);
 
@@ -442,7 +450,7 @@ function extractCSSfromSVG(link) {
     }
   });
 
-  txt = '<link id="couleurCssSvg2" href="' + txt + '" rel="stylesheet" type="text/css" />';
+  if (txt != "") txt = '<link id="couleurCssSvg2" href="' + txt + '" rel="stylesheet" type="text/css" />';
 
   return txt;
 }
@@ -678,6 +686,9 @@ function createPageText(obj){
 
   let text = obj.text[language];
   let audio = obj.narration[language];
+  
+  audio = audio.substring(0, audio.lastIndexOf(path.delimiter))  + audio.substring(audio.indexOf(path.delimiter), audio.length).replaceAll(" ", "_");
+  console.log(audio);
   let title = obj.title;
 
   if(text == undefined) text = " ";
@@ -747,7 +758,7 @@ function createPageText(obj){
     '      </g>\n' +
     '    </svg>\n' +
     '    <audio preload="auto" id="monTexteAudio">\n' +
-    '      <source src="../audio/' + a + '" type="audio/mpeg" />\n' +
+    '      <source src="../audio/' + a + '" type="audio/mpeg" />\n'+
     '    </audio>\n';
   
   }

@@ -526,7 +526,7 @@ function createLangRows(tbl, tbdy, pageId, section) {
       narrInput.setAttribute("id", langs[i].toLowerCase() + "Narr");
       narrInput.value = cutOutName(colVal);
       narrInput.setAttribute("data-path", colVal);
-      if ($("#audioNarr").is(":checked") == true) narrInput.required = true;
+      if ($("#audioNarr").is(":checked") == true && pageId != "cover") narrInput.required = true;
       td.append(narrInput);
     } else {
       textElem = document.createElement("textarea");

@@ -1,10 +1,5 @@
 {
   "dependencies": {
-    "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.3",
-    "electron-squirrel-startup": "^1.0.1",
-    "jquery": "^3.7.1",
-    "jquery-ui-dist": "^1.13.2",
     "@electron-forge/cli": "^7.4.0",
     "@electron-forge/maker-deb": "^7.4.0",
     "@electron-forge/maker-rpm": "^7.4.0",
@@ -14,11 +9,16 @@
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron/fuses": "^1.8.0",
     "archiver": "^7.0.1",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "electron": "^29.3.3",
     "electron-dialog": "^2.0.0",
     "electron-json-storage": "^4.6.0",
+    "electron-squirrel-startup": "^1.0.1",
     "file-saver": "^2.0.5",
     "filesaver": "^0.0.13",
+    "jquery": "^3.7.1",
+    "jquery-ui-dist": "^1.13.2",
     "jszip": "^3.10.1"
   },
   "name": "fpb-builder",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
     "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-dmg": "^7.6.0",
     "@electron-forge/maker-rpm": "^7.4.0",
     "@electron-forge/maker-squirrel": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",

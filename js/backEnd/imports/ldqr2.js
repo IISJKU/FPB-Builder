@@ -2,6 +2,48 @@ var ldqr = {};
 function ldqrBaseController() {
   this.initConfigurables(), this.initComponents(), this.appliqueLocalForage();
 }
+function play() {
+  var start = document.getElementsByClassName("startHere");
+
+  for (let i = 0; i < start.length; i++) {
+    var str = start[i].attributes.getNamedItem("begin").value;
+    var delay = str.substring(str.lastIndexOf(" "), str.length).replaceAll("s", "");
+    delay = parseFloat(delay);
+    console.log(delay);
+
+    if (start[i].beginElement) {
+      if (delay == 0 || delay == "0") start[i].beginElement();
+      else
+        setTimeout(() => {
+          start[i].beginElement();
+        }, delay * 1000);
+    }
+  }
+
+  var audios = document.getElementsByClassName("son-animation");
+
+  for (var x = 0; x < audios.length; x++) {
+    let vol = audios[x].id.split("_")[1];
+    if (vol[0] == "0") vol = parseFloat("0." + parseInt(vol));
+    console.log(vol);
+    audios[x].volume = vol;
+
+    var del = audios[x].id.split("_")[2];
+    if (del != "0") del = del[0] + "." + del.substring(1, del.length);
+    del = parseFloat(del) * 1000;
+
+    console.log("del");
+    console.log(del);
+    audios[x].volume = vol;
+
+    let audio = audios[x];
+
+    setTimeout(() => {
+      console.log("play audio!");
+      audio.play();
+    }, del);
+  }
+}
 function initVersionImage() {
   for (var e = ldqr.DEGRES_APERCU, t = e.length, o = 0; o !== t; o++)
     for (var a = document.querySelectorAll("." + e[o]), n = a.length, s = 0; s !== n; s++) a[s].addClassName("notDisplay");
