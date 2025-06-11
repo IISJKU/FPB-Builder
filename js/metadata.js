@@ -34,7 +34,7 @@ let bookDetails = {
   PublishingDate: [],
   Copyright: "",
   AccessMode: [],
-  AccessModeSufficient: [],
+  AccessModeSufficient: {},
   AccessibilityFeature: [],
   AccessibilityHazard: [],
   AccessibilitySummary: {},
@@ -222,7 +222,7 @@ function createTable(tableTitle, elemID, itemVal, langChange) {
     input.setAttribute("type", "text");
     input.setAttribute("class", "form-control");
     input.value = bookDetObj[itemVal][val];
-    if (!reqMeta.includes(itemVal) || (itemVal == "AccessModeSufficient" && ($("#selectedBox #AccessModeSufficient tbody tr").length > 0 || bookDetObj["AccessModeSufficient"].length > 0) && val != 0)) {
+    if (!reqMeta.includes(itemVal) || (itemVal == "AccessModeSufficient" && ($("#selectedBox #AccessModeSufficient tbody tr").length > 0 || Object.keys(bookDetObj["AccessModeSufficient"]).length > 0) && val != 1)) {
       createIcon(td, "bi bi-trash3-fill", translateTxt("delete entry"));
     }else{
       input.required = true;
