@@ -13,16 +13,10 @@ class ipcMainManager {
   window;
   constructor(window) {
     this.window = window;
-    ipcMain.on("selectDirectory", () => {
-      EPUBMaker.setDirectory(
-        dialog
-          .showOpenDialog({
-            properties: ["openDirectory"],
-          })
-          .then((value) => {
-            this.window.webContents.send("directorySet", value);
-          })
-      );
+    ipcMain.on("selectDirectory", async () => {
+      const value = await dialog.showOpenDialog({ properties: ["openDirectory"] });
+      EPUBMaker.setDirectory(value);
+      this.window.webContents.send("directorySet", value);
     });
     ipcMain.on("narrations", (event, defPath, element, lang) => {
       dialog
