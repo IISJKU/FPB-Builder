@@ -497,12 +497,19 @@ function createPage00(page, firstPageNarration, fontNames) {
   str = str.replaceAll("$MENUSVG", img_str);
   str = str.replaceAll("<!-- color css2 -->", color_css);
 
+  /*
+     This feature keeps breaking now, ill leave this for later
+
+     
+    let numButtons = 5 // get this from the frontend!! 
 
   //split string, add buttons in, depending on number
   var t = str.split("\n");
   str = "";
 
-  let numButtons = 2 // get this from the frontend!! 
+  
+
+ 
 
   let open1 = false;
   let open2 = true;
@@ -529,7 +536,7 @@ function createPage00(page, firstPageNarration, fontNames) {
 
 
   })
-  
+   */
 
 
   let fontText = "";
