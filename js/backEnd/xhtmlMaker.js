@@ -79,6 +79,8 @@ function rewriteXHTMLFile(filePath) {
 
   let ariaSearchActive = false;
 
+  let alt;
+
   fileSplit.forEach((line) => {
     let tempLine = line;
 
@@ -168,12 +170,74 @@ function rewriteXHTMLFile(filePath) {
 
     if (ariaSearchActive && line.includes("aria-label")) {
       ariaSearchActive = false;
-      tempLine =
-        line.substring(0, line.indexOf('"', line.indexOf("aria-label")) + 1) + altText.get(filePath) + line.substring(line.lastIndexOf('"'), line.length);
+      alt = altText.get(filePath);
+      tempLine = line.substring(0, line.indexOf('"', line.indexOf("aria-label")) + 1) + alt + line.substring(line.lastIndexOf('"'), line.length);
     }
 
     tempFile = tempFile + tempLine + "\n";
   });
+
+  const imgAltText = {
+    EN: {
+      colAria: "Color Button",
+      bttnPlay: "Play animation",
+      descrBttns: "Choose how complex the image is",
+      bttnAlt1: "Complexity 1",
+      bttnAlt2: "Complexity 2",
+      bttnAlt3: "Complexity 3",
+      bttnAlt4: "Complexity 4",
+      bttnAlt5: "Complexity 5",
+    },
+    FR: {
+      colAria: "Bouton de couleur",
+      bttnPlay: "Lire l’animation",
+      descrBttns: "Choisissez la complexité de l’image",
+      bttnAlt1: "Complexité 1",
+      bttnAlt2: "Complexité 2",
+      bttnAlt3: "Complexité 3",
+      bttnAlt4: "Complexité 4",
+      bttnAlt5: "Complexité 5",
+    },
+    DE: {
+      colAria: "Farbtaste",
+      bttnPlay: "Animation abspielen",
+      descrBttns: "Wähle die Bildkomplexität",
+      bttnAlt1: "Komplexität 1",
+      bttnAlt2: "Komplexität 2",
+      bttnAlt3: "Komplexität 3",
+      bttnAlt4: "Komplexität 4",
+      bttnAlt5: "Komplexität 5",
+    },
+    LIT: {
+      colAria: "Spalvos mygtukas",
+      bttnPlay: "Paleisti animaciją",
+      descrBttns: "Pasirinkite paveikslėlio sudėtingumą",
+      bttnAlt1: "Sudėtingumas 1",
+      bttnAlt2: "Sudėtingumas 2",
+      bttnAlt3: "Sudėtingumas 3",
+      bttnAlt4: "Sudėtingumas 4",
+      bttnAlt5: "Sudėtingumas 5",
+    },
+    IT: {
+      colAria: "Pulsante colore",
+      bttnPlay: "Avvia animazione",
+      descrBttns: "Scegli la complessità dell'immagine",
+      bttnAlt1: "Complessità 1",
+      bttnAlt2: "Complessità 2",
+      bttnAlt3: "Complessità 3",
+      bttnAlt4: "Complessità 4",
+      bttnAlt5: "Complessità 5",
+    },
+  };
+
+  tempFile = tempFile.replaceAll("{altTextImage}", alt);
+  tempFile = tempFile.replaceAll("{colAria}", imgAltText[language]["colAria"]);
+  tempFile = tempFile.replaceAll("{bttnPlay}", imgAltText[language]["bttnPlay"]);
+  tempFile = tempFile.replaceAll("{descrBttns}", imgAltText[language]["descrBttns"]);
+
+  for (var i = 0; i < 5; i++) {
+    tempFile = tempFile.replaceAll("{bttnAlt" + (i + 1) + "}", imgAltText[language]["bttnAlt" + (i + 1)]);
+  }
 }
 
 function replaceOldFiles(s) {
@@ -221,11 +285,15 @@ function createXHTMLFiles(fileArray, path, newDirName) {
   FileSystemManager.makeFile(
     path + "\\" + newDirName + "\\OEBPS\\xhtml\\",
     "cover.xhtml",
-    EPUBFileCreator.createCover(metadata.title[language], coverImage, "Buchdeckel", coverNarration)
+    EPUBFileCreator.createCover(metadata.title[language], coverImage, cover.alt[language], coverNarration)
   );
   spine.push("cover.xhtml");
 
   fonts = fonts.concat(pathsToFonts());
+
+  console.log("!!!!!!!!!!!!!!!!!!!!!!");
+  console.log(cover.alt);
+  console.log(pages);
 
   fonts.forEach((p) => {
     let symb = "\\";
@@ -453,7 +521,7 @@ function rewriteFontSection(element) {
 
   fileSplit.forEach((line) => {
     tempOpen = true;
-    if (line.includes("(ldqr.FONT_CSS_CLASS")) {
+    if (line.includes("ldqr.FONT_CSS_CLASS = [")) {
       let t = "";
       for (const [key, value] of Object.entries(fontNames)) {
         t = t + '"ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '",';
@@ -465,7 +533,7 @@ function rewriteFontSection(element) {
       tempOpen = false;
     }
 
-    if (line.includes("function choixFontName(e)")) {
+    if (line.includes("function choixFontName(d)")) {
       inFunction = true;
     }
 
@@ -483,7 +551,7 @@ function rewriteFontSection(element) {
             '      case "' +
             key.replaceAll(" ", "") +
             '":\n' +
-            '        o = "ldqr-font-' +
+            '        className = "ldqr-font-' +
             key.replaceAll(" ", "").toLowerCase() +
             '";\n' +
             "        break; \n" +

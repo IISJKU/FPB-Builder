@@ -2,6 +2,22 @@ var ldqr = {};
 function ldqrBaseController() {
   this.initConfigurables(), this.initComponents(), this.appliqueLocalForage();
 }
+
+var numButtons = 5;
+
+function calcNumButtons() {
+  for (let i = 0; i < 5; i++) {
+    let el = document.getElementById("version0" + (1 + i));
+
+    if (el == null) {
+      numButtons = i;
+      break;
+    }
+  }
+
+  console.log("There are " + numButtons + " Buttons.");
+}
+
 function play() {
   var start = document.getElementsByClassName("startHere");
 
@@ -49,12 +65,42 @@ function initVersionImage() {
     for (var a = document.querySelectorAll("." + e[o]), n = a.length, s = 0; s !== n; s++) a[s].addClassName("notDisplay");
 }
 function ldqrBoutonBaseController() {
-  for (var e = document.querySelectorAll(ldqr.CONTROLE_BOUTON_CSS_SELECTOR), t = e.length - 1; t >= 0; t--) new ldqrBoutonController(e[t]);
+  var mesBoutons = document.querySelectorAll(ldqr.CONTROLE_BOUTON_CSS_SELECTOR),
+    mbLength = mesBoutons.length,
+    i = mbLength - 1;
+
+  for (; i >= 0; i--) {
+    new ldqrBoutonController(mesBoutons[i]);
+  }
 }
-function ldqrBoutonController(e) {
-  this.el = e;
-  for (var t = 0; t < ldqr.START_EVENT.length; t++) this.el.addEventListener(ldqr.START_EVENT[t], this, !1);
-  this.el.addEventListener("keydown", this, !1);
+function ldqrBoutonController(element) {
+  this.el = element;
+  this.el.addEventListener("mousedown", this, { passive: false, capture: false });
+  this.el.addEventListener("mouseup", this, { passive: false, capture: false });
+  this.el.addEventListener("touchstart", this, { passive: false, capture: false });
+  this.el.addEventListener("touchend", this, { passive: false, capture: false });
+
+  // pour a11y
+  // this.el.addEventListener("keydown", this, { passive: false, capture: false });
+}
+/**
+ * Description placeholder
+ * @date 24/03/2023 - 16:32:28
+ *
+ * @param {*} d
+ */
+function activerDesactiverBoutonDYSchoix(d) {
+  // console.log(d);
+  // check(italiqueBool,grasBool,soulignementBool,muetBool)
+
+  ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-active").then(function (dys) {
+    if (dys === "activerDYS") {
+      document.body.classList.add("dys");
+      // check(d[0], d[1], d[2], true);
+    } else {
+      document.body.classList.remove("dys");
+    }
+  });
 }
 (ldqr.CHANGE_PAGE_CSS_SELECTOR = ".change-page"),
   (ldqr.VITESSE_SON_VOIX = 1),
@@ -85,162 +131,327 @@ function ldqrBoutonController(e) {
     null == t && (t = !this.hasClassName(e)), this[t ? "addClassName" : "removeClassName"](e);
   }),
   (ldqrBaseController.prototype.initConfigurables = function () {
-    var e = document.getElementById("player");
-    e && e.pause(),
-      (ldqr.SVG_POS = function () {
-        var e = document.getElementById("Emile_Image_SVG"),
-          t = e.getBoundingClientRect(),
-          o = e.getAttribute("viewBox");
-        return { left: t.left - o.split(" ")[0], top: t.top - o.split(" ")[1] };
-      }),
-      (ldqr.POSITION_LDQR_ACTIF = {
-        p01fig: {
-          Emile: [210, 381, 290, 315],
-          ChauveSouris: [120, 310, 260, 240],
-          vase1Decor1: [205, 533, 108, 140],
-          vase2Decor2: [205, 563, 108, 140],
-          table1Decor1: [95, 600, 600, 220],
-          table2Decor2: [95, 600, 600, 220],
-          lampeDecor1: [543, 223, 78, 380],
-          lampeDecor2: [543, 350, 78, 460],
+    ldqr.VITESSE_SON_VOIX = 1;
+
+    // Init LocalForage pour les sauvegardes
+    ldqr.DATA_LOCAL_FORAGE = localforage.createInstance({
+      name: "ldqr_emile",
+    });
+    ldqr.VERSION_IMAGE_EN_COURS = "";
+    ldqr.DATA_LOCAL_FORAGE.getItem("def-image").then(function (d) {
+      d = d || "version01";
+      ldqr.VERSION_IMAGE_EN_COURS = d;
+    });
+    // classe CSS pour les objets interactifs
+    ldqr.CONTROLE_ACTIF_CSS_SELECTOR = ".ldqr-actif";
+    // classe CSS pour les boutons de choix
+    ldqr.CONTROLE_BOUTON_CSS_SELECTOR = ".svg-bouton,#boutonCouleur,#boutonBW,#boutonVersion";
+
+    // Tap threshold value, in pixels
+    ldqr.TAP_THRESHOLD = 10;
+
+    // durée (en mms) qu'il faut pour faire apparaître le fenêtre de zoom
+    ldqr.DELTA_TIME = 300;
+
+    // div où se trouve le zoom (svg)
+    ldqr.ZOOM_ELEMENT_ZONE_CSS_SELECTOR = ".zoomElt";
+
+    // Options pour SVGPanZoom
+    ldqr.ZOOM_OPTIONS = {
+      // Zoom Params, set false to disable zoom
+
+      initialViewBox: {
+        x: 0, // the top-left corner X coordinate
+        y: 0, // the top-left corner Y coordinate
+        width: 748, // the width of the viewBox
+        height: 1024, // the height of the viewBox
+      },
+      limits: 50,
+      // Time(milliseconds) to use for animations. Set 0 to remove the animation
+      animationTime: 250,
+      zoom: {
+        // Zoom Factor, viewBox values are multiplied or divided based on this factor to zoom on each step
+        // Formula: ZoomOut => newWidth = width / (1 + factor), ZoomIn => newWidth = width * (1 + factor)
+        factor: 0.25,
+        // Zoom Limits
+        // minZoom:0.1 => zoom out up to 0.1x
+        minZoom: 1,
+        // maxZoom:5 => zoom in upto 5x
+        maxZoom: 50,
+        // Event related flags
+        callback: function (multiplier) {
+          // console.log(multiplier);
         },
-        p02fig: { ChauveSouris: [0, 330, 680, 395] },
-        p03fig: { Emile: [15, 330, 600, 355] },
-        p04fig: { ChauveSouris: [212, 102, 395, 800] },
-        p05fig: { Emile: [245, 457, 348, 300], Coussin1: [56, 403, 300, 150] },
-        p06fig: { Emile: [262, 474, 348, 300], Coussin: [190, 358, 260, 130], Manique: [568, 481, 140, 70] },
-        p07fig: {
-          CS1Grotte: [302, 569, 50, 100],
-          CS2Grotte: [409, 448, 50, 100],
-          CS3Grotte: [481, 540, 50, 100],
-          CS4Grotte: [552, 688, 50, 100],
-          CS5Grotte: [642, 569, 30, 60],
+      },
+    };
+
+    // ldqr.DEGRES_APERCU = ["version01", "version02", "version03", "version04", "version05"];
+    ldqr.COULEURS_FOND_CSS_CLASS = [
+      "ldqr-couleur-fond-blanc",
+      "ldqr-couleur-fond-gris",
+      "ldqr-couleur-fond-neg",
+      "ldqr-couleur-fond-beige",
+      "ldqr-couleur-fond-jaune",
+    ];
+
+    // noms des classes CSS pour les noms de polices
+    // prettier-ignore
+    ldqr.FONT_CSS_CLASS = ["ldqr-font-arialblack", "ldqr-font-luciole", "ldqr-font-luciolebold", "ldqr-font-opendyslexicmonospace", "ldqr-font-verdana", "ldqr-font-verdanabold",];
+    ldqr.FONT_CASSE_CSS_CLASS = ["ldqr-font-majuscule", "ldqr-font-minuscule"];
+    // noms des classes CSS pour la taille de la police
+    ldqr.FONT_SIZE_CSS_CLASS = ["ldqr-font-size-26", "ldqr-font-size-24", "ldqr-font-size-20"];
+
+    // noms des classes CSS pour l'interlignage
+    ldqr.FONT_INTERLIGNE_CSS_CLASS = ["ldqr-interligne-1", "ldqr-interligne-2", "ldqr-interligne-3"];
+
+    // noms des classes CSS pour l'espacement des mots
+    ldqr.FONT_SPACE_WORD_CSS_CLASS = ["ldqr-space-word-1", "ldqr-space-word-2", "ldqr-space-word-3"];
+    // noms des classes CSS pour l'espacement des caractères
+    ldqr.FONT_SPACE_CAR_CSS_CLASS = ["ldqr-space-car-1", "ldqr-space-car-2", "ldqr-space-car-3"];
+    // noms des classes CSS pour l'espacement des lignes
+    ldqr.FONT_SPACE_LINE_CSS_CLASS = ["ldqr-space-line-1", "ldqr-space-line-2", "ldqr-space-line-3"];
+
+    ldqr.MON_AD = document.getElementById("maDescriptionAudio");
+    ldqr.MON_AUDIO = document.getElementById("monTexteAudio");
+    ldqr.PAUSE_AUDIO = document.getElementById("pauseAudio");
+    ldqr.PLAY_AUDIO = document.getElementById("playAudio");
+
+    if (ldqr.MON_AUDIO) {
+      ldqr.MON_AUDIO.addEventListener(
+        "ended",
+        function () {
+          retourAllOpacity();
+          ldqr.PAUSE_AUDIO.classList.add("notDisplay");
         },
-        p08fig: {
-          Vase1: [86, 606, 125, 150],
-          Vase2: [86, 606, 125, 150],
-          Emile: [251, 341, 230, 135],
-          Coussin1: [159, 353, 140, 120],
-          Coussin2: [450, 340, 170, 130],
-        },
-        p09fig: {
-          CS: [68, 5, 295, 520],
-          Emile: [346, 5, 295, 540],
-          Coussin1: [17, 744, 270, 180],
-          Coussin2: [445, 710, 240, 160],
-          Vase1: [341, 718, 125, 150],
-          Vase2: [341, 718, 125, 150],
-        },
-        p10fig: { Emile: [166, 572, 150, 150], Vase1: [129, 832, 125, 150], Vase2: [129, 832, 125, 150] },
-        p11fig: {
-          Emile: [273, 745, 150, 240],
-          Vase1: [665, 780, 70, 80],
-          Vase2: [665, 780, 70, 80],
-          Lampe1: [496, 510, 90, 320],
-          Chauffage: [495, 672, 150, 150],
-          Meuble: [660, 462, 125, 370],
-          Table1: [468, 813, 300, 150],
-          Table2: [468, 813, 300, 150],
-        },
-        p12fig: {
-          Emile: [271, 534, 300, 300],
-          Lampe1: [185, 255, 150, 600],
-          Lampe2: [185, 255, 150, 600],
-          Chauffage1: [46, 520, 220, 220],
-          Chauffage2: [46, 560, 220, 220],
-        },
-        p13fig: {
-          Emile1: [40, 391, 520, 520],
-          CSZoomEtape3: [394, 350, 130, 260],
-          Vase1: [373, 264, 70, 200],
-          Vase2: [665, 780, 70, 80],
-          Souris: [103, 600, 140, 90],
-        },
-        p14fig: { CS0: [577, 448, 50, 100], Emile: [373, 460, 250, 250], Coussin1: [46, 524, 220, 200], Coussin2: [472, 530, 220, 200] },
-        p15fig: { CS2Grand: [-138, 440, 340, 237], Moustique: [173, 577, 100, 100] },
-        p16fig: { Manique: [263, 511, 110, 110], Emile: [373, 375, 210, 210], Coussin1: [69, 417, 220, 200], Coussin2: [501, 410, 220, 200] },
-        p17fig: { Manique: [263, 511, 110, 110], Emile: [373, 375, 210, 210], Coussin1: [69, 417, 220, 200], Coussin2: [501, 410, 220, 200] },
-        p18fig: { Manique: [95, 573, 200, 200], Emile: [175, 264, 320, 405], Coussin: [431, 300, 360, 360] },
-        p19fig: { Emile: [130, 330, 400, 400], Coussin: [400, 360, 360, 360] },
-        p20fig: { Emile: [325, 320, 300, 300], Coussin1: [23, 390, 200, 200], Coussin2: [440, 410, 200, 200] },
-        p21fig: { Pieuvre: [284, 369, 680, 285] },
+        { passive: false, capture: false }
+      );
+    }
+    var retourPage = document.getElementById("lienPage");
+    // changement page
+    if (retourPage) {
+      var fondBlancLienPage = document.getElementById("fondBlancLienPage");
+      ldqr.DATA_LOCAL_FORAGE.getItem("home-location").then(function (d) {
+        if (d) {
+          retourPage.classList.remove("notDisplay");
+          retourPage.setAttribute("data-retourPage", d);
+          fondBlancLienPage.classList.remove("notDisplay");
+        } else {
+          retourPage.classList.add("notDisplay");
+          fondBlancLienPage.classList.add("notDisplay");
+        }
       });
-    for (var t = document.querySelectorAll("svg"), o = 0; o !== t.length; o++)
-      for (var a = ["touchstart", "mousedown"], n = 0; n != a.length; n++)
-        t[o].addEventListener(a[n], function (e) {
-          var t = document.querySelectorAll(".opacity1,.opacity02");
-          for (k = 0; k !== t.length; k++) t[k].removeClassName("opacity1"), t[k].removeClassName("opacity02");
-          e.stopPropagation(), e.preventDefault();
-        });
-    (ldqr.DATA_LOCAL_FORAGE = localforage.createInstance({ name: "ldqr_emile_test" })),
-      (ldqr.CONTROLE_ACTIF_CSS_SELECTOR = ".ldqr-actif"),
-      (ldqr.CONTROLE_BOUTON_CSS_SELECTOR = ".svg-bouton,#boutonCouleur,#boutonBW,#boutonVersion"),
-      (ldqr.TAP_THRESHOLD = 10),
-      (ldqr.DELTA_TIME = 300),
-      (ldqr.ZOOM_ELEMENT_ZONE_CSS_SELECTOR = ".zoomElt"),
-      (ldqr.ZOOM_OPTIONS = {
-        initialViewBox: { x: 0, y: 0, width: 748, height: 1024 },
-        limits: 50,
-        animationTime: 0,
-        zoom: { factor: 0.25, minZoom: 1, maxZoom: 50, callback: function (e) {} },
-      }),
-      (ldqr.DEGRES_APERCU = ["version01", "version02", "version03", "version04", "version05"]),
-      (ldqr.COULEURS_FOND_CSS_CLASS = [
-        "ldqr-couleur-fond-blanc",
-        "ldqr-couleur-fond-gris",
-        "ldqr-couleur-fond-neg",
-        "ldqr-couleur-fond-beige",
-        "ldqr-couleur-fond-jaune",
-      ]),
-      (ldqr.TEXTE_SELECT = ["texteSeul", "imageSeule", "texteImage"]),
-      (ldqr.TXT_BOUTON_TOGGLE_TEXTE = ["Image seule", "Texte et image"]),
-      (ldqr.FONT_CSS_CLASS = ["ldqr-font-luciole", "ldqr-font-verdana", "ldqr-font-arial-black", "ldqr-font-dys", "ldqr-font-arial"]),
-      (ldqr.FONT_SIZE_CSS_CLASS = ["ldqr-font-size-26", "ldqr-font-size-24", "ldqr-font-size-20"]),
-      (ldqr.FONT_INTERLIGNE_CSS_CLASS = ["ldqr-interligne-1", "ldqr-interligne-2", "ldqr-interligne-3"]),
-      (ldqr.FONT_SPACE_WORD_CSS_CLASS = ["ldqr-space-word-1", "ldqr-space-word-2", "ldqr-space-word-3"]),
-      (ldqr.FONT_CASSE_CSS_CLASS = ["ldqr-font-majuscule", "ldqr-font-minuscule"]),
-      (ldqr.FONT_SPACE_CAR_CSS_CLASS = ["ldqr-space-car-1", "ldqr-space-car-2", "ldqr-space-car-3"]),
-      (ldqr.FONT_SPACE_LINE_CSS_CLASS = ["ldqr-space-line-1", "ldqr-space-line-2", "ldqr-space-line-3"]),
-      (ldqr.DEFERRED_EVENT_DELAY = 1e3);
+    }
+    var zone2texte = document.querySelector("#zone2texte");
+    if (zone2texte) {
+      var zone2texteDIV = zone2texte.querySelector(".texte");
+      var paddingBottom = parseFloat(getComputedStyle(zone2texteDIV, null)["padding-bottom"]);
+      var texteClone = document.querySelector("#foreignClone .texte");
+
+      var pageBefore = document.querySelector("#pageBefore");
+      var pageAfter = document.querySelector("#pageAfter");
+      var pageBeforeXHTML = document.querySelector("#pageBeforeXHTML");
+      var pageAfterXHTML = document.querySelector("#pageAfterXHTML");
+
+      var resizeObserver = new ResizeObserver(function (entries) {
+        for (var i = 0; i !== entries.length; i++) {
+          var entry = entries[i];
+          if (entry.contentBoxSize) {
+            if (entry.contentBoxSize[0]) {
+              var Clone = entries[0].target;
+
+              // NBPAGE = Math.trunc((cloneTaille[1] + NBPAGE * paddingBottom) / z2tHeight);
+              NBPAGE = _ajoutDataPage(Clone, zone2texte, zone2texteDIV, paddingBottom);
+
+              // debug.innerHTML = 'NbPage: ' + NBPAGE + ' chatPageSvg: ' + chatPageSvg;
+
+              if (chatPageSvg > NBPAGE) {
+                chatPageSvg = NBPAGE;
+              }
+              _affichepage(pageAfter, pageBefore, chatPageSvg, zone2texteDIV, pageAfterXHTML, pageBeforeXHTML);
+            }
+          }
+        }
+      });
+      resizeObserver.observe(texteClone);
+    }
+
+    /********************* */
+    smils = document.querySelectorAll('[data-type="smil"]');
+
+    for (var i = 0; i !== smils.length; i++) {
+      var elt = smils[i];
+
+      elt.addEventListener(
+        "playoverlay",
+        function (e) {
+          var interval1 = this.dataset.interval1;
+          var interval2 = this.dataset.interval2;
+          var index = this.dataset.index;
+          var element = this;
+
+          if (interval1 >= ldqr.MON_AUDIO.currentTime * 1000 && !element.classList.contains("notDisplay")) {
+            // active
+            nIntervId[index] = setTimeout(function () {
+              element.classList.add("-epub-media-overlay-active");
+
+              if (element.tagName.toLowerCase() !== "span") {
+                triggerMouseEvent(element, "mousedown");
+                triggerMouseEvent(element, "mouseup");
+              }
+
+              try {
+                chatPageSvg = element.children[0].dataset.page;
+                _affichepage(pageAfter, pageBefore, chatPageSvg, zone2texteDIV, pageAfterXHTML, pageBeforeXHTML);
+              } catch (error) {
+                console.log(error);
+              }
+
+              // triggerMouseEvent(parent, "click");
+            }, interval1 - ldqr.MON_AUDIO.currentTime * 1000);
+            // retire
+          }
+          if (interval2 >= ldqr.MON_AUDIO.currentTime * 1000) {
+            nIntervId2[index] = setTimeout(function () {
+              element.classList.remove("-epub-media-overlay-active");
+            }, interval2 - ldqr.MON_AUDIO.currentTime * 1000);
+          }
+        },
+        false
+      );
+      elt.addEventListener(
+        "stopoverlay",
+        function (e) {
+          console.log("stopOverlay " + nIntervId);
+          // clearTimeout(nIntervId[i]);
+          // clearTimeout(nIntervId2[i]);
+        },
+        false
+      );
+    }
+
+    // Bouton description
+    var text = document.getElementById("groupeImage");
+    ldqr.MON_AD = document.getElementById("maDescriptionAudio");
+    if (ldqr.MON_AD) {
+      ldqr.MON_AD.addEventListener(
+        "ended",
+        function (e) {
+          var pause = document.getElementById("pauseDescription");
+          pause.classList.add("notDisplay");
+        },
+        false
+      );
+    }
+    if (text) {
+      if (ldqr.IS_SPEECHSYNTHESIS && !ldqr.MON_AD) {
+        text = text.getAttribute("aria-label");
+        var pauseDescription = document.getElementById("pauseDescription");
+        var utterance = new SpeechSynthesisUtterance(text);
+        utterance.pitch = 1;
+        utterance.lang = "fr-FR";
+        var controls = ["playDescription", "pauseDescription"];
+        speechSynthesis.cancel();
+        utterance.paused = false;
+        for (var i = 0; i < controls.length; i++) {
+          var control = controls[i];
+          var button = document.getElementById(control);
+          button.addEventListener("touchend", speak, true);
+          button.addEventListener("mouseup", speak, true);
+          // button.addEventListener('click', speak, true);
+        }
+
+        function speak(e) {
+          e.preventDefault();
+          var tts = this.id;
+
+          switch (tts) {
+            case "playDescription":
+              utterance.paused ? speechSynthesis.resume() : speechSynthesis.speak(utterance);
+              break;
+
+            case "pauseDescription":
+              speechSynthesis.pause();
+              utterance.paused = true;
+              break;
+
+            case "stop":
+              speechSynthesis.cancel();
+              utterance.paused = false;
+              break;
+
+            default:
+              console.log("Eh merde. Ça a buggé.");
+          }
+        }
+
+        utterance.onend = function (e) {
+          pauseDescription.classList.add("notDisplay");
+
+          utterance.paused = false; // Back to default
+        };
+        utterance.onboundary = function (event) {
+          console.log(event);
+        };
+      } else if (!ldqr.IS_SPEECHSYNTHESIS && !ldqr.MON_AD) {
+        var maDescriptionPlay = document.getElementById("maDescriptionPlay");
+        var fondMaDescriptionPlay = document.getElementById("fondMaDescriptionPlay");
+        if (maDescriptionPlay) {
+          maDescriptionPlay.remove();
+          fondMaDescriptionPlay.remove();
+        }
+      }
+    }
+
+    NBPAGE = 0;
+    var monAudio = document.getElementById("player");
+    if (monAudio) {
+      // monAudio.playbackRate = 1.2;
+      monAudio.pause();
+    }
+
+    // Touch SVG retire opacité si pas actif et replace opacity1 si existe
+    var mesSvg = document.querySelectorAll("svg");
+    for (var i = 0; i !== mesSvg.length; i++) {
+      mesSvg[i].addEventListener("mousedown", EventElementStart, { passive: false, capture: false });
+      mesSvg[i].addEventListener("mouseup", EventElementEnd, { passive: false, capture: false });
+      mesSvg[i].addEventListener("touchstart", EventElementStart, { passive: false, capture: false });
+      mesSvg[i].addEventListener("touchend", EventElementEnd, { passive: false, capture: false });
+      // pour a11y
+      // mesSvg[i].addEventListener("keydown", EventElementStart, { passive: false, capture: false });
+
+      function EventElementStart(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      function EventElementEnd(e) {
+        console.log("SVG touche end");
+        e.preventDefault();
+        e.stopPropagation();
+        retourAllOpacity();
+      }
+    }
   }),
   (ldqrBaseController.prototype.initComponents = function () {
-    (this.boutonsChoix = new ldqrBoutonBaseController()), (this.boutonsSurprise = new ldqrBoutonBaseSurprise()), (this.svgAction = new ldqrSvgBaseController());
+    this.boutonsChoix = new ldqrBoutonBaseController();
+    this.boutonsSurprise = new ldqrBoutonBaseSurprise();
+    this.svgAction = new ldqrSvgBaseController();
   }),
   (ldqrBaseController.prototype.appliqueLocalForage = function () {
+    // applique style bouton play
+
+    // applique la font
     ldqr.DATA_LOCAL_FORAGE.getItem("font-name").then(function (d) {
       d = d || "choixLucioleBold";
-      console.log(d);
+
       new choixFontName(d);
     });
-
     // applique la casse
     ldqr.DATA_LOCAL_FORAGE.getItem("font-casse").then(function (d) {
       d = d || "activerMinuscule";
-      console.log("APPLY");
-      console.log(d);
+
       new activerMajuscule(d);
     });
 
-    // // applique la taille de la police
-    // ldqr.DATA_LOCAL_FORAGE.getItem("font-size").then(function (d) {
-    //   d = d || ldqr.FONT_SIZE_CSS_CLASS[0];
-    //   new choixFontSize(d);
-    // });
-    // // applique l'espacement des mots
-    // ldqr.DATA_LOCAL_FORAGE.getItem("space-word").then(function (d) {
-    //   d = d || ldqr.FONT_SPACE_WORD_CSS_CLASS[0];
-    //   // new choixSpaceWord(d);
-    // });
-    // // applique l'espacement des caractères
-    // ldqr.DATA_LOCAL_FORAGE.getItem("space-car").then(function (d) {
-    //   d = d || ldqr.FONT_SPACE_CAR_CSS_CLASS[0];
-    //   // new choixSpaceCar(d);
-    // });
-    // // applique l'espacement des lignes
-    // ldqr.DATA_LOCAL_FORAGE.getItem("space-line").then(function (d) {
-    //   d = d || ldqr.FONT_SPACE_LINE_CSS_CLASS[0];
-    //   // new choixSpaceLine(d);
-    // });
     // applique la couleur de fond
     ldqr.DATA_LOCAL_FORAGE.getItem("couleur-fond").then(function (d) {
       d = d || ldqr.COULEURS_FOND_CSS_CLASS[0];
@@ -267,22 +478,22 @@ function ldqrBoutonController(e) {
     });
     ldqr.DATA_LOCAL_FORAGE.getItem("bouton-version-active").then(function (d) {
       d = d || "activerImageVersion";
-      console.log(d);
+
       new activerDesactiverBoutonVersion(d);
     });
     ldqr.DATA_LOCAL_FORAGE.getItem("bouton-couleur-active").then(function (d) {
       d = d || "activerCouleurImage";
-      console.log(d);
+
       new activerDesactiverBoutonCouleur(d);
     });
     ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-active").then(function (d) {
       d = d || "desactiverDYS";
-      console.log(d);
+
       new activerDesactiverBoutonDYS(d);
     });
     ldqr.DATA_LOCAL_FORAGE.getItem("bouton-audio-active").then(function (d) {
       d = d || "activerAudio";
-      console.log(d);
+
       new activerDesactiverBoutonAudio(d);
     });
     ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-choix").then(function (d) {
@@ -298,11 +509,11 @@ function ldqrBoutonController(e) {
     });
     // ldqr.DATA_LOCAL_FORAGE.getItem("vitesse-double-tape").then(function (d) {
     //   d = d || 0.5;
-    //   console.log("dbleTape",d);
+    //
     //   ldqr.VITESSE_DOUBLE_TAPE= d;
     //   var vitesseVal = document.getElementById("dblTapeVal");
     //   var txtVitesse = vitesseVal && vitesseVal.querySelector("text");
-    //   console.log(txtVitesse);
+    //
     //   txtVitesse && (txtVitesse.innerHTML = d);
     // });
   }),
@@ -446,6 +657,8 @@ function ldqrSvgController(e, t) {
       //   // ldqrLocalForage.initVersion();
 
       // });
+    } else if (eltId === "boutonsCouleurImage") {
+      new switchColor();
     } else if (eltId === "boutonVersion") {
       var menuBas = document.getElementById("menuBas");
       var allVersion = document.getElementById("boutonsAllVersion");
@@ -524,25 +737,33 @@ function ldqrSvgController(e, t) {
       new affichagePageMenu(eltId);
     }
   }),
-  (ldqrBoutonController.prototype.handleEvent = function (e) {
-    switch ((e.stopPropagation(), e.preventDefault(), e.type)) {
+  (ldqrBoutonController.prototype.handleEvent = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log(event.type);
+
+    switch (event.type) {
       case "mousedown":
       case "touchstart":
-        this.touchStart(e);
+        // ldqr.START_EVENT = event.type;
+        this.touchStart(event);
         break;
       case "mouseup":
       case "touchend":
-        this.touchEnd(e);
-        break;
-      case "keydown":
+        // ldqr.END_EVENT = event.type;
+        this.touchEnd(event);
         break;
     }
   }),
   (ldqrSvgBaseController.prototype.initSvgPanZoom = function () {
-    var e = {},
-      t = document.querySelector(ldqr.ZOOM_ELEMENT_ZONE_CSS_SELECTOR),
-      o = t.querySelector("svg");
-    (e.panZoom = new SVGPanZoom(o, ldqr.ZOOM_OPTIONS)), (e.zoomElt = o), (e.zoomEltDiv = t), (this.SVGPanZoom = e);
+    var svgPanZoom = {};
+    var zoomEltDiv = document.querySelector(ldqr.ZOOM_ELEMENT_ZONE_CSS_SELECTOR);
+
+    var zoomElt = zoomEltDiv.querySelector("svg");
+    svgPanZoom.panZoom = new SVGPanZoom(zoomElt, ldqr.ZOOM_OPTIONS);
+    svgPanZoom.zoomElt = zoomElt;
+    svgPanZoom.zoomEltDiv = zoomEltDiv;
+    this.SVGPanZoom = svgPanZoom;
   }),
   (ldqrSvgBaseController.prototype.initCloseButton = function (e) {
     var t = this.SVGPanZoom.zoomEltDiv,
@@ -551,7 +772,10 @@ function ldqrSvgController(e, t) {
     if (a)
       for (var n = ["touchstart", "mousedown"], s = 0; s != n.length; s++)
         a.addEventListener(n[s], function (e) {
-          e.stopPropagation(), e.preventDefault(), (o.innerHTML = ""), t.addClassName("notDisplay");
+          e.stopPropagation();
+          e.preventDefault();
+          (o.innerHTML = ""), t.addClassName("notDisplay");
+          retourAllOpacity();
         });
   });
 var lastTap = 0;
@@ -567,6 +791,7 @@ function ldqrBoutonSurprise(e) {
     this.el.addEventListener("touchend", this, !1),
     this.el.addEventListener("keydown", this, !1);
 }
+
 function ldrqOpacityElement(e) {
   var t,
     o = e.parentElement.children;
@@ -579,6 +804,14 @@ function ldrqOpacityElement(e) {
     e.addClassName("opacity1");
   }
 }
+
+/**
+ * Description placeholder
+ * @date 24/03/2023 - 16:32:28
+ *
+ * @param {*} el
+ * @param {*} SVGPanZoom
+ */
 function ldqrZoomElement(e, t) {
   //e is the clicked svg object
   t.panZoom.reset();
@@ -608,35 +841,57 @@ function ldqrZoomElement(e, t) {
   s.removeClassName("opacity02"), i.removeClassName("notDisplay"), n.appendChild(s), n.removeClassName("notDisplay"), t.panZoom.setViewBox(x, y, width, height);
   console.log(t.panZoom.getViewBox());
 }
-function choixFontName(e) {
-  var t = document.getElementById(e),
-    o = "",
-    a = !1,
-    n = document.getElementById("monTexte");
-  if (n) {
-    switch ((new appliqueChecked(t, ".bouton-choix-police"), new removeClassNameAll(n, ldqr.FONT_CSS_CLASS), n.removeClassName("ldqr-font-bold"), e)) {
-      case "choixLuciole":
-        o = "ldqr-font-luciole";
-        break;
-      case "choixLucioleBold":
-        (o = "ldqr-font-luciole"), (a = !0);
-        break;
-      case "choixArialBlack":
-        o = "ldqr-font-arial-black";
-        break;
-      case "choixOpenDys":
-        o = "ldqr-font-dys";
-        break;
-      case "choixVerdana":
-        o = "ldqr-font-verdana";
-        break;
-      case "choixVerdanaBold":
-        (o = "ldqr-font-verdana"), (a = !0);
-        break;
-      default:
-        break;
+
+function choixFontName(d) {
+  var texte = document.querySelectorAll("#monTexte,text");
+
+  if (!texte) return;
+
+  console.log(d);
+
+  var elt = document.getElementById(d);
+  if (!elt) elt = document.getElementById("Luciole");
+
+  var className = "";
+  var bold = false;
+  switch (d) {
+    case "VerdanaBold":
+      className = "ldqr-font-verdanabold";
+      break;
+    case "Verdana":
+      className = "ldqr-font-verdana";
+      break;
+    case "OpenDyslexicmonospace":
+      className = "ldqr-font-opendyslexicmonospace";
+      break;
+    case "LucioleBold":
+      className = "ldqr-font-luciolebold";
+      break;
+    case "Luciole":
+      className = "ldqr-font-luciole";
+      break;
+    case "ArialBlack":
+      className = "ldqr-font-arialblack";
+      break;
+    default:
+      break;
+  }
+
+  console.log(className);
+
+  new appliqueChecked(elt, ".bouton-choix-police");
+  // new removeClassNameAll(document.body, ldqr.FONT_CSS_CLASS);
+
+  for (var i = 0; i !== texte.length; i++) {
+    if (!texte[i].parentElement.classList.contains("bouton-choix-police")) {
+      new removeClassNameAll(texte[i], ldqr.FONT_CSS_CLASS);
+      texte[i].classList.remove("ldqr-font-bold");
+
+      if (bold) texte[i].classList.add("ldqr-font-bold");
+      // document.body.classList.add(className);
+
+      texte[i].classList.add(className);
     }
-    a && n.addClassName("ldqr-font-bold"), n.addClassName(o);
   }
 }
 function choixCouleurFond(e) {
@@ -661,8 +916,10 @@ function removeClassNameAll(e, t) {
 function appliqueChecked(el, ensemble) {
   var bouton1 = document.querySelector(".bouton-choix-police");
   var bouton2 = document.querySelector(".couleur-fond");
-  if (!bouton1) return;
-  if (!bouton2) return;
+  if (ensemble !== ".def-image") {
+    if (!bouton1) return;
+    if (!bouton2) return;
+  }
   var mesBoutons = document.querySelectorAll(ensemble),
     mesBoutonsLength = mesBoutons.length,
     i;
@@ -670,29 +927,47 @@ function appliqueChecked(el, ensemble) {
     mesBoutons[i].setAttribute("aria-checked", "false");
     mesBoutons[i].classList.add("unchecked");
     mesBoutons[i].classList.remove("checked");
-    // mesBoutons[i].tabIndex = -1;
+    mesBoutons[i].tabIndex = -1;
   }
   el.setAttribute("aria-checked", "true");
   el.classList.add("checked");
   el.classList.remove("unchecked");
+  el.tabIndex = 0;
+  // el.focus();
 }
-function choixVersionImage(e) {
-  if (document.querySelector(".def-image")) {
-    initVersionImage();
-    for (
-      var t = { version01: "chiffre1", version02: "chiffre2", version03: "chiffre3", version04: "chiffre4", version05: "chiffre5" }, o = Object.keys(t), a = 0;
-      a !== o.length;
-      a++
-    )
-      e === o[a]
-        ? document.getElementById(t[e]) && document.getElementById(t[e]).removeClassName("notDisplay")
-        : document.getElementById(t[o[a]]) && document.getElementById(t[o[a]]).addClassName("notDisplay");
-    var n = document.getElementById(e);
-    document.getElementById("boutonVersion");
-    appliqueChecked(n, ".def-image");
-    var s = document.querySelectorAll("." + e),
-      i = s.length;
-    for (a = 0; a !== i; a++) s[a].removeClassName("notDisplay");
+function choixVersionImage(d) {
+  ldqr.VERSION_IMAGE_EN_COURS = d;
+  var defImage = document.querySelector(".def-image");
+  if (!defImage) return;
+  retourAllOpacity();
+  // initVersionImage();
+  var chiffres = {
+    version01: "chiffre1",
+    version02: "chiffre2",
+    version03: "chiffre3",
+    version04: "chiffre4",
+    version05: "chiffre5",
+  };
+  var keys = Object.keys(chiffres);
+  for (var i = 0; i !== keys.length; i++) {
+    if (d === keys[i]) {
+      document.getElementById(chiffres[d]) && document.getElementById(chiffres[d]).classList.remove("notDisplay");
+    } else {
+      document.getElementById(chiffres[keys[i]]) && document.getElementById(chiffres[keys[i]]).classList.add("notDisplay");
+    }
+  }
+
+  var elt = document.getElementById(d);
+
+  // boutonVersion.childNodes[3].innerHTML = elt.childNodes[3].innerHTML;
+  appliqueChecked(elt, ".def-image");
+
+  var mesVersions = document.querySelectorAll("[class*=version0]"),
+    mesVersionsLength = mesVersions.length,
+    i;
+  for (i = 0; i !== mesVersionsLength; i++) {
+    mesVersions[i].classList.add("notDisplay");
+    if (mesVersions[i].classList.contains(d)) mesVersions[i].classList.remove("notDisplay");
   }
 }
 function choixVersionImage00() {
@@ -733,23 +1008,27 @@ function activerDesactiverBoutonVersion(d) {
   }
   menuBasTest();
 }
-function activerDesactiverBoutonCouleur(e) {
-  appliqueChecked(document.getElementById(e), ".bouton-couleur-active");
-  var t = document.getElementById("fondBlancBoutonCouleur"),
-    o = document.getElementById("boutonsCouleurImage");
-  t &&
-    ("desactiverCouleurImage" === e
-      ? (t.addClassName("notDisplay"), o.addClassName("notDisplay"))
-      : (t.removeClassName("notDisplay"), o.removeClassName("notDisplay")),
-    menuBasTest());
+function activerDesactiverBoutonCouleur(d) {
+  var elt = document.getElementById(d);
+
+  appliqueChecked(elt, ".bouton-couleur-active");
+  var fondBlanc = document.getElementById("fondBlancBoutonCouleur");
+  var bouton = document.getElementById("boutonsCouleurImage");
+  if (!fondBlanc || !bouton) return;
+
+  if (d === "desactiverCouleurImage") {
+    // fondBlanc.classList.add("notDisplay");
+    // bouton.classList.add("notDisplay");
+    fondBlanc.remove();
+    bouton.remove();
+  }
+  // else {
+  //   fondBlanc.classList.remove("notDisplay");
+  //   bouton.classList.remove("notDisplay");
+  // }
+  // menuBasTest();
 }
-function menuBasTest() {
-  var e = document.getElementById("boutonsCouleurImage"),
-    t = document.getElementById("boutonVersion"),
-    o = document.getElementById("btnOnOff2"),
-    a = document.getElementById("ligneFond");
-  e.hasClassName("notDisplay") && t.hasClassName("notDisplay") && o.hasClassName("notDisplay") && a.addClassName("notDisplay");
-}
+function menuBasTest() {}
 function activerDesactiverBoutonDYS(e) {
   var t = document.getElementById(e);
   if (t) {
@@ -798,48 +1077,47 @@ function activerDesactiverBoutonAudio(e) {
         : (o.removeClassName("notDisplay"), o.addClassName("displayInLine"))
       : appliqueChecked(t, ".bouton-audio-active"));
 }
-function affichagePageMenu(e) {
-  var t,
-    o = document.getElementById("Accueil"),
-    a = !1;
-  switch (e) {
+function affichagePageMenu(id) {
+  var maConfig;
+  var page_accueil = document.getElementById("Accueil");
+  var affiche = false;
+
+  switch (id) {
     case "AudioBoutonChoix":
-      (t = document.getElementById("configAudio")), (a = !0);
+      maConfig = document.getElementById("configAudio");
+      affiche = true;
       break;
     case "ImageBoutonChoix":
-      (t = document.getElementById("configImage")), (a = !0);
+      maConfig = document.getElementById("configImage");
+      affiche = true;
       break;
     case "TexteBoutonChoix":
-      (t = document.getElementById("configTexte")), (a = !0);
+      maConfig = document.getElementById("configTexte");
+      affiche = true;
       break;
     case "boutonValiderConfigAudio":
-      t = document.getElementById("configAudio");
+      maConfig = document.getElementById("configAudio");
+
       break;
     case "boutonValiderConfigImage":
-      t = document.getElementById("configImage");
+      maConfig = document.getElementById("configImage");
+
       break;
     case "boutonValiderConfigTexte":
-      t = document.getElementById("configTexte");
+      maConfig = document.getElementById("configTexte");
+
       break;
+
     default:
       break;
   }
-  a ? (t.removeClassName("notDisplay"), o.addClassName("notDisplay")) : (t.addClassName("notDisplay"), o.removeClassName("notDisplay"));
-}
-function activerDesactiverBoutonDYSchoix(e) {
-  var t = document.getElementById("muet"),
-    o = document.getElementById("souligne"),
-    a = document.getElementById("gras"),
-    n = document.getElementById("italique"),
-    s = (document.getElementById("Emile_Image"), document.querySelectorAll(".section-texte,#monTexte"));
-  ldqr.DATA_LOCAL_FORAGE.getItem("bouton-dys-active").then(function (i) {
-    "activerDYS" === i && 0 !== s.length && check(e[0], e[1], e[2], !0),
-      t &&
-        (e[0] && (n.addClassName("checked"), n.removeClassName("unchecked")),
-        e[1] && (a.addClassName("checked"), a.removeClassName("unchecked")),
-        e[2] && (o.addClassName("checked"), o.removeClassName("unchecked")),
-        e[3] && (t.addClassName("checked"), t.removeClassName("unchecked")));
-  });
+  if (affiche) {
+    maConfig.classList.remove("notDisplay");
+    page_accueil.classList.add("notDisplay");
+  } else {
+    maConfig.classList.add("notDisplay");
+    page_accueil.classList.remove("notDisplay");
+  }
 }
 function affichageTexte(e) {
   var t = document.getElementById(e),
@@ -854,27 +1132,67 @@ function affichageImage(e) {
     o = document.querySelector(".section-figure");
   t && new appliqueChecked(t, ".affiche-image"), o && ("masquerImage" === e ? o.addClassName("notDisplay") : o.removeClassName("notDisplay"));
 }
-function choixCouleurImage(e) {
-  var t = document.getElementById("groupeImage");
-  if (t) {
-    var o = document.getElementById(e),
-      a = document.getElementById("boutonBW"),
-      n = document.getElementById("boutonCouleur"),
-      s = document.querySelector(".zoomElt");
-    switch ((o && o.addClassName("notDisplay"), e)) {
-      case "boutonCouleur":
-      case "imagesCouleur":
-        a && a.removeClassName("notDisplay"), t.removeClassName("nb"), s.removeClassName("nb");
-        break;
-      case "boutonBW":
-      case "imagesNB":
-        n && n.removeClassName("notDisplay"), t.addClassName("nb"), s.addClassName("nb");
-        break;
-      case "imagesNeg":
-        break;
-      default:
-        break;
-    }
+
+function switchColor() {
+  var d = "boutonsCouleurImage";
+  console.log("t");
+  var col = document.getElementById(d);
+  var boutonCouleur = document.getElementById("boutonCouleur");
+
+  if (boutonCouleur.ariaChecked == "false") {
+    choixCouleurImage("boutonCouleur");
+    col.ariaChecked = "true";
+  } else {
+    d.ariaLabel = "";
+    choixCouleurImage("boutonBW");
+    col.ariaChecked = "false";
+  }
+
+  choixVersionImage00();
+}
+
+function choixCouleurImage(d) {
+  // var groupeImage = document.getElementById("groupeImage");
+  // if (!groupeImage) {
+  //   return;
+  // }
+  var elt = document.getElementById(d);
+  var boutonBW = document.getElementById("boutonBW");
+  var boutonCouleur = document.getElementById("boutonCouleur");
+  // var zoom = document.querySelector(".zoomElt");
+  // var cloneZone = document.getElementById('cloneZone');
+  // // elt.setAttribute('aria-hidden',"true");
+
+  elt && elt.classList.add("notDisplay");
+
+  switch (d) {
+    case "boutonCouleur":
+    case "imagesCouleur":
+      boutonBW && boutonBW.classList.remove("notDisplay");
+      // groupeImage.classList.remove("nb");
+      // zoom.classList.remove("nb");
+      // cloneZone && cloneZone.classList.remove("nb");
+
+      boutonCouleur.ariaChecked = "true";
+      boutonBW.ariaChecked = "false";
+
+      document.body.classList.remove("nb");
+      break;
+    case "boutonBW":
+    case "imagesNB":
+      document.body.classList.add("nb");
+      boutonCouleur && boutonCouleur.classList.remove("notDisplay");
+      boutonCouleur.ariaChecked = "false";
+      boutonBW.ariaChecked = "true";
+      // groupeImage.classList.add("nb");
+      // zoom.classList.add("nb");
+      // cloneZone && cloneZone.classList.add("nb");
+
+      break;
+    case "imagesNeg":
+      break;
+    default:
+      break;
   }
 }
 function choixTexteImage(e) {
@@ -896,6 +1214,23 @@ function choixTexteImage(e) {
       for (a = (t = document.querySelectorAll("#monTexte,#textePage,#groupeImage,#version,#couleurImage,#Emile_Image")).length, o = 0; o !== a; o++)
         t[o].removeClassName("notDisplay");
       break;
+  }
+}
+
+/**
+ * Revient à une image sans mise en évidence
+ */
+function retourAllOpacity() {
+  var x = document.querySelectorAll(".opacity02");
+
+  for (var i = 0; i < x.length; i++) {
+    x[i].classList.remove("opacity02");
+  }
+
+  var y = document.querySelectorAll("opacity01");
+
+  for (var i = 0; i < y.length; i++) {
+    y[i].classList.remove("opacity01");
   }
 }
 function returnTabChoix(e) {
@@ -920,6 +1255,135 @@ function returnTabChoix(e) {
       }
   return a;
 }
+function triggerMouseEvent(node, eventType) {
+  var clickEvent = new MouseEvent(eventType, {
+    view: window,
+    bubbles: false,
+    cancelable: true,
+  });
+
+  node.dispatchEvent(clickEvent);
+}
+function RadioGroup(groupNode) {
+  this.groupNode = groupNode;
+
+  this.radioButtons = [];
+
+  this.firstRadioButton = null;
+  this.lastRadioButton = null;
+
+  var rbs = this.groupNode.querySelectorAll('[role="radio"],[role="menuitemradio"]');
+
+  for (var i = 0; i < rbs.length; i++) {
+    var rb = rbs[i];
+
+    rb.addEventListener("keydown", this.handleKeydown.bind(this));
+    rb.addEventListener("click", this.handleClick.bind(this));
+    rb.addEventListener("focus", this.handleFocus.bind(this));
+    rb.addEventListener("blur", this.handleBlur.bind(this));
+
+    this.radioButtons.push(rb);
+
+    if (!this.firstRadioButton) {
+      this.firstRadioButton = rb;
+    }
+    this.lastRadioButton = rb;
+  }
+}
+
+RadioGroup.prototype.setChecked = function (currentItem) {
+  console.log(this.radioButtons);
+  console.log(currentItem);
+  for (var i = 0; i < this.radioButtons.length; i++) {
+    var rb = this.radioButtons[i];
+    rb.setAttribute("aria-checked", "false");
+    rb.classList.remove("checked");
+    rb.classList.add("unchecked");
+    rb.tabIndex = -1;
+  }
+  currentItem.setAttribute("aria-checked", "true");
+  currentItem.classList.add("checked");
+  currentItem.classList.remove("unchecked");
+  triggerMouseEvent(currentItem, "mousedown");
+  triggerMouseEvent(currentItem, "mouseup");
+
+  currentItem.tabIndex = 0;
+  currentItem.focus();
+};
+
+RadioGroup.prototype.setCheckedToPreviousItem = function (currentItem) {
+  var index;
+
+  if (currentItem === this.firstRadioButton) {
+    this.setChecked(this.lastRadioButton);
+  } else {
+    index = this.radioButtons.indexOf(currentItem);
+    this.setChecked(this.radioButtons[index - 1]);
+  }
+};
+
+RadioGroup.prototype.setCheckedToNextItem = function (currentItem) {
+  var index;
+
+  if (currentItem === this.lastRadioButton) {
+    this.setChecked(this.firstRadioButton);
+  } else {
+    index = this.radioButtons.indexOf(currentItem);
+    this.setChecked(this.radioButtons[index + 1]);
+  }
+};
+
+/* EVENT HANDLERS */
+
+RadioGroup.prototype.handleKeydown = function (event) {
+  var tgt = event.currentTarget,
+    flag = false;
+  console.log(event.key, event.target);
+
+  switch (event.key) {
+    case " ":
+      this.setChecked(tgt);
+      flag = true;
+      break;
+
+    case "Up":
+    case "ArrowUp":
+    case "Left":
+    case "ArrowLeft":
+      this.setCheckedToPreviousItem(tgt);
+      flag = true;
+      break;
+
+    case "Down":
+    case "ArrowDown":
+    case "Right":
+    case "ArrowRight":
+      this.setCheckedToNextItem(tgt);
+      flag = true;
+      break;
+
+    default:
+      break;
+  }
+
+  if (flag) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+};
+
+RadioGroup.prototype.handleClick = function (event) {
+  this.setChecked(event.currentTarget);
+};
+
+RadioGroup.prototype.handleFocus = function (event) {
+  // event.currentTarget.classList.add('focus');
+};
+
+RadioGroup.prototype.handleBlur = function (event) {
+  // event.currentTarget.classList.remove('focus');
+};
+
 (ldqrSvgController.prototype.touchStart = function (e) {
   e.preventDefault();
   var t = this.SVGPanZoom,
@@ -1051,76 +1515,308 @@ function returnTabChoix(e) {
     }
   }),
   (ldqrBoutonSurprise.prototype.setAction = function (e) {
-    var t = this.el.getAttribute("id"),
-      o = document.querySelector("title").getAttribute("id"),
-      a = document.getElementById("sonOff"),
-      n = document.querySelector("#anime01"),
-      s = document.querySelector("#animeFin"),
-      i = document.getElementById("menuBas"),
-      r = document.getElementById("monTexteAudio"),
-      l = document.getElementById("pauseAudio");
+    var element = this.el;
+    var monId = element.getAttribute("id");
+    var maPage = document.querySelector("title").getAttribute("id");
 
-    if (s == null) {
-      s = n;
+    var monAnim = document.querySelector("#anime1");
+    var monAnimFin = document.querySelector("#animeFin");
+    var menuBas = document.getElementById("menuBas");
+    var menuHaut = document.getElementById("menuHaut");
+    // var monAudio = document.getElementById("monTexteAudio");
+    var playDescription = document.getElementById("playDescription");
+    var pauseDescription = document.getElementById("pauseDescription");
+    // monAudio &&
+    //   monAudio.addEventListener("ended", function () {
+    //     retourAllOpacity();
+    //     ldqr.PAUSE_AUDIO.classList.add("notDisplay");
+    //   }, { passive: false, capture: false });
+    if (element.dataset.pageturn) {
+      window.location.href = element.dataset.pageturn;
     }
+    var zone2texteDIV = document.querySelector("#zone2texte .texte");
+    var pageBefore = document.querySelector("#pageBefore");
+    var pageAfter = document.querySelector("#pageAfter");
+    var pageBeforeXHTML = document.querySelector("#pageBeforeXHTML");
+    var pageAfterXHTML = document.querySelector("#pageAfterXHTML");
+    switch (monId) {
+      case "lienPage":
+        window.location.href = element.dataset.retourPage;
+        break;
+      case "resultat":
+        var bonneRVal = document.querySelector("[data-reponse]");
+        bonneRVal = bonneRVal.dataset.reponse;
+        var proposition = document.querySelectorAll("[data-proposition]");
+        for (var i = 0; i !== proposition.length; i++) {
+          var val = proposition[i].dataset.proposition;
+          if (val === bonneRVal) {
+            proposition[i].classList.add("bonne-reponse");
+            element.setAttribute("aria-label", "La bonne réponse est " + proposition[i].textContent);
+          } else {
+            proposition[i].classList.add("mauvaise-reponse");
+          }
+        }
+        break;
+      case "boutonHome":
+        ldqr.DATA_LOCAL_FORAGE.setItem("home-location", window.location.href.split("/").pop()).then(function (d) {
+          window.location.href = "page00.xhtml#Accueil";
+        });
+        break;
+      case "pageAfter":
+        chatPageSvg++;
 
-    if (
-      (r &&
-        r.addEventListener("ended", function () {
-          l.addClassName("notDisplay");
-        }),
-      "playAudio" === t || "playTexteSr" === t)
-    )
-      l.removeClassName("notDisplay"), (r.playbackRate = ldqr.VITESSE_SON_VOIX), r.play();
-    else if ("pauseAudio" === t) l.addClassName("notDisplay"), r.pause();
-    else if ("btnOnOff2" === t) {
-      "p09fig" === o &&
-        setTimeout(function () {
-          i.removeClassName("notDisplay");
-        }, 5500),
-        i.addClassName("notDisplay"),
-        s &&
-          s.addEventListener(
+        if (chatPageSvg > NBPAGE) {
+          // chatPageSvg = NBPAGE;
+          element.classList.add("notDisplay");
+        } else {
+          element.classList.remove("notDisplay");
+          _affichepage(pageAfter, pageBefore, chatPageSvg, zone2texteDIV, pageAfterXHTML, pageBeforeXHTML);
+        }
+        break;
+      case "pageBefore":
+        chatPageSvg--;
+
+        if (chatPageSvg < 0) {
+          // chatPageSvg = 0;
+          element.classList.add("notDisplay");
+        } else {
+          element.classList.remove("notDisplay");
+          _affichepage(pageAfter, pageBefore, chatPageSvg, zone2texteDIV, pageAfterXHTML, pageBeforeXHTML);
+        }
+        break;
+      case "btnBulleOnOff":
+        var barre = element.querySelector("#croixBulle");
+        barre.classList.toggle("notDisplay");
+
+        afficheBulles(true);
+
+        break;
+      case "playAudio":
+      case "playTexteSr":
+        if (ldqr.PAUSE_AUDIO) {
+          ldqr.PAUSE_AUDIO.classList.remove("notDisplay");
+          ldqr.PAUSE_AUDIO.setAttribute("tabindex", 0);
+          ldqr.PAUSE_AUDIO.focus();
+          element.setAttribute("tabindex", -1);
+        }
+
+        if (ldqr.MON_AUDIO) {
+          ldqr.MON_AUDIO.playbackRate = ldqr.VITESSE_SON_VOIX;
+
+          ldqr.MON_AUDIO.play(false);
+          for (var i = 0; i !== smils.length; i++) {
+            triggerMouseEvent(smils[i], "playoverlay");
+          }
+        }
+        break;
+      case "pauseAudio":
+        ldqr.PAUSE_AUDIO.classList.add("notDisplay");
+        ldqr.PLAY_AUDIO.setAttribute("tabindex", 0);
+        ldqr.PLAY_AUDIO.focus();
+        element.setAttribute("tabindex", -1);
+        ldqr.MON_AUDIO && ldqr.MON_AUDIO.pause();
+        for (var i = 0; i !== smils.length; i++) {
+          clearTimeout(nIntervId[i]);
+          clearTimeout(nIntervId2[i]);
+        }
+
+        break;
+      case "playCoverNarration":
+        if (ldqr.MON_AUDIO) {
+          if (!ldqr.MON_AUDIO.paused && !ldqr.MON_AUDIO.ended) {
+            ldqr.MON_AUDIO.pause();
+            ldqr.MON_AUDIO.currentTime = 0;
+            console.log("pause");
+          } else {
+            ldqr.MON_AUDIO.playbackRate = ldqr.VITESSE_SON_VOIX;
+            ldqr.MON_AUDIO.play();
+          }
+        }
+        break;
+      case "playDescription":
+        if (ldqr.MON_AD) {
+          ldqr.MON_AD.play();
+        }
+        pauseDescription.classList.remove("notDisplay");
+
+        break;
+      case "pauseDescription":
+        if (ldqr.MON_AD) {
+          ldqr.MON_AD.pause();
+        }
+        pauseDescription.classList.add("notDisplay");
+
+        break;
+      case "btnOnOff2":
+        if (element.classList.contains("notDisplay")) {
+          return;
+        }
+        switch (maPage) {
+          case "page09fig":
+            setTimeout(function () {
+              menuBas.classList.remove("notDisplay");
+              menuHaut.classList.remove("notDisplay");
+            }, 5500);
+            break;
+          case "page12fig":
+            var nuitJour = document.querySelectorAll(".jour-nuit");
+            for (var i = 0; i < nuitJour.length; i++) {
+              nuitJour[i].classList.toggle("notDisplay");
+            }
+            var mesSonsAnimations = document.querySelectorAll(".son-animation");
+            for (var j = 0; j !== mesSonsAnimations.length; j++) {
+              var s = mesSonsAnimations[j];
+              var id = s.getAttribute("id");
+              var splitSon = id.split("-");
+              if (splitSon.length > 1) {
+                if (splitSon[1] === "1") {
+                  s.currentTime = 0;
+                  s.play();
+                }
+              } else {
+                s.currentTime = 0;
+                s.play();
+              }
+            }
+
+            return;
+            break;
+
+          default:
+            break;
+        }
+        menuBas.classList.add("notDisplay");
+        menuHaut.classList.add("notDisplay");
+        afficheBulles(false);
+        retourAllOpacity();
+        var body = document.querySelector("body");
+        body.classList.add("no-event");
+
+        if (monAnimFin) {
+          monAnimFin.addEventListener(
             "endEvent",
             function () {
-              i.removeClassName("notDisplay");
+              menuBas.classList.remove("notDisplay");
+              menuHaut.classList.remove("notDisplay");
+              body.classList.remove("no-event");
+
+              ldqr.ACTIVER_BULLE && afficheBulles(true);
             },
-            !1
-          ),
-        document.querySelectorAll(".son-animation").forEach((e) => {
-          var t = e.getAttribute("id").split("-");
-          t.length > 1 ? "1" === t[1] && ((e.currentTime = 0), e.play()) : ((e.currentTime = 0), e.play());
-        }),
-        n && n.beginElement();
-    } else if ("none" !== a.style.display)
-      switch (((a.style.display = "none"), o)) {
-        case "page09":
-        case "page07":
-          (ldqr.SON_GROTTE.currentTime = 0), ldqr.SON_GROTTE.play();
-          break;
-        case "page14":
-          (ldqr.SON_SOURIS.loop = !0), ldqr.SON_SOURIS.play();
-          break;
-        default:
-          break;
-      }
-    else
-      switch (((a.style.display = "inline"), o)) {
-        case "page09":
-        case "page07":
-          ldqr.SON_GROTTE.pause();
-          break;
-        case "page14":
-          ldqr.SON_SOURIS.pause();
-          break;
-        default:
-          break;
-      }
+            { passive: false, capture: false }
+          );
+        } else {
+          monAnim &&
+            monAnim.addEventListener(
+              "endEvent",
+              function () {
+                menuBas.classList.remove("notDisplay");
+                body.classList.remove("no-event");
+
+                ldqr.ACTIVER_BULLE && afficheBulles(true);
+              },
+              { passive: false, capture: false }
+            );
+        }
+
+        var mesSonsAnimations = document.querySelectorAll(".son-animation");
+        for (var j = 0; j !== mesSonsAnimations.length; j++) {
+          var s = mesSonsAnimations[j];
+          var id = s.getAttribute("id");
+          var splitSon = id.split("-");
+          if (splitSon.length > 1) {
+            if (splitSon[1] === "1") {
+              s.currentTime = 0;
+              s.play();
+            }
+          } else {
+            s.currentTime = 0;
+            s.play();
+          }
+        }
+
+        monAnim && monAnim.beginElement();
+
+        break;
+    }
   }),
   window.addEventListener(
     "DOMContentLoaded",
     function () {
+      calcNumButtons();
       window.ldqrController = new ldqrBaseController();
+
+      console.log("i get triggered!!");
+      var radioGroupes = document.querySelectorAll('[role="radiogroup"],[role="menuitem"]');
+      var rgLength = radioGroupes.length;
+      i = rgLength - 1;
+      for (; i >= 0; i--) {
+        new RadioGroup(radioGroupes[i]);
+      }
+
+      var buttons = document.querySelectorAll('[role="button"],[role="menuitem"]');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener(
+          "keydown",
+          function (e) {
+            if (e.code === "Enter" || e.code === "Space") {
+              triggerMouseEvent(this, "mousedown");
+              triggerMouseEvent(this, "mouseup");
+            }
+          },
+          false
+        );
+      }
+
+      var colorButton = document.getElementById("boutonsCouleurImage");
+
+      if (colorButton) {
+        colorButton.addEventListener("keydown", (e) => {
+          console.log(e.key);
+          if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "Enter") switchColor();
+        });
+      }
+
+      var playButtn = document.getElementById("btnOnOff2");
+      console.log(playButtn);
+      console.log("playButtn");
+      if (playButtn) {
+        playButtn.addEventListener("keydown", (e) => {
+          console.log(e.key);
+          if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "Enter") play();
+        });
+      }
+
+      var boutonsAllVersion = document.getElementById("boutonsAllVersion");
+      var boutonVersion = document.getElementById("boutonVersion");
+      var menuBas = document.getElementById("menuBas");
+      if (menuBas) {
+        boutonsAllVersion &&
+          boutonsAllVersion.addEventListener(
+            "focusin",
+            function (e) {
+              if (!boutonVersion.classList.contains("notDisplay")) {
+                if (menuBas.classList.contains("bas")) {
+                  triggerMouseEvent(boutonVersion, "mousedown");
+                  triggerMouseEvent(boutonVersion, "mouseup");
+                }
+              }
+            },
+            false
+          );
+        boutonsAllVersion &&
+          boutonsAllVersion.addEventListener(
+            "focusout",
+            function (e) {
+              if (!boutonVersion.classList.contains("notDisplay")) {
+                if (menuBas.classList.contains("haut")) {
+                  triggerMouseEvent(boutonVersion, "mousedown");
+                  triggerMouseEvent(boutonVersion, "mouseup");
+                }
+              }
+            },
+            false
+          );
+      }
     },
     !1
   );

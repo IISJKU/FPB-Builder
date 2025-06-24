@@ -22,6 +22,13 @@
     <script src="../Misc/ldqr2.js" type="text/javascript"></script>
     <script src="../Misc/page00.min.js" type="text/javascript"></script>
     <style>
+      #groupeImage {
+        user-select: none;
+        -o-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+      }
       #monTexte {
         /* position: absolute; */
         width: 100%;
@@ -73,7 +80,7 @@
         </g>
       </svg>
     </div>
-    <section class="page00" role="doc-chapter" epub:type="chapter">
+    <section class="page00" role="doc-chapter" epub:type="chapter" aria-labelledby="toc-epubtools-22">
       <h1 class="notDisplay tslt_configuration" id="toc-epubtools-22">Configurazione</h1>
       <figure class="svg-container" id="Emile_Image">
         <svg
@@ -96,24 +103,24 @@
             </linearGradient>
           </defs>
           <rect id="fondImage" x="0" y="0" width="748" height="1024" fill="white" stroke="none" />
-          <g class="st1" id="Accueil">
-            <g class="st1 svg-bouton pa-menu-bouton" id="TexteBoutonChoix">
+          <g class="st1" id="Accueil" aria-label="Menù principale" role="list" tabindex="0">
+            <g class="st1 svg-bouton bouton pa-menu-bouton" id="TexteBoutonChoix" role="button" tabindex="0">
               <g transform="translate(-50 0)">
                 <rect x="94.15234375" y="100" width="131.6953125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_texte" alignment-baseline="middle" text-anchor="middle" x="160" y="135" font-family="Luciole" font-size="22pt">Testo</text>
               </g>
             </g>
-            <g class="st1 svg-bouton pa-menu-bouton" id="ImageBoutonChoix">
+            <g class="st1 svg-bouton bouton pa-menu-bouton" id="ImageBoutonChoix" role="button" tabindex="0">
               <rect x="270.3525390625" y="100" width="204.294921875" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
               <text class="tslt_image" alignment-baseline="middle" text-anchor="middle" x="372.5" y="135" font-family="Luciole" font-size="22pt">Immagine</text>
             </g>
-            <g class="st1 svg-bouton pa-menu-bouton" id="AudioBoutonChoix">
+            <g class="st1 svg-bouton bouton pa-menu-bouton" id="AudioBoutonChoix" role="button" tabindex="0">
               <g transform="translate(50 0)">
                 <rect x="515.6484375" y="100" width="133.703125" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_audio" alignment-baseline="middle" text-anchor="middle" x="582.5" y="135" font-family="Luciole" font-size="22pt">Audio</text>
               </g>
             </g>
-            <g class="st1 svg-bouton pa-menu-bouton bouton-notice" id="NoticeBoutonChoix">
+            <g class="st1 svg-bouton bouton pa-menu-bouton bouton-notice" id="NoticeBoutonChoix" role="button" tabindex="0">
               <g transform="translate(-80 0)">
                 <rect x="178.60107421875" y="770" width="212.7978515625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_notice" alignment-baseline="middle" text-anchor="middle" x="285" y="805" font-family="Luciole" font-size="20pt">
@@ -121,7 +128,7 @@
                 </text>
               </g>
             </g>
-            <g class="st1 svg-bouton pa-menu-bouton bouton-credits" id="CreditBoutonChoix">
+            <g class="st1 svg-bouton bouton pa-menu-bouton bouton-credits" id="CreditBoutonChoix" role="button" tabindex="0">
               <g>
                 <rect x="430.9453125" y="770" width="218.109375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_credits" alignment-baseline="middle" text-anchor="middle" x="540" y="805" font-family="Luciole" font-size="20pt">
@@ -129,15 +136,34 @@
                 </text>
               </g>
             </g>
-            <svg x="90" y="190" width="550" height="610" viewBox="0 100 748 1040" preserveAspectRatio="xMidYMin meet" style="background-color: grey">
+            <svg
+              x="90"
+              y="190"
+              width="550"
+              height="610"
+              viewBox="0 100 748 1040"
+              aria-hidden="true"
+              class="unselectable"
+              preserveAspectRatio="xMidYMin meet"
+              style="background-color: grey; pointer-events: none"
+            >
               $MENUSVG
             </svg>
           </g>
-          <g class="notDisplay" id="configTexte">
-            <text class="tslt_param_texte" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">
+          <g class="notDisplay" id="configTexte" role="menu" aria-labelledby="txtParamTexte" tabindex="0">
+            <text
+              class="tslt_param_texte"
+              id="txtParamTexte"
+              alignment-baseline="hanging"
+              text-anchor="start"
+              x="10"
+              y="10"
+              font-family="Luciole"
+              font-size="24pt"
+            >
               Parametri testo
             </text>
-            <g id="choixPolice" role="radiogroup" aria-labelledby="textePolice" transform="translate(0,70)">
+            <g id="choixPolice" role="radiogroup" aria-labelledby="textePolice" transform="translate(0,70)" tabindex="0">
               <text
                 id="textePolice"
                 class="titre-menu tslt_police"
@@ -152,7 +178,7 @@
               </text>
               {fonts}
             </g>
-            <g id="choixTexte" role="radiogroup" aria-labelledby="texteTexte" transform="translate(0,300)">
+            <g id="choixTexte" role="radiogroup" aria-labelledby="texteTexte" transform="translate(0,300)" tabindex="0">
               <text
                 id="texteTexte"
                 class="titre-menu tslt_texte"
@@ -166,7 +192,7 @@
                 Testo
               </text>
               <g id="choixMinusculeMajuscule">
-                <g id="activerMajuscule" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-majuscule-active">
+                <g id="activerMajuscule" role="menuitemradio" aria-checked="true" class="bouton-fond svg-bouton bouton bouton-majuscule-active" tabindex="0">
                   <rect x="10" y="50" width="256.447265625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                   <text
                     class="tslt_majuscule"
@@ -180,7 +206,7 @@
                     MAIUSCOLO
                   </text>
                 </g>
-                <g id="activerMinuscule" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-majuscule-active">
+                <g id="activerMinuscule" role="menuitemradio" aria-checked="false" class="bouton-fond svg-bouton bouton bouton-majuscule-active" tabindex="-1">
                   <rect x="291.1689453125" y="50" width="217.662109375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                   <text
                     id="txt_minuscule"
@@ -207,7 +233,7 @@
               </g>
             </g> -->
             </g>
-            <g id="choixCouleurFond" role="radiogroup" aria-labelledby="texteFond" transform="translate(0,330)">
+            <g id="choixCouleurFond" role="menuitem" aria-labelledby="texteFond" transform="translate(0,330)" tabindex="0">
               <text
                 id="texteFond"
                 class="titre-menu tslt_fond"
@@ -223,10 +249,11 @@
               <g id="bouton01Fond">
                 <g
                   transform="translate(0,70)"
-                  role="radio"
+                  role="menuitemradio"
                   aria-checked="false"
-                  aria-label="texte noir sur fond blanc"
+                  aria-label="testo nero su sfondo bianco"
                   id="ldqr-couleur-fond-blanc"
+                  tabindex="0"
                   class="svg-bouton couleur-fond bouton-fond ldqr-couleur-fond-blanc"
                 >
                   <rect x="20" y="110" width="60" height="60" stroke="black" stroke-width="1" rx="20" ry="20" />
@@ -236,10 +263,11 @@
               <g id="bouton02Fond">
                 <g
                   transform="translate(70,70)"
-                  role="radio"
+                  role="menuitemradio"
                   aria-checked="false"
-                  aria-label="texte noir sur fond beige"
+                  aria-label="testo nero su sfondo beige"
                   id="ldqr-couleur-fond-beige"
+                  tabindex="-1"
                   class="svg-bouton couleur-fond bouton-fond ldqr-couleur-fond-beige"
                 >
                   <rect x="20" y="110" width="60" height="60" stroke="black" stroke-width="1" rx="20" ry="20" />
@@ -249,10 +277,11 @@
               <g id="bouton03Fond">
                 <g
                   transform="translate(140,70)"
-                  role="radio"
+                  role="menuitemradio"
                   aria-checked="false"
-                  aria-label="texte noir sur fond gris"
+                  aria-label="testo nero su sfondo grigio"
                   id="ldqr-couleur-fond-gris"
+                  tabindex="-1"
                   class="svg-bouton couleur-fond bouton-fond ldqr-couleur-fond-gris"
                 >
                   <rect x="20" y="110" width="60" height="60" stroke="black" stroke-width="1" rx="20" ry="20" />
@@ -262,9 +291,10 @@
               <g id="bouton04Fond">
                 <g
                   transform="translate(210,70)"
-                  role="radio"
+                  role="menuitemradio"
                   aria-checked="false"
-                  aria-label="texte blanc sur fond noir"
+                  aria-label="testo bianco su sfondo nero"
+                  tabindex="-1"
                   id="ldqr-couleur-fond-neg"
                   class="svg-bouton couleur-fond bouton-fond ldqr-couleur-fond-neg"
                 >
@@ -286,13 +316,13 @@
 
             <g transform="translate(0,870)">
               <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black" />
-              <g id="boutonValiderConfigTexte" role="button" tabindex="0" class="bouton-fond svg-bouton bouton-valider">
+              <g id="boutonValiderConfigTexte" role="button" tabindex="0" class="bouton-fond bouton svg-bouton bouton bouton-valider">
                 <rect x="10" y="30" width="231.486328125" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="125.7431640625" y="70" font-family="Luciole" font-size="24pt">
                   Conferma
                 </text>
               </g>
-              <g role="button" tabindex="1" id="boutonReinitialiserConfigTexte" class="bouton-fond svg-bouton bouton-reinitialiser">
+              <g role="button" tabindex="0" id="boutonReinitialiserConfigTexte" class="bouton-fond bouton svg-bouton bouton-reinitialiser">
                 <rect x="251.486328125" y="30" width="197.919921875" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text
                   class="tslt_reinitialiser"
@@ -308,7 +338,7 @@
               </g>
             </g>
           </g>
-          <g class="notDisplay" id="configImage">
+          <g class="notDisplay" id="configImage" role="menu" tabindex="0" aria-labelledby="txtParamImage">
             <g id="choixVersionImage" transform="translate(0,-400)">
               <g id="groupeImage2" transform="translate(50,380)">
                 <g class="imagesVersion version01" id="images-version01-coul">
@@ -343,49 +373,66 @@
                 </g>
               </g>
               <g transform="translate(50,460)">
-                <g id="boutonsCouleurImage" aria-hidden="true" class="svg-bouton" transform="translate(425,500)">
-                  <g id="boutonCouleur">
-                    <circle class="bouton-couleur" cx="0" cy="0" r="25" />
-                  </g>
-                  <g id="boutonBW">
-                    <circle class="bouton-BW" cx="0" cy="0" r="25" />
-                  </g>
-                </g>
-                <g id="boutonsAllVersion" aria-hidden="true" transform="translate(50,450)">
-                  <g id="version01" class="svg-bouton def-image">
+                <g
+                  id="boutonsAllVersion"
+                  role="menuitem"
+                  transform="translate(50,450)"
+                  tabindex="0"
+                  aria-label="Seleziona la complessità dell'immagine. 1 è la più complessa."
+                >
+                  <!--
+                  <g id="version01" class="svg-bouton def-image bouton arialbl_level1" role="menuitemradio" tabindex="0" aria-checked="true">
                     <circle class="fond-bouton-version" cx="0" cy="50" r="25" />
                     <g transform="translate(0 50)">
                       <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">1</text>
                     </g>
                   </g>
-                  <g id="version02" class="svg-bouton def-image">
+                  <g id="version02" class="svg-bouton def-image bouton arialbl_level2" role="menuitemradio" tabindex="-1" aria-checked="false">
                     <circle class="fond-bouton-version" cx="75" cy="50" r="25" />
                     <g transform="translate(75 50)">
                       <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">2</text>
                     </g>
                   </g>
-                  <g id="version03" class="svg-bouton def-image">
+                  <g id="version03" class="svg-bouton def-image bouton arialbl_level3" role="menuitemradio" tabindex="-1" aria-checked="false">
                     <circle class="fond-bouton-version" cx="150" cy="50" r="25" />
                     <g transform="translate(150 50)">
                       <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">3</text>
                     </g>
                   </g>
-                  <g id="version04" class="svg-bouton def-image">
+                  <g id="version04" class="svg-bouton def-image bouton arialbl_level4" role="menuitemradio" tabindex="-1" aria-checked="false">
                     <circle class="fond-bouton-version" cx="225" cy="50" r="25" />
                     <g transform="translate(225 50)">
                       <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">4</text>
                     </g>
                   </g>
-                  <g id="version05" class="svg-bouton def-image">
+                  <g id="version05" class="svg-bouton def-image bouton arialbl_level5" role="menuitemradio" tabindex="-1" aria-checked="false">
                     <circle class="fond-bouton-version" cx="300" cy="50" r="25" />
                     <g transform="translate(300 50)">
                       <text x="0" y="0" alignment-baseline="middle" text-anchor="middle" font-family="Luciole" font-size="24pt">5</text>
                     </g>
                   </g>
+
+                  -->
+                </g>
+                <g
+                  id="boutonsCouleurImage"
+                  role="checkbox"
+                  class="svg-bouton bouton"
+                  transform="translate(425,500)"
+                  aria-label="Pulsante colorato"
+                  tabindex="0"
+                  aria-checked="true"
+                >
+                  <g id="boutonCouleur" class="arialbl_bouton_couleur" role="menuitemradio" aria-checked="true" tabindex="-1">
+                    <circle class="bouton-couleur" cx="0" cy="0" r="25" />
+                  </g>
+                  <g id="boutonBW" class="arialbl_bouton_noir_blanc" role="menuitemradio" aria-checked="false" tabindex="-1">
+                    <circle class="bouton-BW" cx="0" cy="0" r="25" />
+                  </g>
                 </g>
               </g>
             </g>
-            <g class="st1" id="choixImageVersion" role="radiogroup" aria-labelledby="texteVersion" transform="translate(0,610)">
+            <g class="st1" id="choixImageVersion" role="menuitem" aria-labelledby="texteVersion" transform="translate(0,610)" tabindex="0">
               <text
                 id="texteVersion"
                 class="titre-menu tslt_btn_version"
@@ -398,20 +445,20 @@
               >
                 Pulsante semplificazione
               </text>
-              <g id="activerImageVersion" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-version-active">
+              <g id="activerImageVersion" role="menuitemradio" tabindex="0" aria-checked="true" class="bouton-fond svg-bouton bouton-version-active">
                 <rect x="10" y="50" width="234.431640625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="127.2158203125" y="80" font-family="Luciole" font-size="24pt">
                   Visualizza
                 </text>
               </g>
-              <g id="desactiverImageVersion" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-version-active">
+              <g id="desactiverImageVersion" role="menuitemradio" tabindex="-1" aria-checked="false" class="bouton-fond svg-bouton bouton-version-active">
                 <rect x="254.431640625" y="50" width="221.630859375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="365.2470703125" y="80" font-family="Luciole" font-size="24pt">
                   Nascondi
                 </text>
               </g>
             </g>
-            <g class="st1" id="choixCouleurImage" role="radiogroup" aria-labelledby="texteCouleur" transform="translate(0,740)">
+            <g class="st1" id="choixCouleurImage" role="menuitem" aria-labelledby="texteCouleur" transform="translate(0,740)" tabindex="0">
               <text
                 id="texteCouleur"
                 class="titre-menu tslt_btn_noir_blanc"
@@ -424,13 +471,13 @@
               >
                 Pulsante bianco e nero
               </text>
-              <g id="activerCouleurImage" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-couleur-active">
+              <g id="activerCouleurImage" role="menuitemradio" tabindex="0" aria-checked="true" class="bouton-fond svg-bouton bouton-couleur-active">
                 <rect x="10" y="50" width="234.431640625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="127.2158203125" y="80" font-family="Luciole" font-size="24pt">
                   Visualizza
                 </text>
               </g>
-              <g id="desactiverCouleurImage" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-couleur-active">
+              <g id="desactiverCouleurImage" role="menuitemradio" tabindex="-1" aria-checked="false" class="bouton-fond svg-bouton bouton-couleur-active">
                 <rect x="254.431640625" y="50" width="221.630859375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="365.2470703125" y="80" font-family="Luciole" font-size="24pt">
                   Nascondi
@@ -438,18 +485,27 @@
               </g>
               <g></g>
             </g>
-            <text class="tslt_param_image" alignment-baseline="hanging" text-anchor="start" x="10" y="10" font-family="Luciole" font-size="24pt">
+            <text
+              class="tslt_param_image"
+              id="txtParamImage"
+              alignment-baseline="hanging"
+              text-anchor="start"
+              x="10"
+              y="10"
+              font-family="Luciole"
+              font-size="24pt"
+            >
               Parametri immagine
             </text>
             <g transform="translate(0,870)">
               <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black" />
-              <g id="boutonValiderConfigImage" role="button" tabindex="2" class="bouton-fond svg-bouton bouton-valider">
+              <g id="boutonValiderConfigImage" role="button" tabindex="0" class="bouton-fond bouton svg-bouton bouton-valider">
                 <rect x="10" y="30" width="231.486328125" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="125.7431640625" y="70" font-family="Luciole" font-size="24pt">
                   Conferma
                 </text>
               </g>
-              <g role="button" tabindex="3" id="boutonReinitialiserConfigImage" class="bouton-fond svg-bouton bouton-reinitialiser">
+              <g role="button" tabindex="0" id="boutonReinitialiserConfigImage" class="bouton-fond bouton svg-bouton bouton-reinitialiser">
                 <rect x="251.486328125" y="30" width="197.919921875" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text
                   class="tslt_reinitialiser"
@@ -465,8 +521,8 @@
               </g>
             </g>
           </g>
-          <g class="notDisplay" id="configAudio">
-            <g class="st1" id="choixAudio" role="radiogroup" aria-labelledby="texteAudio" transform="translate(0,60)">
+          <g class="notDisplay" id="configAudio" role="menu" tabindex="0" aria-labelledby="txtParamAudio">
+            <g class="st1" id="choixAudio" role="radiogroup" aria-labelledby="texteAudio" transform="translate(0,60)" tabindex="0">
               <text
                 id="texteAudio"
                 class="titre-menu tslt_btn_audio"
@@ -479,13 +535,13 @@
               >
                 Pulsante audio
               </text>
-              <g id="activerAudio" role="radio" aria-checked="true" class="bouton-fond svg-bouton bouton-audio-active">
+              <g id="activerAudio" role="menuitemradio" tabindex="0" aria-checked="true" class="bouton-fond svg-bouton bouton bouton-audio-active">
                 <rect x="10" y="50" width="254.431640625" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_afficher" alignment-baseline="middle" text-anchor="middle" x="137.2158203125" y="80" font-family="Luciole" font-size="24pt">
                   Visualizza
                 </text>
               </g>
-              <g id="desactiverAudio" role="radio" aria-checked="false" class="bouton-fond svg-bouton bouton-audio-active">
+              <g id="desactiverAudio" role="menuitemradio" tabindex="0" aria-checked="false" class="bouton-fond bouton svg-bouton bouton-audio-active">
                 <rect x="274.431640625" y="50" width="221.630859375" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_masquer" alignment-baseline="middle" text-anchor="middle" x="385.2470703125" y="80" font-family="Luciole" font-size="24pt">
                   Nascondi
@@ -509,7 +565,7 @@
             </g>
           </g> -->
             <text
-              id="paramAudio"
+              id="txtParamAudio"
               class="tslt_param_audio"
               alignment-baseline="hanging"
               text-anchor="start"
@@ -523,18 +579,24 @@
             <g transform="translate(0,870)">
               <line class="separation-boutons" x1="0" y1="0" x2="748" y2="0" stroke="black" />
 
-              <g id="boutonValiderConfigAudio" role="button" tabindex="6" aria-labelledby="paramAudio" class="bouton-fond svg-bouton bouton-valider">
+              <g
+                id="boutonValiderConfigAudio"
+                role="button"
+                tabindex="0"
+                aria-labelledby="txtParamAudio"
+                class="bouton-fond bouton svg-bouton bouton bouton-valider"
+              >
                 <rect x="10" y="30" width="231.486328125" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text class="tslt_valider" alignment-baseline="middle" text-anchor="middle" x="125.7431640625" y="70" font-family="Luciole" font-size="24pt">
                   Conferma
                 </text>
               </g>
               <g
-                aria-labelledby="paramAudio"
+                aria-labelledby="txtParamAudio"
                 id="boutonReinitialiserConfigAudio"
                 role="button"
                 tabindex="7"
-                class="bouton-fond svg-bouton bouton-reinitialiser"
+                class="bouton-fond svg-bouton bouton bouton-reinitialiser bouton"
               >
                 <rect x="251.486328125" y="30" width="197.919921875" height="80" fill="white" stroke="black" stroke-width="1" rx="40" ry="40" />
                 <text

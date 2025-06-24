@@ -264,27 +264,40 @@ function createContentFile(files, spineFiles) {
   metaDataContents =
     metaDataContents + "\n" + '   <meta name="cover" content="' + coverImage + '"/>\n' + '   <meta property="ibooks:specified-fonts">true</meta>\n' + "\n";
 
-  if (meta.accessMode != undefined && meta.accessMode != null && meta.accessMode.length != 0)
-    meta.accessMode.forEach((mode) => {
-      if (mode != null && mode != undefined && mode != "") metaDataContents = metaDataContents + '   <meta property="schema:accessMode">' + mode + "</meta>\n";
-    });
+  if (meta.accessMode && Object.keys(meta.accessMode).length > 0) {
+    for (const key in meta.accessMode) {
+      const mode = meta.accessMode[key];
+      if (mode) {
+        metaDataContents += '   <meta property="schema:accessMode">' + mode + "</meta>\n";
+      }
+    }
+  }
 
-  if (meta.accessibilityModeSufficcient != undefined && meta.accessibilityModeSufficcient != null && meta.accessibilityModeSufficcient.length != 0)
-    meta.accessibilityModeSufficcient.forEach((mode) => {
-      if (mode != null && mode != undefined && mode != "")
-        metaDataContents = metaDataContents + '   <meta property="schema:accessModeSufficient">' + mode + "</meta>\n";
-    });
+  if (meta.accessibilityModeSufficcient && Object.keys(meta.accessibilityModeSufficcient).length > 0) {
+    for (const key in meta.accessibilityModeSufficcient) {
+      const mode = meta.accessibilityModeSufficcient[key];
+      if (mode) {
+        metaDataContents += '   <meta property="schema:accessModeSufficient">' + mode + "</meta>\n";
+      }
+    }
+  }
 
-  if (meta.accessibilityFeature != undefined && meta.accessibilityFeature != null && meta.accessibilityFeature.length != 0)
-    meta.accessibilityFeature.forEach((f) => {
-      if (f != null && f != undefined && f != "") metaDataContents = metaDataContents + '   <meta property="schema:accessibilityFeature">' + f + "</meta>\n";
-    });
-
-  if (meta.accessibilityHazard != undefined && meta.accessibilityHazard != null && meta.accessibilityHazard.length != 0)
-    meta.accessibilityHazard.forEach((f) => {
-      if (f != null && f != undefined && f != "") metaDataContents = metaDataContents + '   <meta property="schema:accessibilityHazard">' + f + "</meta>\n";
-    });
-
+  if (meta.accessibilityFeature && Object.keys(meta.accessibilityFeature).length > 0) {
+    for (const key in meta.accessibilityFeature) {
+      const f = meta.accessibilityFeature[key];
+      if (f) {
+        metaDataContents += '   <meta property="schema:accessibilityFeature">' + f + "</meta>\n";
+      }
+    }
+  }
+  if (meta.accessibilityHazard && Object.keys(meta.accessibilityHazard).length > 0) {
+    for (const key in meta.accessibilityHazard) {
+      const f = meta.accessibilityHazard[key];
+      if (f) {
+        metaDataContents += '   <meta property="schema:accessibilityHazard">' + f + "</meta>\n";
+      }
+    }
+  }
   metaDataContents = metaDataContents + '   <meta property="schema:accessibilityAPI">ARIA</meta>\n';
 
   if (meta.accessibilitySummary[language] != null && meta.accessibilitySummary[language] != undefined && meta.accessibilitySummary[language] != "")
@@ -472,7 +485,8 @@ function createPage00(page, firstPageNarration, fontNames) {
     if(fs.existsSync(page.imagesScripts.Image)){
       img_str = extractSVG(page.imagesScripts.Image);
       color_css = extractCSSfromSVG(page.imagesScripts.Image);
-   
+      img_str = img_str.replaceAll("ldqr-actif", ""); //make it non zoomable
+      img_str = img_str.replaceAll('role="img"', "");
     }
     
   }
@@ -482,6 +496,39 @@ function createPage00(page, firstPageNarration, fontNames) {
   str = str.replaceAll("{firstPageNarration}", "../audio/" + firstPageNarration);
   str = str.replaceAll("$MENUSVG", img_str);
   str = str.replaceAll("<!-- color css2 -->", color_css);
+
+
+  //split string, add buttons in, depending on number
+  var t = str.split("\n");
+  str = "";
+
+  let numButtons = 2 // get this from the frontend!! 
+
+  let open1 = false;
+  let open2 = true;
+
+
+  t.forEach((line) => {
+
+    if(open1 && line.includes("<!--")){ 
+      line = ""; open1 = false;
+    }
+    if(line.includes("boutonsAllVersion")) open1 = true;
+    
+
+    if(line.includes('id="version0' + (numButtons + 1) + '"')) line = "<!--" + line ;
+    
+
+    if(open2 && numButtons == 5 && line.includes("-->")) {
+      line = "<!--" + line; 
+      open2 = false;
+    }
+
+
+    str = str + line + "\n";
+
+
+  })
   
 
 
@@ -493,8 +540,10 @@ function createPage00(page, firstPageNarration, fontNames) {
 
   let count = 0;
   let group = 0;
+  let tabIndex = "0";
+
   for (const [key, value] of Object.entries(fontNames)) {
-    if(count != 0) checked = "false";
+    if(count != 0) {checked = "false"; tabIndex = "-1";}
     
 
     if (count % 2 == 0 || count == 0) {
@@ -512,7 +561,7 @@ function createPage00(page, firstPageNarration, fontNames) {
     if(name == "" || name == undefined) name = key;
     fontText =
       fontText +
-      '                   <g id="' + key.replaceAll(" ", "") +'" role="radio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond svg-bouton bouton-choix-police">\n' +
+      '                   <g id="' + key.replaceAll(" ", "") +'" role="menuitemradio" aria-checked="' + checked +'" transform="translate(0,' + moveDown + ')" class="bouton-fond bouton svg-bouton bouton-choix-police" tabindex="' + tabIndex + '">\n' +
       '                       <rect x="10" y="50" width="195" height="60" fill="white" stroke="black" stroke-width="1" rx="40" ry="40"/>\n' +
       '                       <text alignment-baseline="middle" text-anchor="middle" x="110" y="80" class="ldqr-font-' + key.replaceAll(" ", "").toLowerCase() + '" font-size="24pt">' + name + '</text>\n' +
       "                   </g>\n";
@@ -614,11 +663,11 @@ function createCredits(creditPage) {
   ];*/
 
   let ourCredit = {
-    EN: "This EPUB was created with the Flexi Picture EBook Builder, which was developed at the JKU Linz by Danya Gharbieh and Maximilian Punz. \n This book also contains scripts developed by Les Doigts Qui Rêvent.",
-    DE: "Dieses EPUB wurde mit dem Flexi Picture EBook Builder erstellt, der an der JKU Linz von Danya Gharbieh und Maximilian Punz entwickelt wurde. \n Dieses Buch enthält Skripte die von Les Doigts Qui Rêvent entwickelt wurden.",
-    LIT: 'Šis EPUB buvo sukurtas naudojant "Flexi Picture EBook Builder" programą, kurią JKU sukūrė Danya Gharbieh ir Maximilian Punz. \n Šioje knygoje taip pat yra scenarijų, kuriuos sukūrė Les Doigts Qui Rêvent.',
-    FR: "Cet EPUB a été créé avec le Flexi Picture EBook Builder, développé à la JKU par Danya Gharbieh et Maximilian Punz. \n Ces livres enthält scénarisent les Doigts Qui Rêvent écrits par les gens. ",
-    IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz. \n Questo libro contiene anche script sviluppati da Les Doigts Qui Rêvent.",
+    EN: "This EPUB was created with the Flexi Picture EBook Builder, which was developed at the JKU Linz by Danya Gharbieh and Maximilian Punz. \n This code in this book is based on the original ebook by Ludovic Bal (Canopée Hauts de France) and Les Doigts Qui Rêvent.",
+    DE: "Dieses EPUB wurde mit dem Flexi Picture EBook Builder erstellt, der an der JKU Linz von Danya Gharbieh und Maximilian Punz entwickelt wurde. \n Der Code in diesem Buch basiert auf dem E-Book von Ludovic Bal (Canopée Hauts de France) und Les Doigts Qui Rêvent.",
+    LIT: 'Šis EPUB buvo sukurtas naudojant "Flexi Picture EBook Builder" programą, kurią JKU sukūrė Danya Gharbieh ir Maximilian Punz. \n Šioje knygoje pateiktas kodas yra pagrįstas Ludovic Bal (Canopée Hauts de France) ir Les Doigts Qui Rêvent elektronine knyga.',
+    FR: "Cet EPUB a été créé avec le Flexi Picture EBook Builder, développé à la JKU par Danya Gharbieh et Maximilian Punz. \n Le code présenté dans cet ouvrage est basé sur l'ebook de Ludovic Bal (Canopée Hauts de France) et Les Doigts Qui Rêvent. ",
+    IT: "Questo EPUB è stato creato con Flexi Picture EBook Builder, sviluppato alla JKU Linz da Danya Gharbieh e Maximilian Punz. \n Il codice contenuto in questo libro è basato sull'ebook di Ludovic Bal (Canopée Hauts de France) e Les Doigts Qui Rêvent.",
   };
 
   if (creditPage.text[language] == undefined) {
@@ -762,15 +811,19 @@ function createPageText(obj){
     '    </audio>\n';
   
   }
-    
-
+  
   str = str +
   '      <section id="monTexte" class="section-texte ldqr-font-luciole ldqr-font-bold">\n' +
   '       <span epub:type="pagebreak" id="'+ title + '" aria-label="' + title + '" role="doc-pagebreak"></span>\n' +
-  '       <div class="texte">'+ processedText + '</div>\n' +
+  '       <div class="texte">'+ processedText + '</div>\n';
+
+if(options.includeNarrations && a != "" && a != " " )
+  str = str + 
   '         <button id="playTexteSr" aria-labelledby="label" class="screen-reader bouton-surprise">\n' +
   '          <span id="label" class="tslt_ecouter_texte">anhören</span>\n' +
-  '        </button>\n' +
+  '        </button>\n';
+
+  str = str + 
   '      </section>\n' +
   '    </section>\n' +
   '  </body>\n' +
@@ -812,12 +865,19 @@ function createCover(title, cover, altText, audio){
   }
 
   str = str +
-  '  <div style="text-align: center; height: 100%">\n' +
+  '  <figure style="text-align: center; height: 100%">\n' +
   '    <img epub:type="cover" role="doc-cover" class="alt_sentence0" src="../images/' + cover.substring(cover.lastIndexOf(path.sep) + 1, cover.length) + '" alt="' + altText +'" style="max-width: 100%; max-height: 100%" />\n' +
-  '  </div>\n' +
-  '  <button id="playTexteSr" aria-labelledby="label" class="screen-reader bouton-surprise">\n' +
+  '  </figure>\n';
+
+  if(audio != "" || audio.substring(audio.lastIndexOf(path.sep) + 1, audio.length) != ""){
+    str = str +
+  '  <button id="playCoverNarration" aria-labelledby="label" class="screen-reader bouton-surprise">\n' +
   '    <span id="label" class="tslt_ecouter_texte">anhören</span>\n' +
-  '  </button>\n' +
+  '  </button>\n';
+  }
+
+
+  str = str +
   '</body>\n' +
   '</html>\n';
 

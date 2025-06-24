@@ -33,6 +33,8 @@ let window;
 let spine = [];
 
 function setDirectory(d) {
+  console.log("Set Directory!");
+  console.log(d);
   directory = d;
 }
 
@@ -53,6 +55,8 @@ function make(metadata, pages, data) {
     let dirName = data.dirName + "_" + language;
     let count = 1;
 
+    console.log(language);
+
     //if folder with that name exists, add (*) at the end.
     if (fs.existsSync(directory + path.sep + dirName)) {
       while (fs.existsSync(directory + path.sep + dirName + "(" + count + ")")) {
@@ -61,6 +65,7 @@ function make(metadata, pages, data) {
       dirName = dirName + "(" + count + ")";
     }
 
+    console.log(dirName + " " + directory);
     FileSystemManager.createFileStructure(dirName, directory);
     //import all of the required files!
     let files = fileImporter.import(pages, language);

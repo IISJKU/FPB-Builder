@@ -179,9 +179,7 @@ h4 img {
 .ldqr-font-bold {
   font-weight: 700 !important;
 }
-.notDisplay {
-  display: none !important;
-}
+
 .displayInLine {
   display: inherit !important;
 }
@@ -505,4 +503,13 @@ p img {
   border: 0 !important;
   -webkit-clip-path: inset(50%) !important;
   clip-path: inset(50%) !important;
+}
+
+.notDisplay {
+  display: none !important;
+  visibility: hidden;
+}
+
+*:focus {
+  outline: 2px solid;
 }
