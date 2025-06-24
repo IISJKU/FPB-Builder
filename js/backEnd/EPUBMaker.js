@@ -34,7 +34,7 @@ let spine = [];
 
 function setDirectory(d) {
   console.log("Set Directory!");
-  console.log(d);
+
   directory = d;
 }
 
@@ -55,7 +55,7 @@ function make(metadata, pages, data) {
     let dirName = data.dirName + "_" + language;
     let count = 1;
 
-    console.log(language);
+    console.log(directory);
 
     //if folder with that name exists, add (*) at the end.
     if (fs.existsSync(directory + path.sep + dirName)) {

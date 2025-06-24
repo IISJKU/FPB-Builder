@@ -40,6 +40,7 @@ $(document).on("focusout", "#projName", function (e) {
 });
 
 window.BRIDGE.onDirectorySet((value) => {
+  console.log(value["filePaths"][0]);
   let options = sessionStorage.getItem("options");
 
   if (options == null || options == undefined) {
@@ -49,6 +50,8 @@ window.BRIDGE.onDirectorySet((value) => {
       includeNarrations: true,
       includeBookSettings: true,
     };
+  } else {
+    options = JSON.parse(options); // 🔥 THIS WAS MISSING
   }
 
   $("#directory").val(value["filePaths"][0]);
