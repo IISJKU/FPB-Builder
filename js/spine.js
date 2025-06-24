@@ -609,6 +609,7 @@ function saveData() {
     missingAttr = $(this).children("td").children(0).attr("data-missing");
     //Change this later!
     if (section != "imagesScripts" && pageId != "cover") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
+    if (section == "alt" && pageId == "cover") pageDetObj[pageId][section][attr] = $(this).children("td").children(0).val();
     if ((section == "narration" || section == "imagesScripts") && $(this).children("td").children(0).attr("data-path") != undefined) {
       if (missingAttr == "1") {
         if (pageDetObj[pageId][section]["missing"] == undefined) pageDetObj[pageId][section]["missing"] = {};
