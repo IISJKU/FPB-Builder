@@ -4,6 +4,10 @@ const { FuseV1Options, FuseVersion } = require("@electron/fuses");
 module.exports = {
   packagerConfig: {
     asar: true,
+     osxSign: {
+      identity: "FPBSign", // The name from Keychain
+      hardenedRuntime: false,        // Hardened Runtime is optional unless you're notarizing
+    },
   },
   rebuildConfig: {},
   makers: [
