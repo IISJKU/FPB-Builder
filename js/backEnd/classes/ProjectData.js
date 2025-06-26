@@ -9,6 +9,7 @@ class ProjectData {
   pages = [];
   settings = [];
   fonts = [];
+  numberOfLayers = 5;
 
   async fillData(window){
     await window.webContents.executeJavaScript('JSON.parse(sessionStorage.getItem("bookDetails"))', true).then(async (result) => {
@@ -42,6 +43,13 @@ class ProjectData {
   async getSettings(window){
     await window.webContents.executeJavaScript('getOthSettings()', true).then(async (result) => {
       this.settings = result;
+      await this.getNumberOfLayers(window);
+    });
+  }
+
+  async getNumberOfLayers(window) {
+    await window.webContents.executeJavaScript('document.getElementById("layers").valueAsNumber', true).then(async (result) => {
+      this.numberOfLayers = result;
       await this.getFonts(window);
     });
   }
@@ -64,6 +72,7 @@ class ProjectData {
     this.name;
     this.directory;
     this.languages;
+    this.numberOfLayers;
     this.settings;
     this.metadata;
     this.pages;

@@ -8,9 +8,10 @@ let o = {
   includeInstructions: true,
   includeNarrations: true,
   includeBookSettings: true,
+  numberOfLayers: 5,
 };
 
-sessionStorage.setItem("options", o);
+sessionStorage.setItem("options", JSON.stringify(o));
 
 function loadProject(name) {
   let project;
@@ -142,7 +143,12 @@ window.BRIDGE.onProjectData((value) => {
     includeInstructions: projData["settings"].includes("instructions"),
     includeNarrations: projData["settings"].includes("audioNarr"),
     includeBookSettings: projData["settings"].includes("bookSettings"),
+    numberOfLayers: document.getElementById("layers").valueAsNumber || 5,
   };
+
+  if (projData["numberOfLayers"]) {
+    document.getElementById("layers").value = projData["numberOfLayers"];
+  }
 
   sessionStorage.setItem("options", JSON.stringify(settOptions));
 

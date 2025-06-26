@@ -11,14 +11,22 @@
           <input type="text" class="form-control" id="projName" name="name" placeholder="Project Name" aria-label="Project name and can be modifiable" required minlength="3" maxlength="100" />
         </div>
         <div class="form-group mb-3">
-          <label for="publicationLanguage" class="langTxt">Publication Languages</label>
-          <select class="form-select" aria-label="select multiple Publication languages" id="publicationLanguage" multiple>
-            <option value="EN" class="langTxt" data-tokens="English" selected>English</option>
-            <option value="FR" class="langTxt" data-tokens="French">French</option>
-            <option value="IT" class="langTxt" data-tokens="Italian">Italian</option>
-            <option value="LIT" class="langTxt" data-tokens="Lithuanian">Lithuanian</option>
-            <option value="DE" class="langTxt" data-tokens="German">German</option>
-          </select>
+          <div class="row">
+            <div class="col-md-6">
+              <label for="publicationLanguage" class="langTxt">Publication Languages</label>
+              <select class="form-select" aria-label="select multiple Publication languages" id="publicationLanguage" multiple>
+                <option value="EN" class="langTxt" data-tokens="English" selected>English</option>
+                <option value="FR" class="langTxt" data-tokens="French">French</option>
+                <option value="IT" class="langTxt" data-tokens="Italian">Italian</option>
+                <option value="LIT" class="langTxt" data-tokens="Lithuanian">Lithuanian</option>
+                <option value="DE" class="langTxt" data-tokens="German">German</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="layers">Number of Layers (1 to 5):</label>
+              <input id="layers" class="form-control" type="number" min="1" max="5" value="5">
+            </div>
+          </div>
         </div>
         <div class="form-group mb-3">
           <label for="otherSettings" class="langTxt">Other Settings</label>

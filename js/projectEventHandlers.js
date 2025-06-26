@@ -11,8 +11,14 @@ $(document).on("change", "#publicationLanguage", function (e) {
 
 function getOptions() {
   if (JSON.parse(sessionStorage.getItem("options")) == null) {
-    options = { directory: "", includeInstructions: true, includeNarrations: true, includeBookSettings: true };
-    return options;
+    options = {
+      directory: "",
+      includeInstructions: true,
+      includeNarrations: true,
+      includeBookSettings: true,
+      numberOfLayers: 5
+    };
+  return options;
   } else {
     return JSON.parse(sessionStorage.getItem("options"));
   }
@@ -34,6 +40,12 @@ $(document).on("change", "#bookSettings", function (e) {
   sessionStorage.setItem("options", JSON.stringify(options));
 });
 
+$(document).on("change", "#layers", function (e) {
+  options = getOptions();
+  options.numberOfLayers = this.valueAsNumber || 5;
+  sessionStorage.setItem("options", JSON.stringify(options));
+});
+
 // save the values when the input element loses the focus
 $(document).on("focusout", "#projName", function (e) {
   sessionStorage.setItem("projectName", this.value);
@@ -49,6 +61,7 @@ window.BRIDGE.onDirectorySet((value) => {
       includeInstructions: true,
       includeNarrations: true,
       includeBookSettings: true,
+      numberOfLayers: 5
     };
   } else {
     options = JSON.parse(options); // 🔥 THIS WAS MISSING

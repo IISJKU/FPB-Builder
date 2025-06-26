@@ -83,6 +83,7 @@ function resetFields() {
   $("#fontList input:checked").each(function () {
     $(this).prop("checked", false);
   });
+  document.getElementById("layers").value = 5;
 }
 
 function rmSessionItem() {
@@ -121,6 +122,7 @@ function compareData(data) {
   if (Object.keys(data["fonts"]).length != 0) {
     if (!objEqCheck(getSelectedFonts(), data["fonts"])) checkStatus = 0;
   }
+  if (parseInt(document.getElementById("layers").value) !== data["numberOfLayers"]) checkStatus = 0;
   return checkStatus;
 }
 
