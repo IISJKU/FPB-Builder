@@ -471,7 +471,7 @@ function extractCSSfromSVG(link) {
 //this reads page00 from a template,
 //fills in the fonts according to what is specified in the frontend
 //prettier-ignore
-function createPage00(page, firstPageNarration, fontNames) {
+function createPage00(page, firstPageNarration, fontNames, numButtons) {
 
   let str = "";
   let img_str = "";
@@ -497,46 +497,38 @@ function createPage00(page, firstPageNarration, fontNames) {
   str = str.replaceAll("$MENUSVG", img_str);
   str = str.replaceAll("<!-- color css2 -->", color_css);
 
-  /*
-     This feature keeps breaking now, ill leave this for later
-
-     
-    let numButtons = 5 // get this from the frontend!! 
+  
+  
+  if(!numButtons)
+  numButtons = 5; 
 
   //split string, add buttons in, depending on number
   var t = str.split("\n");
   str = "";
 
-  
-
- 
-
   let open1 = false;
-  let open2 = true;
+  let open2 = false;
 
 
   t.forEach((line) => {
-
     if(open1 && line.includes("<!--")){ 
       line = ""; open1 = false;
     }
     if(line.includes("boutonsAllVersion")) open1 = true;
     
-
     if(line.includes('id="version0' + (numButtons + 1) + '"')) line = "<!--" + line ;
-    
+
+    if(line.includes('id="version05"')) open2 = true;
 
     if(open2 && numButtons == 5 && line.includes("-->")) {
-      line = "<!--" + line; 
+      console.log("remoooooooved :) ");
+      console.log(line);
+      line = ""; 
       open2 = false;
     }
-
-
     str = str + line + "\n";
-
-
-  })
-   */
+  });
+   
 
 
   let fontText = "";

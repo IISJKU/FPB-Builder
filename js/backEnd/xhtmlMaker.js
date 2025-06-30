@@ -319,7 +319,7 @@ function createXHTMLFiles(fileArray, path, newDirName) {
     FileSystemManager.makeFile(
       path + "\\" + newDirName + "\\OEBPS\\xhtml\\",
       "page00.xhtml",
-      EPUBFileCreator.createPage00(menuIllustration, pages[0].narration[language], fontNames)
+      EPUBFileCreator.createPage00(menuIllustration, pages[0].narration[language], fontNames, options.numberOfLayers)
     );
     spine.push("page00.xhtml");
   }
